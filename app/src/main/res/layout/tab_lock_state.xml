@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tab_lock"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+
+   <LinearLayout
+        android:id="@+id/list_lock"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <include
+            android:id="@+id/lock_list_title"
+            layout="@layout/locklist_tittle" />
+
+        <ListView
+            android:id="@+id/list_lock_state"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/list_bg"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="#f9b68b"
+            android:dividerHeight="1.0dp"
+            android:fadingEdge="none"
+            android:scrollbars="vertical" >
+        </ListView>
+    </LinearLayout>
+
+</LinearLayout>

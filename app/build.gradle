@@ -1,0 +1,185 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
+    defaultConfig {
+        applicationId "alpha.cyber.intelmain"
+        minSdkVersion 17
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        sourceSets {
+            main {
+                jniLibs.srcDirs = ['src/main/libs']
+            }
+        }
+    }
+
+    //正式环境
+    def API_RELEASE_HOST = '"http://imzhiliao.com:9000/"'
+    //开发环境
+    def API_DEV_HOST = '"http://dev.imzhiliao.com/"'
+    //测试环境
+    def API_TEST_HOST = '"http://test.imzhiliao.com/"'
+
+    //签名
+    signingConfigs {
+        myConfig {
+            storeFile file("../app/key/tongchuan_lib.jks")
+            storePassword "tongchuanlib"
+            keyAlias "tongchuanlib"
+            keyPassword "tongchuanlib"
+        }
+
+    }
+
+    buildTypes {
+
+        //没有做数字签名
+        debug {
+            buildConfigField('boolean', 'PRINT_LOG', 'true')
+            buildConfigField('String', 'API_HOST', "${API_DEV_HOST}")
+            minifyEnabled false
+            // 混淆文件的位置
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //debug
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null &&
+                            outputFile.name.endsWith('debug.apk')) {
+                        def fileName =
+                                "tongchuan_debug_${defaultConfig.versionName}_${compileTime()}.apk"
+                        output.outputFile = new File(outputFile.parent, fileName)
+                    }
+                }
+            }
+        }
+
+        dev {
+            buildConfigField('boolean', 'PRINT_LOG', 'true')
+            buildConfigField('String', 'API_HOST', "${API_DEV_HOST}")
+            signingConfig signingConfigs.myConfig
+            minifyEnabled false
+            // 混淆文件的位置
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //debug
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null &&
+                            outputFile.name.endsWith('dev.apk')) {
+                        def fileName =
+                                "tongchuan_dev_${defaultConfig.versionName}_${compileTime()}.apk"
+                        output.outputFile = new File(outputFile.parent, fileName)
+                    }
+                }
+            }
+        }
+
+        qa {
+            buildConfigField('boolean', 'PRINT_LOG', 'true')
+            buildConfigField('String', 'API_HOST', "${API_TEST_HOST}")
+            signingConfig signingConfigs.myConfig
+            minifyEnabled false
+            // 混淆文件的位置
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //apk重命名
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null &&
+                            outputFile.name.endsWith('qa.apk')) {
+                        def fileName =
+                                "tongchuan_qa_${defaultConfig.versionName}_${compileTime()}.apk"
+                        output.outputFile = new File(outputFile.parent, fileName)
+                    }
+                }
+            }
+        }
+
+        release {
+            buildConfigField('boolean', 'PRINT_LOG', 'false')
+            buildConfigField('String', 'API_HOST', "${API_RELEASE_HOST}")
+
+            signingConfig signingConfigs.myConfig
+            //
+            minifyEnabled false
+            // 混淆文件的位置
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //release版本apk重命名
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null &&
+                            outputFile.name.endsWith('release.apk')) {
+                        def fileName =
+                                "tongchuan_release_${defaultConfig.versionName}_${compileTime()}.apk"
+                        output.outputFile = new File(outputFile.parent, fileName)
+                    }
+                }
+            }
+        }
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java', 'src/main/java-gen']
+        }
+    }
+
+    productFlavors{
+        //正式环境
+        official {
+            manifestPlaceholders = [APP_ENV       : "release",
+                                    CHANNEL_NAME  : "official",
+                                    TALKINGDATA_ID: "F169ABC85EF74D73B5A763392FB5539F"]
+        }
+
+        //开发环境
+        nofficial {
+            manifestPlaceholders = [APP_ENV       : "dev",
+                                    CHANNEL_NAME  : "official",
+                                    TALKINGDATA_ID: "4C50A07C47AD462E84C60BD92BF1C521"]
+        }
+    }
+
+}
+
+def compileTime() {
+    return new Date().format("yyyy_MM_dd", java.util.TimeZone.getTimeZone("GMT+8"))
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+
+    testCompile 'junit:junit:4.12'
+    compile files('libs/ormlite-android-4.48.jar')
+    compile files('libs/ormlite-core-4.48.jar')
+    compile files('libs/fastjson-1.1.35.jar')
+    compile 'com.android.support:appcompat-v7:25.4.0'
+    compile 'com.android.support:design:25.4.0'
+    compile 'com.android.support:support-v4:25.4.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.google.code.gson:gson:2.3.+'
+//    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
+//    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
+
+    //retrofit
+    compile 'com.squareup.retrofit2:retrofit:2.0.1'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.1'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.1'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.1.2'
+    compile 'com.facebook.stetho:stetho:1.3.1'
+    compile 'com.facebook.stetho:stetho-okhttp3:1.3.0'
+    //rxjava
+    compile 'io.reactivex:rxjava:1.1.3'
+    //rxandroid
+    compile 'io.reactivex:rxandroid:1.1.0'
+
+    compile 'com.google.zxing:core:3.3.0'
+    compile project(path:':banner')
+}

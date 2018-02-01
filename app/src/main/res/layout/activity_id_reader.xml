@@ -1,0 +1,24 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context="alpha.cyber.intelllibdemo.IdReaderActivity" >
+
+    
+    <TextView
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="卡号："
+	    android:textColor="#0000FF"
+	    android:textSize="25sp" />
+    
+    <TextView
+	    android:id="@+id/nummber_display"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="00"
+	    android:textColor="#0000FF"
+	    android:textSize="15sp" />
+   
+</LinearLayout>

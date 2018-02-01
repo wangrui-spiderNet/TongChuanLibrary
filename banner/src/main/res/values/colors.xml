@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    //通用颜色
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorDialog">#f1f1f1</color>
+    <color name="colorRed">#FF0000</color>
+    <color name="colorRedAlpha">#88FF0000</color>
+    <color name="colorAlphaHalfBlack">#88000000</color>
+    <color name="colorAlpha30White">#56ffffff</color>
+    <color name="colorWhite15">#26ffffff</color>
+    <color name="colorOrange">#fff400</color>
+
+    <color name="half_transparent">#e0000000</color>
+    <color name="transparent">#00000000</color>
+
+    //APP颜色
+    <color name="colorSettingBg">#252525</color>
+    <color name="colorSettingline">#5c5c5c</color>
+    <color name="colorSettingText">#959595</color>
+    <color name="colorSettingTextContent">#7d7d7d</color>
+    <color name="colorButton">#0088ff</color>
+    <color name="colorLoginFrame">#d9e2eb</color>
+    <color name="colorTextCanClick">#a1afbe</color>
+    <color name="colorLoginTextClick">#379af0</color>
+    <color name="colorDialogText">#379af0</color>
+    <color name="colorTextUserInfoTitle">#aab8d9</color>
+    <color name="colorChooseLine">#323232</color>
+    <color name="colorTextModelAlpha">#535353</color>
+    <color name="colorTextNoInfo">#7b98d2</color>
+    <color name="input_color">#b8b8b8</color>
+
+    <color name="home_category_color">#b4c3f9</color>
+
+</resources>

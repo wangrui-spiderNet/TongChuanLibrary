@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="textColor">#FFFFFF</color>
+
+    <!--标题栏背景颜色-->
+    <color name="title_bg_color">#0083C4</color>
+    <color name="tab_color_unchecked">#7A7979</color>
+
+    <!--资料页面灰色背景-->
+    <color name="material_page_bg">#E2E2E2</color>
+
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#727272</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#B6B6B6</color>
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <!--页面背景-->
+    <color name="layout_background">#f2f2f2</color>
+
+    <!--主题颜色-->
+    <color name="app_theme_color">#fbbb30</color>
+    <!--白色-->
+    <color name="font_white">#FFFFFF</color>
+    <!--灰白色-->
+    <color name="font_white_gray">#e0dbd8</color>
+    <!--灰色-->
+    <color name="font_gray">#999999</color>
+    <!--深灰色-->
+    <color name="font_hint_gray">#999999</color>
+    <!--蓝色 -->
+    <color name="bright_blue">#0DAEF4</color>
+    <!--蓝色 -->
+    <color name="green">#4dd34d</color>
+
+    <!--黑色-->
+    <color name="font_black">#444444</color>
+
+    <!--分割线-->
+    <color name="divider_line_color">#19000000</color>
+    <!--按下效果-->
+    <color name="pressed_item">#e9e9f9</color>
+    <color name="button_pressed">#fdc042</color>
+    <color name="set_button_false">#dcdcdc</color>
+    <color name="gray_txt_light">#FFC8C8C8</color>
+
+    <!--透明-->
+    <color name="transparent">#00000000</color>
+    <!--灰色-->
+    <color name="gray">#B1B1B1</color>
+    <!--白色 -->
+    <color name="white">#FFFFFF</color>
+    <!--橙色 -->
+    <color name="orange">#FFA500</color>
+    <!--红色 -->
+    <color name="red">#FF0000</color>
+
+    <!--黑色 -->
+    <color name="black">#000000</color>
+
+    <color name="black_overlay">#66000000</color>
+
+
+    <color name="txt_gray_color">#808080</color>
+    <color name="public_line_eo">#E0E0E0</color>
+    <color name="updata_text_color_E5">#E5E6E6</color>
+
+    <color name="tab_unselect_color">#626262</color>
+    <color name="tab_selected_color">#ec773f</color>
+</resources>

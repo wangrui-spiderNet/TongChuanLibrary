@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_name"
+            style="@style/text_info_style"
+            android:layout_marginLeft="@dimen/dimen_50"
+            android:text="姓名:张三" />
+
+        <TextView
+            android:id="@+id/tv_card_number"
+            style="@style/text_info_style"
+            android:layout_marginLeft="@dimen/dimen_50"
+            android:text="卡号:61000032320000320" />
+
+        <TextView
+            android:id="@+id/tv_permission"
+            style="@style/text_info_style"
+            android:layout_marginLeft="@dimen/dimen_50"
+            android:text="权限:可借4册，已借2册，剩余可借2册。" />
+
+        <LinearLayout
+            android:id="@+id/layout_table_borrowed"
+            android:layout_width="@dimen/table_width"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_table_back"
+            android:layout_width="@dimen/table_width"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimen_10"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_table_will_borrow"
+            android:layout_width="@dimen/table_width"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimen_10"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
