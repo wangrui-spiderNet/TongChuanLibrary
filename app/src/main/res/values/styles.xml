@@ -15,8 +15,6 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <!-- 标题样式 -->
-
-
     <style name="RecyclerViewStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -172,7 +170,7 @@
     </style>
 
     <!-- popup样式 -->
-    <style name="AlertDialog" parent="@android:style/Theme.Dialog">
+    <style name="AlertDialog" parent="Animation.AppCompat.Dialog">
 
         <!-- Dialog Theme -->
         <item name="android:windowFrame">@null</item>
@@ -181,6 +179,18 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <style name="CustomDialog" parent="android:style/Theme.Dialog">
+        <!-- 背景颜色及透明程度 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 是否有标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 是否浮现在activity之上 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 是否模糊 -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowFrame">@null</item>
     </style>
 
     <style name="activityDialogStyle">
@@ -289,6 +299,7 @@
         <item name="android:dividerHeight">0.5px</item>
         <item name="android:fadingEdge">none</item>
     </style>
+
     <!--checkBox,没有点击,不获取焦点事件-->
     <style name="checkBox_style">
         <item name="android:layout_width">wrap_content</item>
@@ -316,7 +327,6 @@
         <item name="android:horizontalSpacing">@dimen/dimen_5</item>
         <item name="android:layout_marginLeft">@dimen/dimen_10</item>
         <item name="android:layout_marginRight">@dimen/dimen_10</item>
-
     </style>
 
     <style name="MyTabLayoutTextAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
@@ -375,7 +385,6 @@
         
     </style>
 
-    
     <style name="text_info_style">
         <item name="android:textSize">@dimen/font_size_20</item>
         <item name="android:layout_width">wrap_content</item>
@@ -393,6 +402,14 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="dialog_info_style">
+        <item name="android:textSize">@dimen/dialog_text_size</item>
+        <item name="android:layout_width">@dimen/dialog_width</item>
+        <item name="android:layout_height">@dimen/dialog_height</item>
+        <item name="android:padding">@dimen/dimen_10</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
     <style name="operator_style">
         <item name="android:layout_width">@dimen/dimen_120</item>
         <item name="android:layout_height">@dimen/dimen_120</item>
@@ -403,4 +420,5 @@
         <item name="android:background">@drawable/circle_bg_shape</item>
 
     </style>
+
 </resources>

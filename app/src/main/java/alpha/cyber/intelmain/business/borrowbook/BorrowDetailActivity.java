@@ -8,19 +8,21 @@ import android.widget.TextView;
 
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
+import alpha.cyber.intelmain.widget.CustomConfirmDialog;
 import alpha.cyber.intelmain.widget.TitleTableView;
 
 /**
  * Created by wangrui on 2018/2/1.
  */
 
-public class BorrowDetailActivity extends BaseActivity implements View.OnClickListener{
+public class BorrowDetailActivity extends BaseActivity implements View.OnClickListener,CustomConfirmDialog.CustomDialogConfirmListener {
 
     private TextView tvName;
     private TextView tvCardNumber;
     private TextView tvPermission;
     private LinearLayout layoutTableBorrowed,layoutTableBack,layoutTableWillBorrow;
 
+    private CustomConfirmDialog customDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,6 +39,9 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         layoutTableBorrowed = findView(R.id.layout_table_borrowed);
         layoutTableBack = findView(R.id.layout_table_back);
         layoutTableWillBorrow = findView(R.id.layout_table_will_borrow);
+
+        customDialog = new CustomConfirmDialog(this);
+        customDialog.setConfirmListener(this);
     }
 
     @Override
@@ -83,7 +88,15 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View v) {
 
         if(v==btnRightButton){
-
+            customDialog.setContent("您还有未关闭的柜门，请先关闭柜门，再按确认按钮");
+            customDialog.setConfirmButtonText("确认");
+            customDialog.setCancelable(false);
+            customDialog.show();
         }
+    }
+
+    @Override
+    public void onButtonClick(View view) {
+
     }
 }

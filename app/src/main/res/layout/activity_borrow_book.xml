@@ -12,7 +12,6 @@
         android:layout_weight="1"
         android:gravity="center"
         android:textSize="@dimen/font_size_20"
-
         />
 
     <GridView
@@ -53,7 +52,6 @@
             android:paddingRight="@dimen/dimen_20"
             android:layout_marginLeft="@dimen/font_size_20"
             android:layout_marginTop="@dimen/dimen_20"
-            android:text="点击您喜欢书所在的书柜，取出书后请及时关闭柜门，谢谢配合!"
             />
 
     </RelativeLayout>
