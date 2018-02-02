@@ -30,6 +30,7 @@ import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.MyApplication;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.util.ActivityManager;
+import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.DateUtils;
 import alpha.cyber.intelmain.util.DensityUtil;
 import alpha.cyber.intelmain.util.DialogUtil;
@@ -42,10 +43,8 @@ public abstract class BaseActivity  extends FragmentActivity {
 
     public static Activity instance;
     private String session;
-    public static final String formatter = "%s_%s_%s".replaceAll("_", "::");
     private String runningActivityName;
     public Context mContext;
-    protected DisplayMetrics metric;
     protected int screenWidth;
     protected int screenHeight;
 

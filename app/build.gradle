@@ -19,8 +19,13 @@ android {
 
         ndk {
             //根据需要 自行选择添加的对应cpu类型的.so库。
-            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a','x86', 'x86_64'
+            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
             // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
+
+//            manifestPlaceholders = [
+//                    XG_ACCESS_ID : "2100276680",
+//                    XG_ACCESS_KEY: "A3H2KIU7S76V"
+//            ]
         }
     }
 
@@ -151,8 +156,8 @@ android {
         nofficial {
             manifestPlaceholders = [APP_ENV       : "dev",
                                     CHANNEL_NAME  : "official",
-                                    XG_ACCESS_ID  : "2100276556",
-                                    XG_ACCESS_KEY : "A2748TUMC5QW",
+                                    XG_ACCESS_ID  : "2100276680",
+                                    XG_ACCESS_KEY : "A3H2KIU7S76V",
                                     TALKINGDATA_ID: "778917A8BF12475E948992A672F09BA2"]
         }
     }

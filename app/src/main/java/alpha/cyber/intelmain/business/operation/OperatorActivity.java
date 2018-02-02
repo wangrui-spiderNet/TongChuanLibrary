@@ -11,16 +11,18 @@ import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.business.borrowbook.BorrowBookActivity;
 import alpha.cyber.intelmain.business.borrowbook.BorrowDetailActivity;
+import alpha.cyber.intelmain.business.login.LoginActivity;
 import alpha.cyber.intelmain.business.search.SearchActivity;
 import alpha.cyber.intelmain.business.userinfo.UserInfoActivity;
 import alpha.cyber.intelmain.util.IntentUtils;
+import alpha.cyber.intelmain.widget.CustomConfirmDialog;
 import alpha.cyber.intelmain.widget.TitleTableView;
 
 /**
  * Created by wangrui on 2018/1/31.
  */
 
-public class OperatorActivity extends BaseActivity implements View.OnClickListener{
+public class OperatorActivity extends BaseActivity implements View.OnClickListener,CustomConfirmDialog.CustomDialogConfirmListener {
 
     private TextView tvName;
     private TextView tvCardNumber;
@@ -30,6 +32,8 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     private TextView tvSearchBook;
     private TextView tvReaderInfo;
     private LinearLayout layoutTable;
+
+    private CustomConfirmDialog confirmDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,11 +59,12 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         tvSearchBook.setOnClickListener(this);
         tvReaderInfo.setOnClickListener(this);
 
+        confirmDialog = new CustomConfirmDialog(this);
+
     }
 
     @Override
     protected void initComponent() {
-
 
         TitleTableView stv1=new TitleTableView(this,4);
         stv1.AddRow(new String[]{"已借图书"},true);
@@ -79,6 +84,8 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         super.onResume();
         btnRightButton.setText(R.string.exit_login);
         btnRightButton.setVisibility(View.VISIBLE);
+        btnRightButton.setOnClickListener(this);
+        confirmDialog.setConfirmListener(this);
     }
 
     @Override
@@ -95,7 +102,15 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
 
             IntentUtils.startAty(this, SearchActivity.class);
 
+        }else if(btnRightButton == v){
+            confirmDialog.setContent(getString(R.string.box_not_closed_exit));
+            confirmDialog.show();
         }
+    }
+
+    @Override
+    public void onButtonClick(View view) {
+        IntentUtils.startAty(this, LoginActivity.class);
     }
 
     @Override

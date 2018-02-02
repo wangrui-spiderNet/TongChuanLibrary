@@ -1,14 +1,20 @@
 package alpha.cyber.intelmain.business.login;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import alpha.cyber.intelmain.MyApplication;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
+import alpha.cyber.intelmain.util.FileUtils;
 import alpha.cyber.intelmain.util.IntentUtils;
+import alpha.cyber.intelmain.util.QRCodeUtils;
 import alpha.cyber.intelmain.util.StringUtils;
 
 /**
@@ -36,14 +42,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
         btnLoginByCard.setOnClickListener(this);
 
-        String qrcode_path="";
+        String qrcode_content="http://www.shuduier.com";
 
-        setQrCode(qrcode_path);
+        setQrCode(qrcode_content);
 
     }
 
-    private void setQrCode(String qrcode_path) {
-        if (StringUtils.isEmpty(qrcode_path)) {
+    private void setQrCode(String qrcode_content) {
+        if (StringUtils.isEmpty(qrcode_content)) {
             if (ivQrCode.isFocused()){
                 ivQrCode.setBackgroundResource(R.drawable.qr_code_choose);
             }else{
@@ -51,10 +57,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
             }
 
         } else {
-//            ivQrCode.setBackground(new BitmapDrawable(QRCodeUtil.generateQRCode(presenter.getLoginUrl(JiGuangUtils.getJiGuangRegId(mContext)), 100, 100)));
+
+            Bitmap logobitmap= BitmapFactory.decodeResource(getResources(),R.drawable.app_logo);
+            String filePath= FileUtils.getCacheQrImage(MyApplication.getInstance().getApplicationContext(),"qr.jpeg");
+            ivQrCode.setBackground(new BitmapDrawable(QRCodeUtils.generateQRCode(qrcode_content,200,200,logobitmap,filePath)));
         }
 
-//        ivQrCode.invalidate();
     }
 
     @Override

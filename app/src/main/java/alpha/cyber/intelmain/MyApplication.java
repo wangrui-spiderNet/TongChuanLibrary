@@ -44,6 +44,9 @@ public class MyApplication extends Application {
             }
         });
 
+        String token= XGPushConfig.getToken(this);
+        Log.e(Constant.TAG,"token:"+token);
+
     }
 
     public static MyApplication getInstance() {
