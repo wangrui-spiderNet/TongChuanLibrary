@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="100dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="个人信息："
+            android:textSize="@dimen/font_size_28"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_name"
+            style="@style/text_info_style"
+            android:layout_marginLeft="@dimen/dimen_130"
+            android:drawableLeft="@drawable/icon_name"
+            android:gravity="center"
+            android:text="姓名：张三" />
+
+        <TextView
+            android:id="@+id/tv_card_number"
+            style="@style/text_info_style"
+            android:layout_marginLeft="@dimen/dimen_130"
+            android:drawableLeft="@drawable/icon_card_code"
+            android:gravity="center"
+            android:text="卡号：6103459000000" />
+
+        <TextView
+            android:id="@+id/tv_permission"
+            style="@style/text_info_style"
+            android:layout_marginLeft="@dimen/dimen_130"
+            android:drawableLeft="@drawable/icon_permission"
+            android:gravity="center"
+            android:text="权限：可借4册，已借2册，剩余可借2册。" />
+
+        <LinearLayout
+            android:id="@+id/layout_table_borrowed"
+            android:layout_width="@dimen/table_width"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_overtime"
+            style="@style/text_info_style"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:text="逾期滞纳金2.5元，请尽快缴纳。" />
+
+        <TextView
+            android:id="@+id/tv_tips"
+            style="@style/text_info_style"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:text="@string/overtime_tips1" />
+
+        <TextView
+            android:id="@+id/tv_tips2"
+            style="@style/text_info_style"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="320dp"
+            android:text="@string/overtime_tips2" />
+
+    </LinearLayout>
+
+</ScrollView>

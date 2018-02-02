@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/tv_search"
+        android:text="@string/search"
+        style="@style/text_info_style"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dimen_30"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        >
+
+        <ImageView
+            android:id="@+id/iv_app_qr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/qr_code_left"
+            android:layout_margin="@dimen/dimen_30"
+            />
+
+        <ImageView
+            android:id="@+id/iv_public_qr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/qr_code_right"
+            android:layout_margin="@dimen/dimen_30"
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_tips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dimen_30"
+        android:textColor="@color/black"
+        android:textSize="@dimen/font_size_18"
+        android:gravity="center_horizontal"
+        android:text="提示：下载书堆儿APP或扫描二维码关注公众号即可查询"
+        />
+
+</LinearLayout>

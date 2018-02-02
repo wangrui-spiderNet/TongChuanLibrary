@@ -1,18 +1,19 @@
 package alpha.cyber.intelmain.business.operation;
 
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.business.borrowbook.BorrowBookActivity;
+import alpha.cyber.intelmain.business.borrowbook.BorrowDetailActivity;
+import alpha.cyber.intelmain.business.search.SearchActivity;
+import alpha.cyber.intelmain.business.userinfo.UserInfoActivity;
 import alpha.cyber.intelmain.util.IntentUtils;
-import alpha.cyber.intelmain.widget.SimpleTableView;
 import alpha.cyber.intelmain.widget.TitleTableView;
 
 /**
@@ -86,10 +87,13 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
             IntentUtils.startAty(this, BorrowBookActivity.class);
 
         }else if(tvBackBook == v){
-
+            IntentUtils.startAtyWithSingleParam(this, BorrowDetailActivity.class, Constant.BORROW_BACK,Constant.BACK_BOOK);
         }else if(tvReaderInfo == v){
 
+            IntentUtils.startAty(this, UserInfoActivity.class);
         }else if(tvSearchBook == v){
+
+            IntentUtils.startAty(this, SearchActivity.class);
 
         }
     }

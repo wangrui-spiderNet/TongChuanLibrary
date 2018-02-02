@@ -1,11 +1,13 @@
 package alpha.cyber.intelmain.business.borrowbook;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.widget.CustomConfirmDialog;
@@ -23,6 +25,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     private LinearLayout layoutTableBorrowed,layoutTableBack,layoutTableWillBorrow;
 
     private CustomConfirmDialog customDialog;
+    private int from;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,8 +43,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         layoutTableBack = findView(R.id.layout_table_back);
         layoutTableWillBorrow = findView(R.id.layout_table_will_borrow);
 
-        customDialog = new CustomConfirmDialog(this);
-        customDialog.setConfirmListener(this);
+
     }
 
     @Override
@@ -72,6 +74,17 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     protected void getIntentData() {
+        customDialog = new CustomConfirmDialog(this);
+        customDialog.setConfirmListener(this);
+        Intent intent=getIntent();
+        from = intent.getIntExtra(Constant.BORROW_BACK,0);
+
+        if(from==2){
+            customDialog.setContent("请将书按照书标向外放置并关闭柜门，谢谢您的配合！");
+            customDialog.setConfirmButtonText("确认");
+            customDialog.setCancelable(false);
+            customDialog.show();
+        }
 
     }
 
@@ -97,6 +110,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onButtonClick(View view) {
+
 
     }
 }

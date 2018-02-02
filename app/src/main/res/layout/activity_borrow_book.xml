@@ -52,6 +52,7 @@
             android:paddingRight="@dimen/dimen_20"
             android:layout_marginLeft="@dimen/font_size_20"
             android:layout_marginTop="@dimen/dimen_20"
+            android:text="@string/borrow_book_tips"
             />
 
     </RelativeLayout>
