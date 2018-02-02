@@ -16,6 +16,12 @@ android {
                 jniLibs.srcDirs = ['src/main/libs']
             }
         }
+
+        ndk {
+            //根据需要 自行选择添加的对应cpu类型的.so库。
+            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a','x86', 'x86_64'
+            // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
+        }
     }
 
     //正式环境
@@ -131,25 +137,30 @@ android {
         }
     }
 
-    productFlavors{
+    productFlavors {
         //正式环境
         official {
             manifestPlaceholders = [APP_ENV       : "release",
                                     CHANNEL_NAME  : "official",
-                                    TALKINGDATA_ID: "F169ABC85EF74D73B5A763392FB5539F"]
+                                    XG_ACCESS_ID  : "2100276556",
+                                    XG_ACCESS_KEY : "A2748TUMC5QW",
+                                    TALKINGDATA_ID: "778917A8BF12475E948992A672F09BA2"]
         }
 
         //开发环境
         nofficial {
             manifestPlaceholders = [APP_ENV       : "dev",
                                     CHANNEL_NAME  : "official",
-                                    TALKINGDATA_ID: "4C50A07C47AD462E84C60BD92BF1C521"]
+                                    XG_ACCESS_ID  : "2100276556",
+                                    XG_ACCESS_KEY : "A2748TUMC5QW",
+                                    TALKINGDATA_ID: "778917A8BF12475E948992A672F09BA2"]
         }
     }
 
 }
 
 def compileTime() {
+
     return new Date().format("yyyy_MM_dd", java.util.TimeZone.getTimeZone("GMT+8"))
 }
 
@@ -181,5 +192,11 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.1.0'
 
     compile 'com.google.zxing:core:3.3.0'
-    compile project(path:':banner')
+
+    //信鸽3.2.0 稳定版本
+    compile 'com.tencent.xinge:xinge:3.2.0-release'
+    compile 'com.tencent.wup:wup:1.0.0.E-release'
+    compile 'com.tencent.mid:mid:4.0.0-release'
+
+    compile project(path: ':banner')
 }

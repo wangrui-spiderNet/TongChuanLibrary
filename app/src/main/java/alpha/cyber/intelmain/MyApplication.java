@@ -2,7 +2,11 @@ package alpha.cyber.intelmain;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
+import com.tencent.android.tpush.XGIOperateCallback;
+import com.tencent.android.tpush.XGPushConfig;
+import com.tencent.android.tpush.XGPushManager;
 import com.tendcloud.tenddata.TCAgent;
 
 import alpha.cyber.intelmain.util.ActivityManager;
@@ -28,7 +32,17 @@ public class MyApplication extends Application {
 
         AppSharedPreference.getInstance();
 
-//        ImHelper.getInstance().init(appContext);
+        XGPushConfig.enableDebug(this,true);
+        XGPushManager.registerPush(this, new XGIOperateCallback() {
+            @Override
+            public void onSuccess(Object data, int flag) {
+                Log.e(Constant.TAG, "注册成功，设备token为：" + data);
+            }
+            @Override
+            public void onFail(Object data, int errCode, String msg) {
+                Log.e(Constant.TAG, "注册失败，错误码：" + errCode + ",错误信息：" + msg);
+            }
+        });
 
     }
 
