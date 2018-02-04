@@ -7,6 +7,15 @@ package alpha.cyber.intelmain.bean;
 public class BoxBean {
     private String name;
     private long boxnum;
+    private int open;
+
+    public int getOpen() {
+        return open;
+    }
+
+    public void setOpen(int open) {
+        this.open = open;
+    }
 
     public long getBoxnum() {
         return boxnum;

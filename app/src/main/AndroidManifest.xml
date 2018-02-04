@@ -65,7 +65,9 @@
         <activity android:name="alpha.cyber.intelmain.business.borrowbook.BorrowDetailActivity"></activity>
         <activity android:name="alpha.cyber.intelmain.business.search.SearchActivity"></activity>
         <activity android:name="alpha.cyber.intelmain.business.userinfo.UserInfoActivity"></activity>
-
+        <activity android:name="alpha.cyber.intelmain.business.manage.ManagerLoginActivity"></activity>
+        <activity android:name="alpha.cyber.intelmain.business.manage.ManagerOperatorActivity"></activity>
+        <activity android:name="alpha.cyber.intelmain.business.manage.ManagerOpenAllBoxesActivity"></activity>
         <activity
             android:name="alpha.cyber.intelmain.business.LockTestActivity"
             android:label="@string/lock_test"></activity>

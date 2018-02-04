@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerInParent="true"
+        >
+
+        <TextView
+            android:id="@+id/tv_open_box"
+            style="@style/manager_box_operator_style"
+            android:text="@string/open_box" />
+
+        <TextView
+            android:id="@+id/tv_refresh_box"
+            style="@style/manager_box_operator_style"
+            android:layout_alignParentRight="true"
+            android:text="@string/refresh_box" />
+
+        <TextView
+            android:id="@+id/tv_statistic_box"
+            style="@style/manager_box_operator_style"
+            android:layout_alignParentBottom="true"
+            android:text="@string/statistics" />
+
+        <TextView
+            android:id="@+id/tv_record_box"
+            style="@style/manager_box_operator_style"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:text="@string/record" />
+    </RelativeLayout>
+
+</RelativeLayout>

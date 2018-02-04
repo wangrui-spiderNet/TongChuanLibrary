@@ -29,11 +29,13 @@ import com.tendcloud.tenddata.TCAgent;
 import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.MyApplication;
 import alpha.cyber.intelmain.R;
+import alpha.cyber.intelmain.business.manage.ManagerLoginActivity;
 import alpha.cyber.intelmain.util.ActivityManager;
 import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.DateUtils;
 import alpha.cyber.intelmain.util.DensityUtil;
 import alpha.cyber.intelmain.util.DialogUtil;
+import alpha.cyber.intelmain.util.IntentUtils;
 
 
 /**
@@ -158,7 +160,7 @@ public abstract class BaseActivity  extends FragmentActivity {
                 if((time-temptime)<2000){
                     click_count=click_count+1;
                     if(click_count>=5){
-//                        IntentUtils.startAty(BaseActivity.this,);
+                        IntentUtils.startAty(BaseActivity.this, ManagerLoginActivity.class);
                         click_count=0;
                         Log.e(Constant.TAG,"连击5次");
                     }

@@ -53,6 +53,10 @@
     <string name="borrow_book_tips">点击您喜欢书所在的书柜，取出书后请及时关闭柜门，谢谢配合！</string>
     <string name="box_not_closed">您还有未关闭的柜门，请先关闭柜门，再按确定按钮。</string>
     <string name="box_not_closed_exit">您还有未关闭的柜门，请先关闭柜门，再退出登录。</string>
+    <string name="open_box">开柜门</string>
+    <string name="refresh_box">刷新</string>
+    <string name="statistics">统计</string>
+    <string name="record">记录</string>
 
 
 </resources>

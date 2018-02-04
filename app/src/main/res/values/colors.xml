@@ -71,4 +71,7 @@
 
     <color name="tab_unselect_color">#626262</color>
     <color name="tab_selected_color">#ec773f</color>
+
+    <color name="deep_red">#da3337</color>
+    <color name="closed_gray">#a0a0a0</color>
 </resources>
