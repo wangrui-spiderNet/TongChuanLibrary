@@ -204,17 +204,17 @@ public class TitleTableView extends TableLayout {//一个用于显示简易表�
 
         int titleHeight = 0;
 
-        for (int j = 0; j < tableRowList.size(); j++) {
+        for (int j = 0; j < tableRowList.size()-1; j++) {
 
             if ((boolean) tableRowList.get(j).getTag()) {//获取标题高度
                 titleHeight = tableRowList.get(j).getHeight();
             }
 
             if (!(boolean) tableRowList.get(j).getTag()) {
-                for (i = 0; i < viewList.get(j).size() - 1; i++) {//画纵线
-                    nCLinePosition += viewList.get(j).get(i).getWidth();
-                    canvas.drawLine(nCLinePosition, titleHeight, nCLinePosition, height, paint1);
-                }
+
+                nCLinePosition += viewList.get(j).get(i).getWidth();
+                canvas.drawLine(nCLinePosition, titleHeight, nCLinePosition, height, paint1);
+
             }
         }
     }
