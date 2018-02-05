@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_120"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="统计"
+        android:textSize="@dimen/font_size_30"
+        android:textColor="@color/black"
+        />
+    
+    <TextView
+        android:id="@+id/tv_statistics_record"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_20"
+        android:textColor="@color/orange"
+        android:text="本柜(0001号)中现有书88册"
+        android:textSize="@dimen/font_size_16"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        />
+
+</LinearLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tv_time"
+        style="@style/record_table_style"
+        />
+
+    <TextView
+        android:id="@+id/tv_out_count"
+        style="@style/record_table_style"
+        android:layout_marginLeft="-1dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_add_count"
+        style="@style/record_table_style"
+        android:layout_marginLeft="-1dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_sum"
+        style="@style/record_table_style"
+        android:layout_marginLeft="-1dp"
+        />
+
+</LinearLayout>

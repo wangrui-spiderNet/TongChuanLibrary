@@ -61,10 +61,11 @@ public class ManagerOperatorActivity extends BaseActivity implements View.OnClic
 
         }else if(v==tv_record_box){
 
+            IntentUtils.startAty(this,ManagerRecordActivity.class);
         }else if(v==tv_refresh_box){
 
         }else if(v==tv_statistic_box){
-
+            IntentUtils.startAty(this,ManagerStatisticsActivity.class);
         }
     }
 }

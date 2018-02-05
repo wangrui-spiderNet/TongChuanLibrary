@@ -68,6 +68,8 @@
         <activity android:name="alpha.cyber.intelmain.business.manage.ManagerLoginActivity"></activity>
         <activity android:name="alpha.cyber.intelmain.business.manage.ManagerOperatorActivity"></activity>
         <activity android:name="alpha.cyber.intelmain.business.manage.ManagerOpenAllBoxesActivity"></activity>
+        <activity android:name="alpha.cyber.intelmain.business.manage.ManagerRecordActivity"></activity>
+        <activity android:name="alpha.cyber.intelmain.business.manage.ManagerStatisticsActivity"></activity>
         <activity
             android:name="alpha.cyber.intelmain.business.LockTestActivity"
             android:label="@string/lock_test"></activity>

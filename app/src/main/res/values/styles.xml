@@ -435,4 +435,14 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="record_table_style">
+        <item name="android:layout_width">@dimen/record_table_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/rect_transparent_bg_shape</item>
+        <item name="android:paddingTop">@dimen/dimen_5</item>
+        <item name="android:paddingBottom">@dimen/dimen_5</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+
 </resources>

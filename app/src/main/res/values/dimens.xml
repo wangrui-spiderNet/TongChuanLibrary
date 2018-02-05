@@ -175,4 +175,5 @@
     <dimen name="head_height">130dp</dimen>
     <dimen name="logo_width">260dp</dimen>
     <dimen name="bottom_height">85dp</dimen>
+    <dimen name="record_table_width">200dp</dimen>
 </resources>

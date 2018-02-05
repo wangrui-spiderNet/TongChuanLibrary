@@ -58,6 +58,10 @@
     <string name="statistics">统计</string>
     <string name="record">记录</string>
     <string name="chinese_space">&#12288;</string>
+    <string name="time">时间</string>
+    <string name="carry_out">取出</string>
+    <string name="add">增加</string>
+    <string name="sum">总数</string>
 
 
 </resources>
