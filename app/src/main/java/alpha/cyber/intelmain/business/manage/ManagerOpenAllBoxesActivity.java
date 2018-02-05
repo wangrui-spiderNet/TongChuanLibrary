@@ -9,9 +9,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.bean.BoxBean;
+import alpha.cyber.intelmain.util.Log;
 
 /**
  * Created by wangrui on 2018/2/2.
@@ -48,6 +50,7 @@ public class ManagerOpenAllBoxesActivity extends BaseActivity  {
                 boxBean.setName("" + (i + 1));
             }
 
+            Log.e(Constant.TAG,"数字取余数:"+(i%2==0));
             if(i%2==0){
                 boxBean.setOpen(0);
             }else{
@@ -58,7 +61,7 @@ public class ManagerOpenAllBoxesActivity extends BaseActivity  {
         }
 
         mAdapter = new ManagerBoxesAdapter(this, boxBeans);
-
+        mAdapter.notifyDataSetChanged();
         gvBoxes.setAdapter(mAdapter);
 
     }

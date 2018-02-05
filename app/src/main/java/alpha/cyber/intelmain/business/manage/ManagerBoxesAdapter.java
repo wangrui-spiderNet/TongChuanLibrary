@@ -51,6 +51,8 @@ public class ManagerBoxesAdapter extends BaseAdapter {
             holder =(ViewHolder) convertView.getTag();
         }
 
+
+
         if(boxBeans.get(position).getOpen()==0){
 
             holder.tvBoxName.setBackgroundResource(R.drawable.rect_gray_bg_shape);
