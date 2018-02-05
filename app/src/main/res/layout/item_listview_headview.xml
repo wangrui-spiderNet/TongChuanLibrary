@@ -7,24 +7,28 @@
     <TextView
         android:id="@+id/tv_01"
         style="@style/record_table_style"
+        android:textColor="@color/my_orange"
         android:text="@string/time" />
 
     <TextView
         android:id="@+id/tv_02"
         style="@style/record_table_style"
         android:layout_marginLeft="-1dp"
+        android:textColor="@color/my_orange"
         android:text="@string/carry_out" />
 
     <TextView
         android:id="@+id/tv_03"
         style="@style/record_table_style"
         android:layout_marginLeft="-1dp"
+        android:textColor="@color/my_orange"
         android:text="@string/add" />
 
     <TextView
         android:id="@+id/tv_04"
         android:layout_marginLeft="-1dp"
         style="@style/record_table_style"
+        android:textColor="@color/my_orange"
         android:text="@string/sum" />
 
 </LinearLayout>

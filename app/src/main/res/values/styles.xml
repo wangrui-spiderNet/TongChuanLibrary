@@ -439,9 +439,10 @@
         <item name="android:layout_width">@dimen/record_table_width</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/rect_transparent_bg_shape</item>
-        <item name="android:paddingTop">@dimen/dimen_5</item>
-        <item name="android:paddingBottom">@dimen/dimen_5</item>
+        <item name="android:paddingTop">@dimen/dimen_10</item>
+        <item name="android:paddingBottom">@dimen/dimen_10</item>
         <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/font_size_22</item>
     </style>
 
 
