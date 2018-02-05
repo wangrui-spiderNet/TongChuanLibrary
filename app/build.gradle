@@ -29,7 +29,6 @@ android {
 
         }
     }
-
     //正式环境
     def API_RELEASE_HOST = '"http://imzhiliao.com:9000/"'
     //开发环境

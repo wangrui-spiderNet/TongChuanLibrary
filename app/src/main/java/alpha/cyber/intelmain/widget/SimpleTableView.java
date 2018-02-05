@@ -16,9 +16,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.R;
-import alpha.cyber.intelmain.util.Log;
 
 /**
  * Created by wangrui on 2018/1/31.
@@ -110,7 +108,7 @@ public class SimpleTableView extends TableLayout {//一个用于显示简易表�
         switch (classname) {
             case "class java.lang.String"://这个值是String.class.toString()的结果
 
-                TextView tView = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.view_textview,null);
+                TextView tView = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.view_table_view_cell,null);
                 tView.setText((String) obj);
                 rView = tView;
                 break;

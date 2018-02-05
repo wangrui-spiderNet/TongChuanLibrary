@@ -11,7 +11,7 @@ import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.widget.CustomConfirmDialog;
-import alpha.cyber.intelmain.widget.TitleTableView;
+import alpha.cyber.intelmain.widget.MyTableView;
 
 /**
  * Created by wangrui on 2018/2/1.
@@ -49,21 +49,21 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void initComponent() {
 
-        TitleTableView tableBorrowed=new TitleTableView(this,4);
+        MyTableView tableBorrowed=new MyTableView(this,4);
         tableBorrowed.AddRow(new String[]{"已借图书"},true);
         tableBorrowed.AddRow(new String[]{"书名","借阅时间","到期归还","逾期天数"},false);
         tableBorrowed.AddRow(new Object[]{"笑傲江湖","2018-1-23","2019-01-24","5"},false);
         tableBorrowed.AddRow(new Object[]{"射雕英雄传","2018-1-23","2019-01-24","5"},false);
         layoutTableBorrowed.addView(tableBorrowed);
 
-        TitleTableView tableBack=new TitleTableView(this,4);
+        MyTableView tableBack=new MyTableView(this,4);
         tableBack.AddRow(new String[]{"已还图书"},true);
         tableBack.AddRow(new String[]{"书名","还书时间","到期归还","逾期天数"},false);
         tableBack.AddRow(new Object[]{"倚天屠龙记","2018-1-23","2019-01-24","5"},false);
         tableBack.AddRow(new Object[]{"天龙八部","2018-1-23","2019-01-24","5"},false);
         layoutTableBack.addView(tableBack);
 
-        TitleTableView tableWillBorrow=new TitleTableView(this,4);
+        MyTableView tableWillBorrow=new MyTableView(this,4);
         tableWillBorrow.AddRow(new String[]{"本次借阅"},true);
         tableWillBorrow.AddRow(new String[]{"书名","借阅时间","到期归还","逾期天数"},false);
         tableWillBorrow.AddRow(new Object[]{"神雕侠侣","2018-1-23","2019-01-24","5"},false);

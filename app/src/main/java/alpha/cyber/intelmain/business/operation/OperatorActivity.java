@@ -16,7 +16,7 @@ import alpha.cyber.intelmain.business.search.SearchActivity;
 import alpha.cyber.intelmain.business.userinfo.UserInfoActivity;
 import alpha.cyber.intelmain.util.IntentUtils;
 import alpha.cyber.intelmain.widget.CustomConfirmDialog;
-import alpha.cyber.intelmain.widget.TitleTableView;
+import alpha.cyber.intelmain.widget.MyTableView;
 
 /**
  * Created by wangrui on 2018/1/31.
@@ -66,7 +66,7 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void initComponent() {
 
-        TitleTableView stv1=new TitleTableView(this,4);
+        MyTableView stv1=new MyTableView(this,4);
         stv1.AddRow(new String[]{"已借图书"},true);
         stv1.AddRow(new String[]{"书名","借阅时间","到期归还","逾期天数"},false);
         stv1.AddRow(new Object[]{"笑傲江湖","2018-1-23","2019-01-24","5"},false);

@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
+import alpha.cyber.intelmain.widget.MyTableView;
 
 public class MainActivity extends BaseActivity implements OnClickListener {
 
@@ -15,12 +17,15 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 	private Button mHfTest;
 	private Button mIDReaderTest;
 	private Button mKeyBoardTest;
+	private LinearLayout layout_container;
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
 	}
 
 	@Override
@@ -67,6 +72,8 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 		mIDReaderTest = (Button)findViewById(R.id.id_reader);
 		mKeyBoardTest = (Button)findViewById(R.id.key_board);
 
+		layout_container = findView(R.id.layout_container);
+
 		mLockTest.setOnClickListener(this);
 		mHfTest.setOnClickListener(this);
 		mIDReaderTest.setOnClickListener(this);
@@ -75,6 +82,18 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	protected void initComponent() {
+
+		MyTableView stv1=new MyTableView(this,4);
+		stv1.AddRow(new String[]{"已借图书"},true);
+		stv1.AddRow(new String[]{"书名","借阅时间","到期归还","逾期天数"},false);
+		stv1.AddRow(new Object[]{"笑傲江湖","2018-1-23","2019-01-24","5"},false);
+		stv1.AddRow(new Object[]{"射雕英雄传","2018-1-23","2019-01-24","5"},false);
+		stv1.AddRow(new Object[]{"倚天屠龙记","2018-1-23","2019-01-24","5"},false);
+		stv1.AddRow(new Object[]{"天龙八部","2018-1-23","2019-01-24","5"},false);
+		stv1.AddRow(new Object[]{"神雕侠侣","2018-1-23","2019-01-24","5"},false);
+		stv1.AddRow(new Object[]{"碧血剑","2018-1-23","2019-01-24","5"},false);
+
+		layout_container.addView(stv1);
 
 	}
 

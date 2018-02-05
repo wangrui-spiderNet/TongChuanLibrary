@@ -10,6 +10,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -17,15 +18,13 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.R;
-import alpha.cyber.intelmain.util.Log;
 
 /**
  * Created by wangrui on 2018/1/31.
  */
 
-public class TitleTableView extends TableLayout {//一个用于显示简易表格的VIEW
+public class MyTableView extends TableLayout {//一个用于显示简易表格的VIEW
 
     protected int columnN = 2;//列的数目。该值只能在构造函数中设置，设置之后不能修改。
 
@@ -36,11 +35,15 @@ public class TitleTableView extends TableLayout {//一个用于显示简易表�
     protected List<List<View>> viewList;
     private Paint paint1;
 
+    private final int ITEM_HEIGHT = 30;
+
+    private final int ITEM_WIDTH = 120;
+
     public int getColumnN() {
         return columnN;
     }
 
-    public TitleTableView(Context context) {
+    public MyTableView(Context context) {
         super(context);
         // TODO Auto-generated constructor stub
         tableRowList = new ArrayList<TableRow>();
@@ -49,7 +52,7 @@ public class TitleTableView extends TableLayout {//一个用于显示简易表�
         this.setWillNotDraw(false);
     }
 
-    public TitleTableView(Context context, int n) {//指定列的数目
+    public MyTableView(Context context, int n) {//指定列的数目
         super(context);
         // TODO Auto-generated constructor stub
         tableRowList = new ArrayList<TableRow>();
@@ -106,7 +109,7 @@ public class TitleTableView extends TableLayout {//一个用于显示简易表�
 
 //            Log.e(Constant.TAG,"添加标题");
             if (objects[0] != null) {
-                viewCell = CreateCellView(objects[0]);
+                viewCell = createCellView(objects[0],0,true);
             }
 
             if (viewCell == null) {
@@ -123,7 +126,7 @@ public class TitleTableView extends TableLayout {//一个用于显示简易表�
 //            Log.e(Constant.TAG,"添加表格");
             for (int i = 0; i < columnN; i++) {
                 if (objects[i] != null) {
-                    viewCell = CreateCellView(objects[i]);
+                    viewCell = createCellView(objects[i],i,false);
                 }
 
                 if (viewCell == null) {
@@ -155,16 +158,32 @@ public class TitleTableView extends TableLayout {//一个用于显示简易表�
         }
     }
 
-    protected View CreateCellView(Object obj) {
+    protected View createCellView(Object obj,int position,boolean istitle) {
         View rView = null;
         String classname = obj.getClass().toString();
 
         switch (classname) {
             case "class java.lang.String"://这个值是String.class.toString()的结果
 
-                TextView tView = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.view_textview, null);
-                tView.setText((String) obj);
-                rView = tView;
+                LinearLayout view = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.view_table_view_cell, null);
+                TextView tvCell = (TextView) view.findViewById(R.id.tv_cell);
+
+                StringBuilder bookName=new StringBuilder();
+                bookName.append(obj);
+
+                int round_count=10-obj.toString().length();
+
+                tvCell.setText(bookName);
+                if(round_count>0&&position==0&&!istitle){//只给书名做修饰
+                    for(int i=0;i<round_count;i++){
+                        tvCell.append(getContext().getResources().getString(R.string.chinese_space));
+                    }
+
+                }else {
+                    tvCell.setText(bookName);
+                }
+
+                rView = view;
                 break;
 
             case "class android.graphics.Bitmap":
@@ -182,6 +201,7 @@ public class TitleTableView extends TableLayout {//一个用于显示简易表�
         return rView;
     }
 
+    int titleHeight=0;
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -190,32 +210,41 @@ public class TitleTableView extends TableLayout {//一个用于显示简易表�
             return;
         }
 
-        int i, nRLinePosition = 0, nCLinePosition = 0, width = getWidth(), height = getHeight();
+        int nRLinePosition = 0, nCLinePosition = 0, width = getWidth(), height = getHeight();
         paint1.setStyle(Paint.Style.STROKE);
         paint1.setStrokeWidth(m_LineWidth);
         paint1.setColor(m_LineColor);
 
         canvas.drawRect(new Rect(1, 1, width, height - 1), paint1);
 
-        for (i = 0; i < tableRowList.size(); i++) {//划横线
+        for (int i = 0; i < tableRowList.size() - 1; i++) {//划横线
             nRLinePosition += tableRowList.get(0).getHeight();
+//            nRLinePosition += ITEM_HEIGHT;
             canvas.drawLine(0, nRLinePosition, width, nRLinePosition, paint1);
+
         }
 
-        int titleHeight = 0;
+//        for (int j = 0; j < tableRowList.size() - 1; j++) {//划竖线
+//            nCLinePosition += viewList.get(j).get(j).getWidth();
+////            nCLinePosition += ITEM_WIDTH;
+//            canvas.drawLine(nCLinePosition, ITEM_HEIGHT, nCLinePosition, height, paint1);
+//
+//        }
 
-        for (int j = 0; j < tableRowList.size()-1; j++) {
+
+        for (int j = 0; j < tableRowList.size(); j++) {
 
             if ((boolean) tableRowList.get(j).getTag()) {//获取标题高度
                 titleHeight = tableRowList.get(j).getHeight();
             }
 
             if (!(boolean) tableRowList.get(j).getTag()) {
-
-                nCLinePosition += viewList.get(j).get(i).getWidth();
-                canvas.drawLine(nCLinePosition, titleHeight, nCLinePosition, height, paint1);
-
+                for (int i = 0; i < viewList.get(j).size() - 1; i++) {//画纵线
+                    nCLinePosition += viewList.get(j).get(i).getWidth();
+                    canvas.drawLine(nCLinePosition, titleHeight, nCLinePosition, height, paint1);
+                }
             }
         }
+
     }
 }

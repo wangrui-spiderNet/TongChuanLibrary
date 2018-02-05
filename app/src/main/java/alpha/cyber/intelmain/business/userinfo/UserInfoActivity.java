@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
-import alpha.cyber.intelmain.widget.TitleTableView;
+import alpha.cyber.intelmain.widget.MyTableView;
 
 /**
  * Created by wangrui on 2018/2/2.
@@ -42,7 +42,7 @@ public class UserInfoActivity extends BaseActivity {
     @Override
     protected void initComponent() {
 
-        TitleTableView stv1=new TitleTableView(this,4);
+        MyTableView stv1=new MyTableView(this,4);
         stv1.AddRow(new String[]{"已借图书"},true);
         stv1.AddRow(new String[]{"书名","借阅时间","到期归还","逾期天数"},false);
         stv1.AddRow(new Object[]{"笑傲江湖","2018-1-23","2019-01-24","5"},false);

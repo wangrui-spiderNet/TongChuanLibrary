@@ -45,14 +45,14 @@ public class QRCodeUtils {
         Bitmap bitmap = Bitmap.createBitmap(w,h, Bitmap.Config.RGB_565);
         bitmap.setPixels(rawData,0,w,0,0,w,h);
 
-        try{
+//        try{
             if(null!=logoBitmap){
                 bitmap = addLogo(bitmap,logoBitmap);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 150, new FileOutputStream(filePath));
+//                bitmap.compress(Bitmap.CompressFormat.JPEG, 150, new FileOutputStream(filePath));
             }
-        }catch (FileNotFoundException e){
-            e.printStackTrace();
-        }
+//        }catch (FileNotFoundException e){
+//            e.printStackTrace();
+//        }
 
         return bitmap;
     }
