@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:paddingLeft="@dimen/dimen_15"
-    android:layout_height="@dimen/dimen_85">
+    android:layout_height="@dimen/bottom_height">
 
     <ImageView
         android:id="@+id/iv_qr"
@@ -10,16 +10,19 @@
         android:layout_height="wrap_content"
         android:src="@drawable/qr_bottom"
         android:layout_margin="@dimen/dimen_5"
+        android:layout_centerVertical="true"
         />
 
     <TextView
         android:id="@+id/tv_tech_service"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:layout_toRightOf="@+id/iv_qr"
         android:layout_marginTop="@dimen/dimen_15"
         android:layout_marginLeft="@dimen/dimen_5"
         android:textColor="@color/black"
+        android:textSize="@dimen/font_size_16"
         android:text="@string/service_tip" />
 
     <TextView
@@ -29,6 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/service_tel"
+        android:textSize="@dimen/font_size_16"
         android:textColor="@color/black"
         android:layout_marginLeft="@dimen/dimen_5"
         />
@@ -43,7 +47,7 @@
         android:textColor="@color/white"
         android:padding="0dp"
         android:layout_alignParentRight="true"
-        android:textSize="@dimen/font_size_20"
+        android:textSize="@dimen/font_size_23"
         />
 
 

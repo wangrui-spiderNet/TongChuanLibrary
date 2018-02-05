@@ -5,22 +5,25 @@
 
     <ImageView
         android:id="@+id/iv_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/logo_width"
+        android:layout_height="@dimen/head_height"
         android:src="@drawable/logo"
-        android:scaleType="centerInside"
+        android:scaleType="centerCrop"
+        android:layout_marginLeft="@dimen/dimen_10"
         />
 
     <TextView
         android:id="@+id/iv_back"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dimen_30"
+        android:layout_height="match_parent"
         android:drawableLeft="@drawable/icon_back"
         android:layout_alignParentRight="true"
         android:enabled="true"
+        android:layout_marginRight="@dimen/dimen_30"
         android:clickable="true"
         android:onClick="back"
+        android:textSize="@dimen/font_size_25"
+        android:gravity="center_vertical"
         android:text="@string/back"
         />
 
