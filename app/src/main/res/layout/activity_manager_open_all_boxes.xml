@@ -20,16 +20,16 @@
         android:id="@+id/gv_boxes"
         android:layout_width="@dimen/box_width"
         android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="center"
         android:cacheColorHint="@color/transparent"
         android:gravity="center"
         android:horizontalSpacing="0dp"
         android:verticalSpacing="0dp"
+        android:layout_marginTop="@dimen/dimen_100"
         android:listSelector="@color/transparent"
         android:numColumns="2"
-        android:layout_marginLeft="@dimen/dimen_50"
-        android:layout_marginTop="@dimen/dimen_30"
         android:scrollbars="none"
+        android:layout_marginLeft="@dimen/dimen_200"
         >
 
     </GridView>

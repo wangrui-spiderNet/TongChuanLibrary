@@ -30,6 +30,7 @@
             android:id="@+id/rg_tabs"
             android:layout_width="120dp"
             android:layout_height="match_parent"
+            android:paddingTop="@dimen/dimen_50"
             android:layout_gravity="center_vertical">
 
             <RadioButton

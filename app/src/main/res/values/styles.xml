@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -414,8 +415,8 @@
     </style>
 
     <style name="operator_style">
-        <item name="android:layout_width">@dimen/dimen_120</item>
-        <item name="android:layout_height">@dimen/dimen_120</item>
+        <item name="android:layout_width">@dimen/dimen_150</item>
+        <item name="android:layout_height">@dimen/dimen_150</item>
         <item name="android:layout_margin">@dimen/dimen_20</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/white</item>
