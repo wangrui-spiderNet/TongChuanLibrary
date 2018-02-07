@@ -64,8 +64,9 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         if(v==btnLogin){
-
             IntentUtils.startAty(this, OperatorActivity.class);
+            String requeststr = "6300120180206162150Y        AO|AA6101008880085324|AC|AD666666|BP00001|BQ00005AY0AZ";
+            new LoginPresenter(this).getUserInfo(requeststr);
         }
     }
 
