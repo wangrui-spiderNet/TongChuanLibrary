@@ -21,6 +21,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import alpha.cyber.intelmain.Constant;
+
 /**
  * 日期工具类
  */
@@ -29,6 +31,9 @@ public class DateUtils {
     private static final SimpleDateFormat DATE_FORMAT_DATE = new SimpleDateFormat("yyyy-MM-dd");
     private static final SimpleDateFormat DATE_FORMAT_SHORTDATE = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private static final SimpleDateFormat DATE_FORMAT_TIME = new SimpleDateFormat("HH:mm:ss");
+
+    private static final String time_format = "yyyyMMddHHmmss";
+
 
     private final static ThreadLocal<SimpleDateFormat> dateFormater = new ThreadLocal<SimpleDateFormat>() {
         @Override
@@ -209,6 +214,22 @@ public class DateUtils {
         SimpleDateFormat format = new SimpleDateFormat(strformat);
         return format.format(date);
     }
+
+    /**
+     * 按照格式获取系统时间
+     * @return
+     */
+    public static String getSystemTime(){
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat(time_format);
+
+
+        return format.format(date);
+    }
+
+//    public static void main(String [] strs){
+//        System.out.print("系统时间:"+getSystemTime());
+//    }
 
     /**
      * 获取当前日期是星期几<br>

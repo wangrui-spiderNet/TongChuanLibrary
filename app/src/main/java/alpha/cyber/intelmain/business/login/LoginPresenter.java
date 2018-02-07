@@ -8,15 +8,15 @@ import alpha.cyber.intelmain.http.socket.MyAsyncTask;
  * Created by wangrui on 2018/2/7.
  */
 
-public class LoginPresenter  {
+public class LoginPresenter {
 
     private Context context;
 
-    public LoginPresenter (Context context){
-        this.context=context;
+    public LoginPresenter(Context context) {
+        this.context = context;
     }
 
-    public void getUserInfo( String request) {
+    public void getUserInfo(String request) {
 
         new MyAsyncTask(new MyAsyncTask.OnSocketRequestListener() {
             @Override
@@ -41,7 +41,7 @@ public class LoginPresenter  {
         }).execute(request);
     }
 
-    public void getUserState(String request){
+    public void getUserState(String request) {
         new MyAsyncTask(new MyAsyncTask.OnSocketRequestListener() {
             @Override
             public void onStart() {
@@ -65,7 +65,29 @@ public class LoginPresenter  {
         }).execute(request);
     }
 
+    public void getBookInfo(String request) {
+        new MyAsyncTask(new MyAsyncTask.OnSocketRequestListener() {
+            @Override
+            public void onStart() {
 
+            }
+
+            @Override
+            public void onSuccess(String result) {
+
+            }
+
+            @Override
+            public void onFail(String errorMessage) {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        }).execute(request);
+    }
 
 
 }
