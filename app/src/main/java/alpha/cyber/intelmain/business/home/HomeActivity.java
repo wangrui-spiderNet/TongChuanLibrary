@@ -156,34 +156,32 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
         String time1 = time.substring(0, 8);
         String time2 = time.substring(8, time.length());
-//        Log.e(Constant.TAG, "time:" + time);
-//        读者信息
-//        String userinfo_request = getResources().getString(R.string.userinfo_request);
-//        String userinfo_format = String.format(userinfo_request,time,cardnum,pwd);
-//        presenter.getUserInfo(userinfo_format);
-//        读者状态信息
-//        String userstate_request = getResources().getString(R.string.userstate_request);
-//        String userstate_format = String.format(userstate_request, time1, time2,"", cardnum, pwd);
-//        presenter.getUserState(userstate_format);
-//        书籍信息
-//        String bookinfo_request=getResources().getString(R.string.bookinfo_request);
-//        String bookinfo_format = String.format(bookinfo_request,time,book_code);
-//        presenter.getBookInfo(bookinfo_format);
+        Log.e(Constant.TAG, "time:" + time);
+
+        //读者状态信息
+        String userstate_request = getResources().getString(R.string.userstate_request);
+        String userstate_format = String.format(userstate_request, time1, time2,"", cardnum, pwd);
+        presenter.getUserState(userstate_format);
+        //读者信息
+        String userinfo_request = getResources().getString(R.string.userinfo_request);
+        String userinfo_format = String.format(userinfo_request,time,cardnum,pwd);
+        presenter.getUserInfo(userinfo_format);
+        //书籍信息
+        String bookinfo_request=getResources().getString(R.string.bookinfo_request);
+        String bookinfo_format = String.format(bookinfo_request,time,book_code);
+        presenter.getBookInfo(bookinfo_format);
 
         //借书
-        String borrow_book = "11YN20180207    16532120180207    165321AO|AA6101008880085324|AB00834463|AC|AY3AZ";
         String borrow_book_request =getResources().getString(R.string.borrowbook_reuqest);
         String borrow_book_format = String.format(borrow_book_request,time1,time2,time1,time2,cardnum,book_code);
         presenter.borrowBook(borrow_book_format);
 
         //续借
-        String continue_borrow = "29YN20180207    16532120180207    165321AO|AA666666|AB00834463|AC|AY3AZ";
         String continue_borrow_request = getResources().getString(R.string.re_borrow_book_request);
         String continue_borrow_format = String.format(continue_borrow_request,time1,time2,time1,time2,pwd,book_code);
         presenter.continueBorrowBook(continue_borrow_format);
 
         //还书
-        String back_book = "09N20180207    170405                AP|AO|AB00834463|AC|BIN|AY1AZ";
         String back_book_request = getResources().getString(R.string.back_book_request);
         String back_book_format = String.format(back_book_request,time1,time2,book_code);
         presenter.backBook(back_book_format);

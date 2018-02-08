@@ -79,12 +79,12 @@
     <!--获取用户状态-->
     <!--23001（系统时间18个字符 年月日四个空格小时分钟秒）AO（图书馆ID）|AA（读者证号）|AC|AD|AY0AZ（最后四位用前面所有的字符的sum和然后取最后四个字节取补码-->
     <!--2300120180206    162150AO|AA6101008880085324|AC|AD666666|AY2AZ-->
-    <string name="userstate_request">23001%1$s&#160;&#160;&#160;&#160;%2$sAO%3$s|AA%4$s|AC|AD%5$s|AY0AZ</string>
+    <string name="userstate_request">23001%1$s&#160;&#160;&#160;&#160;%2$sAO%3$s|AA%4$s|AC|AD%5$s|AY9AZ</string>
 
     <!--获取用户信息-->
     <!--63001+18位时间+Y（8个空格）AO|AA6101008880085324|AC|AD666666|BP00001|BQ00005AY0AZ（校验码）-->
     <!--6300120180206162150Y        AO|AA6101008880085324|AC|AD666666|BP00001|BQ00005AY0AZ-->
-    <string name="userinfo_request">63001%1$sY&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;AO|AA%2$s|AC|AD%3$s|BP00001|BQ00005AY0AZ</string>
+    <string name="userinfo_request">63001%1$sY&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;AO|AA%2$s|AC|AD%3$s|BP00001|BQ00005AY9AZ</string>
 
     <!--根据书籍码，获取书籍信息-->
     <!--17001（18位时间）AO|AB00834463|AY0AZ（检验码）-->
@@ -93,16 +93,14 @@
 
     <!--借书-->
     <!--11YN20180207    16532120180207    165321AO|AA6101008880085324|AB00834463|AC|AY3AZ-->
-    <string
-        name="borrowbook_reuqest">11YN%1$s&#160;&#160;&#160;&#160;%2$s%3$s&#160;&#160;&#160;&#160;%4$sAO|AA%5$s|AB%6$s|AC|AY0AZ</string>
+    <string name="borrowbook_reuqest">11YN%1$s&#160;&#160;&#160;&#160;%2$s%3$s&#160;&#160;&#160;&#160;%4$sAO|AA%5$s|AB%6$s|AC|AY9AZ</string>
 
     <!--还书-->
     <!--09N20180207    170405                AP|AO|AB00834463|AC|BIN|AY1AZ-->
-    <string name="back_book_request">09N%1$s&#160;&#160;&#160;&#160;%2$s&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;AP|AO|AB%3$s|AC|BIN|AY1AZ</string>
+    <string name="back_book_request">09N%1$s&#160;&#160;&#160;&#160;%2$s&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;AP|AO|AB%3$s|AC|BIN|AY9AZ</string>
 
     <!--续借-->
     <!--29YN20180207    16532120180207    165321AO|AA666666|AB00834463|AC|AY3AZ-->
-    <string
-        name="re_borrow_book_request">29YN%1$s&#160;&#160;&#160;&#160;%2$s%3$s&#160;&#160;&#160;&#160;%4$sAO|AA%5$s|AB%6$s|AC|AY3AZ</string>
+    <string name="re_borrow_book_request">29YN%1$s&#160;&#160;&#160;&#160;%2$s%3$s&#160;&#160;&#160;&#160;%4$sAO|AA%5$s|AB%6$s|AC|AY9AZ</string>
 
 </resources>
