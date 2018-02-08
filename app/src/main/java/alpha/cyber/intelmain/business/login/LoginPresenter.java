@@ -89,5 +89,80 @@ public class LoginPresenter {
         }).execute(request);
     }
 
+    public void borrowBook(String request) {
+        new MyAsyncTask(new MyAsyncTask.OnSocketRequestListener() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onSuccess(String result) {
+
+            }
+
+            @Override
+            public void onFail(String errorMessage) {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        }).execute(request);
+    }
+
+    public void backBook(String request) {
+        new MyAsyncTask(new MyAsyncTask.OnSocketRequestListener() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onSuccess(String result) {
+
+            }
+
+            @Override
+            public void onFail(String errorMessage) {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        }).execute(request);
+    }
+
+
+    public void continueBorrowBook(String request) {
+        new MyAsyncTask(new MyAsyncTask.OnSocketRequestListener() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onSuccess(String result) {
+
+            }
+
+            @Override
+            public void onFail(String errorMessage) {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        }).execute(request);
+    }
+
+
+
 
 }

@@ -202,6 +202,5 @@ dependencies {
     compile 'com.tencent.xinge:xinge:3.2.0-release'
     compile 'com.tencent.wup:wup:1.0.0.E-release'
     compile 'com.tencent.mid:mid:4.0.0-release'
-
     compile project(path: ':banner')
 }

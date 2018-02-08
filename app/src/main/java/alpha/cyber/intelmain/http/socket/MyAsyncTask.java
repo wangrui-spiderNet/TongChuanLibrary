@@ -55,7 +55,6 @@ public class MyAsyncTask extends AsyncTask<String,Integer,String> {
 
             String info = null;
             while ((info = br.readLine()) != null) {
-                Log.e(Constant.TAG, "返回:" + info);
 
                 result = info;
             }
@@ -80,8 +79,6 @@ public class MyAsyncTask extends AsyncTask<String,Integer,String> {
         return result;
     }
 
-
-
     @Override
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
@@ -90,8 +87,9 @@ public class MyAsyncTask extends AsyncTask<String,Integer,String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        Log.e(Constant.TAG,"返回结果:"+s);
+        Log.e(Constant.TAG,"返回:"+s);
         requestListener.onSuccess(s);
+
     }
 
     private String calculateEndFour(String str) {
