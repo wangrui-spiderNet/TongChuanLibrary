@@ -181,5 +181,6 @@
     <dimen name="home_page_tab_width">190dp</dimen>
     <dimen name="manager_tow_boxes_width">480dp</dimen>
     <dimen name="sure_btn_size">150dp</dimen>
+    <dimen name="qr_size">260dp</dimen>
 
 </resources>

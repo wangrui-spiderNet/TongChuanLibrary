@@ -389,7 +389,7 @@
     </style>
 
     <style name="text_info_style">
-        <item name="android:textSize">@dimen/font_size_20</item>
+        <item name="android:textSize">@dimen/font_size_22</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">@dimen/dimen_5</item>
@@ -397,7 +397,7 @@
     </style>
 
     <style name="table_info_style">
-        <item name="android:textSize">@dimen/font_size_15</item>
+        <item name="android:textSize">@dimen/font_size_18</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:padding">@dimen/dimen_5</item>

@@ -60,7 +60,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
             Bitmap logobitmap= BitmapFactory.decodeResource(getResources(),R.drawable.app_logo);
             String filePath= FileUtils.getCacheQrImage(MyApplication.getInstance().getApplicationContext(),"qr.jpeg");
-            ivQrCode.setBackground(new BitmapDrawable(QRCodeUtils.generateQRCode(qrcode_content,200,200,logobitmap,filePath)));
+            ivQrCode.setBackground(new BitmapDrawable(QRCodeUtils.generateQRCode(qrcode_content,300,300,logobitmap,filePath)));
         }
 
     }

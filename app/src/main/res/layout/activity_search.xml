@@ -23,16 +23,16 @@
 
         <ImageView
             android:id="@+id/iv_app_qr"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/qr_size"
+            android:layout_height="@dimen/qr_size"
             android:src="@drawable/qr_code_left"
             android:layout_margin="@dimen/dimen_30"
             />
 
         <ImageView
             android:id="@+id/iv_public_qr"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/qr_size"
+            android:layout_height="@dimen/qr_size"
             android:src="@drawable/qr_code_right"
             android:layout_margin="@dimen/dimen_30"
             />
@@ -46,7 +46,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/dimen_30"
         android:textColor="@color/black"
-        android:textSize="@dimen/font_size_18"
+        android:textSize="@dimen/font_size_22"
         android:gravity="center_horizontal"
         android:text="提示：下载书堆儿APP或扫描二维码关注公众号即可查询"
         />
