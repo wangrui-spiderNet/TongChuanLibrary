@@ -70,10 +70,10 @@
         <activity android:name="alpha.cyber.intelmain.business.manage.ManagerStatisticsActivity"></activity>
         <activity
             android:name="alpha.cyber.intelmain.business.LockTestActivity"
-            android:label="@string/lock_test"></activity>
+            ></activity>
         <activity
             android:name="alpha.cyber.intelmain.business.RifIdTestActivity"
-            android:label="@string/rifid_test"></activity>
+            ></activity>
         <activity
             android:name="alpha.cyber.intelmain.business.InventoryParaActivity"
             android:label="@string/inventory_para_set"></activity>

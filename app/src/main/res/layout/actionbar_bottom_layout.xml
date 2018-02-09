@@ -6,11 +6,11 @@
 
     <ImageView
         android:id="@+id/iv_qr"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/bottom_height"
+        android:layout_height="@dimen/bottom_height"
         android:src="@drawable/qr_bottom"
-        android:layout_margin="@dimen/dimen_5"
         android:layout_centerVertical="true"
+        android:layout_marginBottom="@dimen/dimen_5"
         />
 
     <TextView
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:layout_toRightOf="@+id/iv_qr"
-        android:layout_marginTop="@dimen/dimen_15"
+        android:layout_marginTop="@dimen/dimen_20"
         android:layout_marginLeft="@dimen/dimen_5"
         android:textColor="@color/black"
         android:textSize="@dimen/font_size_16"

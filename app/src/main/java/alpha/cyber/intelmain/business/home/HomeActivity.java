@@ -13,12 +13,6 @@ import com.youth.banner.BannerConfig;
 import com.youth.banner.loader.GlideImageLoaderImpl;
 import com.youth.banner.transformer.DefaultTransformer;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +22,6 @@ import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.business.login.LoginActivity;
 import alpha.cyber.intelmain.business.login.LoginPresenter;
-import alpha.cyber.intelmain.http.socket.SocketInstance;
 import alpha.cyber.intelmain.util.DateUtils;
 import alpha.cyber.intelmain.util.IntentUtils;
 
@@ -142,7 +135,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         if (v == btnRightButton) {
             IntentUtils.startAty(this, LoginActivity.class);
 
-            getUserInfo();
+            requestTest();
         }
     }
 
@@ -150,7 +143,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     private String pwd = "666666";
     private String book_code = "00834463";
 
-    private void getUserInfo() {
+    private void requestTest() {
 
         String time = DateUtils.getSystemTime();
 
