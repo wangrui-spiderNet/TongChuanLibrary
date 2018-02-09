@@ -35,10 +35,6 @@ public class MyTableView extends TableLayout {//一个用于显示简易表格�
     protected List<List<View>> viewList;
     private Paint paint1;
 
-    private final int ITEM_HEIGHT = 30;
-
-    private final int ITEM_WIDTH = 120;
-
     public int getColumnN() {
         return columnN;
     }
@@ -219,17 +215,9 @@ public class MyTableView extends TableLayout {//一个用于显示简易表格�
 
         for (int i = 0; i < tableRowList.size() - 1; i++) {//划横线
             nRLinePosition += tableRowList.get(0).getHeight();
-//            nRLinePosition += ITEM_HEIGHT;
             canvas.drawLine(0, nRLinePosition, width, nRLinePosition, paint1);
 
         }
-
-//        for (int j = 0; j < tableRowList.size() - 1; j++) {//划竖线
-//            nCLinePosition += viewList.get(j).get(j).getWidth();
-////            nCLinePosition += ITEM_WIDTH;
-//            canvas.drawLine(nCLinePosition, ITEM_HEIGHT, nCLinePosition, height, paint1);
-//
-//        }
 
 
         for (int j = 0; j < tableRowList.size(); j++) {

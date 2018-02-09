@@ -163,7 +163,7 @@
     <!-- 录音对话框大小 -->
     <dimen name="record_audio_dialog_size">145dp</dimen>
     <dimen name="folder_cover_size">72dp</dimen>
-    <dimen name="table_width">430dp</dimen>
+    <dimen name="table_width">470dp</dimen>
     <dimen name="cell_width">100dp</dimen>
     <dimen name="cell_height">80dp</dimen>
 
