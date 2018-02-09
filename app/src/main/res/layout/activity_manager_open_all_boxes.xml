@@ -12,24 +12,22 @@
         android:text="@string/borrow_book"
         android:gravity="center"
         android:layout_margin="@dimen/dimen_150"
-        android:textSize="@dimen/font_size_20"
+        android:textSize="@dimen/font_size_25"
         />
-
 
     <GridView
         android:id="@+id/gv_boxes"
-        android:layout_width="@dimen/box_width"
+        android:layout_width="@dimen/manager_tow_boxes_width"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:cacheColorHint="@color/transparent"
         android:gravity="center"
         android:horizontalSpacing="0dp"
         android:verticalSpacing="0dp"
-        android:layout_marginTop="@dimen/dimen_100"
         android:listSelector="@color/transparent"
         android:numColumns="2"
         android:scrollbars="none"
-        android:layout_marginLeft="@dimen/dimen_200"
+        android:layout_marginLeft="@dimen/dimen_130"
         >
 
     </GridView>

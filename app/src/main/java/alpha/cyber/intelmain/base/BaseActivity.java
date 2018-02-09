@@ -78,7 +78,6 @@ public abstract class BaseActivity  extends FragmentActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams. FLAG_FULLSCREEN , WindowManager.LayoutParams. FLAG_FULLSCREEN);
 
-        int sdkInt = Build.VERSION.SDK_INT;
         instance = this;
 
         // api15 以上打开硬件加速
@@ -233,7 +232,6 @@ public abstract class BaseActivity  extends FragmentActivity {
         return;
     }
 
-
     /**
      * 异步查询网络数据，子类根据需要自行重写
      */
@@ -295,7 +293,6 @@ public abstract class BaseActivity  extends FragmentActivity {
             int left = l[0], top = l[1], bottom = top + v.getHeight(), /*right = left + v.getWidth();*/ right =screenWidth;
             return !(event.getX() > left && event.getX() < right && event.getY() > top && event.getY() < bottom);
         }
-        // 如果焦点不是EditText则忽略，这个发生在视图刚绘制完，第一个焦点不在EditView上，和用户用轨迹球选择其他的焦点
         return false;
     }
 

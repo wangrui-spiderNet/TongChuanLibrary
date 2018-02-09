@@ -46,6 +46,12 @@ public class ManagerLoginActivity extends BaseActivity implements View.OnClickLi
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        btnRightButton.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
     public void onClick(View v) {
         if(v==btn_login){
 

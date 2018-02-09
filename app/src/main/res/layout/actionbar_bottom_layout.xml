@@ -39,10 +39,10 @@
 
     <Button
         android:id="@+id/btn_right_bottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/sure_btn_size"
+        android:layout_height="match_parent"
         android:background="@drawable/icon_sure"
-        android:layout_margin="@dimen/dimen_15"
+        android:layout_margin="@dimen/dimen_5"
         android:text="@string/login"
         android:textColor="@color/white"
         android:padding="0dp"

@@ -39,9 +39,8 @@ public class MyAsyncTask extends AsyncTask<String,Integer,String> {
 
             OutputStream os = socket.getOutputStream();//字节输出流
             PrintWriter pw = new PrintWriter(os);//将输出流包装成打印流
-
+            socket.setSoTimeout(SocketConstants.TIME_OUT);
             String request=requeststr[0];
-//            String requeststr = "1700120180207105620AO|AB00834463|AY0A";
             request = request + calculateEndFour(request);
             Log.e(Constant.TAG, "请求：" + request);
             pw.write(request);

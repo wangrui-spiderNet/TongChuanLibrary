@@ -6,28 +6,31 @@
 
     <TextView
         style="@style/titleTextStyle"
-        android:text="管理员登录" />
+        android:text="@string/admin_login" />
 
     <EditText
         android:id="@+id/et_pwd"
-        android:layout_width="@dimen/dimen_200"
-        android:layout_height="@dimen/dimen_30"
+        android:layout_width="@dimen/dimen_300"
+        android:layout_height="@dimen/dimen_40"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/dimen_30"
         android:paddingLeft="@dimen/dimen_3"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/font_size_25"
         android:drawableLeft="@drawable/icon_pwd"
         android:background="@drawable/corner_strock_bg" />
 
     <Button
         android:id="@+id/btn_login"
         android:layout_width="@dimen/dimen_200"
-        android:layout_height="@dimen/dimen_60"
+        android:layout_height="@dimen/dimen_80"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/dimen_40"
         android:background="@drawable/icon_sure"
         android:gravity="center"
         android:padding="0dp"
         android:text="@string/login"
+        android:textSize="@dimen/font_size_25"
         android:textColor="@color/white" />
 
 </LinearLayout>

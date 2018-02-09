@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/dimen_80"
+    android:paddingLeft="@dimen/dimen_70"
     android:paddingTop="@dimen/dimen_50"
     android:orientation="horizontal">
 
@@ -11,29 +11,26 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:layout_marginLeft="@dimen/dimen_30"
         android:layout_marginTop="@dimen/dimen_30"
+        android:paddingLeft="@dimen/dimen_50"
         >
 
         <TextView
             android:id="@+id/tv_name"
             style="@style/text_info_style"
             android:text="姓名:张三"
-            android:layout_marginLeft="@dimen/dimen_50"
             />
 
         <TextView
             android:id="@+id/tv_card_number"
             style="@style/text_info_style"
             android:text="卡号:61000032320000320"
-            android:layout_marginLeft="@dimen/dimen_50"
             />
 
         <TextView
             android:id="@+id/tv_permission"
             style="@style/text_info_style"
             android:text="权限:可借4册，已借2册，剩余可借2册。"
-            android:layout_marginLeft="@dimen/dimen_50"
             android:textColor="@color/colorRed"
             />
 
@@ -55,7 +52,6 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:paddingTop="@dimen/dimen_50"
-        android:paddingLeft="@dimen/dimen_30"
         >
 
         <TextView

@@ -4,8 +4,8 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="@dimen/manager_box_size"
+        android:layout_height="@dimen/manager_box_size"
         android:layout_centerInParent="true"
         >
 

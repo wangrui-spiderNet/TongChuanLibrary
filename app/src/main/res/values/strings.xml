@@ -102,5 +102,6 @@
     <!--续借-->
     <!--29YN20180207    16532120180207    165321AO|AA666666|AB00834463|AC|AY3AZ-->
     <string name="re_borrow_book_request">29YN%1$s&#160;&#160;&#160;&#160;%2$s%3$s&#160;&#160;&#160;&#160;%4$sAO|AA%5$s|AB%6$s|AC|AY9AZ</string>
+    <string name="admin_login">管理员登录</string>
 
 </resources>
