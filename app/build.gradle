@@ -30,11 +30,9 @@ android {
         }
     }
     //正式环境
-    def API_RELEASE_HOST = '"http://imzhiliao.com:9000/"'
+    def API_RELEASE_HOST = '"http://opac.shuduier.com"'
     //开发环境
-    def API_DEV_HOST = '"http://dev.imzhiliao.com/"'
-    //测试环境
-    def API_TEST_HOST = '"http://test.imzhiliao.com/"'
+    def API_DEV_HOST = '"http://opac.shuduier.com"'
 
     //签名
     signingConfigs {
@@ -84,27 +82,6 @@ android {
                             outputFile.name.endsWith('dev.apk')) {
                         def fileName =
                                 "tongchuan_dev_${defaultConfig.versionName}_${compileTime()}.apk"
-                        output.outputFile = new File(outputFile.parent, fileName)
-                    }
-                }
-            }
-        }
-
-        qa {
-            buildConfigField('boolean', 'PRINT_LOG', 'true')
-            buildConfigField('String', 'API_HOST', "${API_TEST_HOST}")
-            signingConfig signingConfigs.myConfig
-            minifyEnabled false
-            // 混淆文件的位置
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            //apk重命名
-            applicationVariants.all { variant ->
-                variant.outputs.each { output ->
-                    def outputFile = output.outputFile
-                    if (outputFile != null &&
-                            outputFile.name.endsWith('qa.apk')) {
-                        def fileName =
-                                "tongchuan_qa_${defaultConfig.versionName}_${compileTime()}.apk"
                         output.outputFile = new File(outputFile.parent, fileName)
                     }
                 }

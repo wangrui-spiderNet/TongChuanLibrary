@@ -69,12 +69,12 @@ class GsonResponseBodyConverter<T> implements Converter<ResponseBody, T> {
         String response = value.string();
         try {
             Result result = mGson.fromJson(response, Result.class);
-            AppSharedPreference.getInstance().setServerTimeStamp(result.getTs());
-            if (result.isSuccess()) {
-                return mGson.fromJson(mGson.toJson(result.getBizData()), mType);
-            } else {
-                throw new BusinessException(result.getRtnCode(), result.getMsg());
-            }
+//            AppSharedPreference.getInstance().setServerTimeStamp(result.getTs());
+//            if (result.isSuccess()) {
+                return mGson.fromJson(mGson.toJson(result.getData()), mType);
+//            } else {
+//                throw new BusinessException(result.getRtnCode(), result.getMsg());
+//            }
         } catch (BusinessException e) {
             throw e;
         } catch (Exception e) {
