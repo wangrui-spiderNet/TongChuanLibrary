@@ -1,7 +1,9 @@
 package alpha.cyber.intelmain.business.operation;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,6 +16,7 @@ import alpha.cyber.intelmain.business.borrowbook.BorrowDetailActivity;
 import alpha.cyber.intelmain.business.login.LoginActivity;
 import alpha.cyber.intelmain.business.search.SearchActivity;
 import alpha.cyber.intelmain.business.userinfo.UserInfoActivity;
+import alpha.cyber.intelmain.util.DateUtils;
 import alpha.cyber.intelmain.util.IntentUtils;
 import alpha.cyber.intelmain.widget.CustomConfirmDialog;
 import alpha.cyber.intelmain.widget.MyTableView;
@@ -22,7 +25,7 @@ import alpha.cyber.intelmain.widget.MyTableView;
  * Created by wangrui on 2018/1/31.
  */
 
-public class OperatorActivity extends BaseActivity implements View.OnClickListener,CustomConfirmDialog.CustomDialogConfirmListener {
+public class OperatorActivity extends BaseActivity implements View.OnClickListener,CustomConfirmDialog.CustomDialogConfirmListener ,IUserView{
 
     private TextView tvName;
     private TextView tvCardNumber;
@@ -34,6 +37,7 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     private LinearLayout layoutTable;
 
     private CustomConfirmDialog confirmDialog;
+    private OperatorPresenter presenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,6 +64,8 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         tvReaderInfo.setOnClickListener(this);
 
         confirmDialog = new CustomConfirmDialog(this);
+
+
 
     }
 
@@ -114,7 +120,40 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     }
 
     @Override
+    public void getUserInfo(UserInfoBean userinfoBean) {
+
+        tvName.setText("姓名："+userinfoBean.getName());
+        tvCardNumber.setText("卡号："+userinfoBean.getCardnum());
+        tvPermission.setText("权限：最多可借"+userinfoBean.getMaxcount()+"册,已借"+userinfoBean.getBorrowcount()+"册");
+    }
+
+    @Override
     protected void getIntentData() {
 
+        presenter = new OperatorPresenter(this,this);
+        Intent intent=getIntent();
+
+        String cardnum = intent.getStringExtra(Constant.ACCOUNT);
+        String pwd = intent.getStringExtra(Constant.PASSWORD);
+
+        String time = DateUtils.getSystemTime();
+
+        String time1 = time.substring(0, 8);
+        String time2 = time.substring(8, time.length());
+        Log.e(Constant.TAG, "time:" + time);
+
+        //读者状态信息
+//        String userstate_request = getResources().getString(R.string.userstate_request);
+//        String userstate_format = String.format(userstate_request, time1, time2,"", cardnum, pwd);
+//        presenter.getUserState(userstate_format);
+
+
+        Log.e(Constant.TAG,cardnum);
+        Log.e(Constant.TAG,pwd);
+
+        //读者信息
+        String userinfo_request = getResources().getString(R.string.userinfo_request);
+        String userinfo_format = String.format(userinfo_request,time,cardnum,pwd);
+        presenter.getUserInfo(userinfo_format);
     }
 }

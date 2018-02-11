@@ -22,6 +22,7 @@ import alpha.cyber.intelmain.MyApplication;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.bean.HomeNewsBean;
+import alpha.cyber.intelmain.business.login.InPutPwdActivity;
 import alpha.cyber.intelmain.business.login.LoginActivity;
 import alpha.cyber.intelmain.business.login.LoginPresenter;
 import alpha.cyber.intelmain.util.DateUtils;
@@ -143,8 +144,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener ,
     @Override
     public void onClick(View v) {
         if (v == btnRightButton) {
-            IntentUtils.startAty(this, LoginActivity.class);
-
+            IntentUtils.startAty(this, InPutPwdActivity.class);
             requestTest();
         }
     }
@@ -155,13 +155,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener ,
 
     private void requestTest() {
 
-//        String time = DateUtils.getSystemTime();
-//
-//        String time1 = time.substring(0, 8);
-//        String time2 = time.substring(8, time.length());
-//        Log.e(Constant.TAG, "time:" + time);
-//
-//        //读者状态信息
+        String time = DateUtils.getSystemTime();
+
+        String time1 = time.substring(0, 8);
+        String time2 = time.substring(8, time.length());
+        Log.e(Constant.TAG, "time:" + time);
+
+        //读者状态信息
 //        String userstate_request = getResources().getString(R.string.userstate_request);
 //        String userstate_format = String.format(userstate_request, time1, time2,"", cardnum, pwd);
 //        presenter.getUserState(userstate_format);

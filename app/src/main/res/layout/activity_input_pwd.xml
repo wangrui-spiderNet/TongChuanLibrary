@@ -9,9 +9,20 @@
         android:text="@string/input_pwd" />
 
     <EditText
+        android:id="@+id/et_account"
+        android:layout_width="@dimen/dimen_300"
+        android:layout_height="@dimen/dimen_40"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dimen_30"
+        android:paddingLeft="@dimen/dimen_3"
+        android:hint="@string/input_account"
+        android:background="@drawable/corner_strock_bg" />
+
+    <EditText
         android:id="@+id/et_pwd"
         android:layout_width="@dimen/dimen_300"
         android:layout_height="@dimen/dimen_40"
+        android:hint="@string/please_input_pwd"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/dimen_30"
         android:paddingLeft="@dimen/dimen_3"

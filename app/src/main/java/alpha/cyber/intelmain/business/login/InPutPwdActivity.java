@@ -7,10 +7,13 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.business.operation.OperatorActivity;
 import alpha.cyber.intelmain.util.IntentUtils;
+import alpha.cyber.intelmain.util.StringUtils;
 import alpha.cyber.intelmain.util.ToastUtil;
 
 /**
@@ -19,7 +22,7 @@ import alpha.cyber.intelmain.util.ToastUtil;
 
 public class InPutPwdActivity extends BaseActivity implements View.OnClickListener{
 
-    private EditText etPWd;
+    private EditText etPWd,etAccount;
     private Button btnLogin;
 
 
@@ -33,40 +36,34 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void findWidgets() {
         etPWd = findView(R.id.et_pwd);
+        etAccount = findView(R.id.et_account);
         btnLogin = findView(R.id.btn_login);
         btnRightButton.setVisibility(View.INVISIBLE);
         btnLogin.setOnClickListener(this);
 
-        etPWd.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-//                if(s.toString().trim().length()<6){
-//                    btnLogin.setEnabled(false);
-//                }else{
-//                    btnLogin.setEnabled(true);
-//                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+        etAccount.setText(Constant.cardnum);
+        etPWd.setText(Constant.pwd);
 
     }
 
     @Override
     public void onClick(View v) {
         if(v==btnLogin){
-            IntentUtils.startAty(this, OperatorActivity.class);
-            String requeststr = "6300120180206162150Y        AO|AA6101008880085324|AC|AD666666|BP00001|BQ00005AY0AZ";
-            new LoginPresenter(this).getUserInfo(requeststr);
+
+            if(StringUtils.isEmpty(etAccount.getText().toString())){
+                ToastUtil.showToast("账号不能为空");
+                return;
+            }
+
+            if(StringUtils.isEmpty(etPWd.getText().toString())){
+                ToastUtil.showToast("密码不能为空");
+                return;
+            }
+
+            Bundle bundle=new Bundle();
+            bundle.putString(Constant.ACCOUNT,etAccount.getText().toString());
+            bundle.putString(Constant.PASSWORD,etPWd.getText().toString());
+            IntentUtils.startAty(this, OperatorActivity.class,bundle);
         }
     }
 

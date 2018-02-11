@@ -69,5 +69,7 @@ public class SocketConstants {
     public static final String location_code = "CP";
     public static final String valid_patron_password = "CQ";
 
+    public static final String has_borrowed = "XT";
+
 
 }

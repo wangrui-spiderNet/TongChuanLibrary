@@ -39,7 +39,7 @@
     <string name="login">登录</string>
     <string name="scan_qrcode_login">扫码登录</string>
     <string name="login_with_card">插卡登陆</string>
-    <string name="input_pwd">请输入密码</string>
+    <string name="input_pwd">请输入账号密码</string>
     <string name="back_book">还书</string>
     <string name="search_book">图书查询</string>
     <string name="reader_info">读者信息</string>
@@ -109,5 +109,7 @@
     <string name="open_time">开放时间</string>
     <string name="use_guide">本机指南</string>
     <string name="more">更多</string>
+    <string name="input_account">请输入账号</string>
+    <string name="please_input_pwd">请输入密码</string>
 
 </resources>
