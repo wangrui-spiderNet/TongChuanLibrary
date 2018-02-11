@@ -1,5 +1,7 @@
 package alpha.cyber.intelmain.business.operation;
 
+import java.util.List;
+
 /**
  * Created by wangrui on 2018/2/11.
  */
@@ -9,6 +11,15 @@ public class UserInfoBean {
     private String cardnum;
     private String maxcount;
     private String borrowcount;
+    private List<String > bookcodes;
+
+    public List<String> getBookcodes() {
+        return bookcodes;
+    }
+
+    public void setBookcodes(List<String> bookcodes) {
+        this.bookcodes = bookcodes;
+    }
 
     public String getName() {
         return name;

@@ -14,7 +14,9 @@ public class Constant {
     public static final String ACCOUNT = "account";
     public static final String PASSWORD = "password";
 
-    public static final String cardnum="6101008880085324";
+    public static final String cardnum="6101006660007487";//朱6101006660007487 韩6101008880085324
     public static final String pwd = "666666";
-    public static final String book_code = "00834463";
+    public static final String book_code1 = "00514644";
+    public static final String book_code2 = "00946459";
+    public static final String book_code3 = "00648945";
 }

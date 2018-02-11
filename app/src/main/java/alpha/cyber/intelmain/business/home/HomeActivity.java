@@ -149,10 +149,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener ,
         }
     }
 
-    private String cardnum="6101008880085324";
-    private String pwd = "666666";
-    private String book_code = "00834463";
-
     private void requestTest() {
 
         String time = DateUtils.getSystemTime();
@@ -170,9 +166,15 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener ,
 //        String userinfo_format = String.format(userinfo_request,time,cardnum,pwd);
 //        presenter.getUserInfo(userinfo_format);
 //        //书籍信息
-//        String bookinfo_request=getResources().getString(R.string.bookinfo_request);
-//        String bookinfo_format = String.format(bookinfo_request,time,book_code);
-//        presenter.getBookInfo(bookinfo_format);
+        String bookinfo_request=getResources().getString(R.string.bookinfo_request);
+        String bookinfo_format = String.format(bookinfo_request,time,Constant.book_code1);
+        presenter.getBookInfo(bookinfo_format);
+
+        String bookinfo_format1 = String.format(bookinfo_request,time,Constant.book_code2);
+        presenter.getBookInfo(bookinfo_format1);
+
+        String bookinfo_format2 = String.format(bookinfo_request,time,Constant.book_code3);
+        presenter.getBookInfo(bookinfo_format2);
 //
 //        //借书
 //        String borrow_book_request =getResources().getString(R.string.borrowbook_reuqest);

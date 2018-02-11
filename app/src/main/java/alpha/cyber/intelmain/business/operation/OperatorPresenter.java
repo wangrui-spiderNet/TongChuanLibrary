@@ -2,7 +2,11 @@ package alpha.cyber.intelmain.business.operation;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import alpha.cyber.intelmain.Constant;
+import alpha.cyber.intelmain.bean.BookInfoBean;
 import alpha.cyber.intelmain.http.socket.MyAsyncTask;
 import alpha.cyber.intelmain.http.socket.SocketConstants;
 import alpha.cyber.intelmain.util.Log;
@@ -31,7 +35,7 @@ public class OperatorPresenter {
             @Override
             public void onSuccess(String result) {
 
-                userView.getUserInfo(parseData(result));
+                userView.getUserInfo(parseUserInfo(result));
 
             }
 
@@ -48,27 +52,32 @@ public class OperatorPresenter {
 
     }
 
-    private UserInfoBean parseData(String result) {
+    private UserInfoBean parseUserInfo(String result) {
         if (null != result) {
             String[] results = result.split("\\|");
 
             UserInfoBean infoBean=new UserInfoBean();
+            List<String > bookcodes=new ArrayList<String>();
             for (int i = 0; i < results.length; i++) {
                 Log.e(Constant.TAG, results[i]);
 
                 String temp=results[i];
 
-                if(temp.contains(SocketConstants.personal_name_ae)){
+                if(temp.startsWith(SocketConstants.personal_name_ae)){
                     infoBean.setName(temp.substring(SocketConstants.personal_name_ae.length()));
-                }else if(temp.contains(SocketConstants.hold_items_limit)){
-                    infoBean.setMaxcount(temp.substring(SocketConstants.hold_items_limit.length()));
-                }else if(temp.contains(SocketConstants.has_borrowed)){
-                    infoBean.setBorrowcount(temp.substring(SocketConstants.has_borrowed.length()));
-                }else if(temp.contains(SocketConstants.patron_identifier_aa)){
+                }else if(temp.startsWith(SocketConstants.hold_items_limit_bz)){
+                    infoBean.setMaxcount(temp.substring(SocketConstants.hold_items_limit_bz.length()));
+                }else if(temp.startsWith(SocketConstants.has_borrowed_xt)){
+                    infoBean.setBorrowcount(temp.substring(SocketConstants.has_borrowed_xt.length()));
+                }else if(temp.startsWith(SocketConstants.patron_identifier_aa)){
                     infoBean.setCardnum(temp.substring(SocketConstants.patron_identifier_aa.length()));
+                }else if(temp.startsWith(SocketConstants.hold_items_as)){
+                    bookcodes.add(temp.substring(SocketConstants.hold_items_as.length()));
                 }
 
             }
+
+            infoBean.setBookcodes(bookcodes);
 
             return infoBean;
 
@@ -86,7 +95,7 @@ public class OperatorPresenter {
 
             @Override
             public void onSuccess(String result) {
-                parseData(result);
+                parseUserInfo(result);
             }
 
             @Override
@@ -99,5 +108,58 @@ public class OperatorPresenter {
 
             }
         }).execute(request);
+    }
+
+    public void getBookInfo(String request) {
+        new MyAsyncTask(new MyAsyncTask.OnSocketRequestListener() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onSuccess(String result) {
+                userView.getBorrowedBookInfo(parseBooks(result));
+            }
+
+            @Override
+            public void onFail(String errorMessage) {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        }).execute(request);
+    }
+
+    private BookInfoBean parseBooks(String result) {
+        if (null != result) {
+            String[] results = result.split("\\|");
+
+            BookInfoBean infoBean=new BookInfoBean();
+            for (int i = 0; i < results.length; i++) {
+                Log.e(Constant.TAG, results[i]);
+
+                String temp=results[i];
+
+                if(temp.startsWith(SocketConstants.title_identifier_aj)){
+                    infoBean.setBookname(temp.substring(SocketConstants.title_identifier_aj.length()));
+                }else if(temp.startsWith(SocketConstants.hold_items_limit_bz)){
+                    infoBean.setBookcode(temp.substring(SocketConstants.item_identifier_ab.length()));
+                }else if(temp.startsWith(SocketConstants.due_date_ah)){
+                    infoBean.setEndtime(temp.substring(SocketConstants.due_date_ah.length()));
+                }else if(temp.startsWith(SocketConstants.hold_pickup_date_cm)){
+                    infoBean.setBorrowtime(temp.substring(SocketConstants.hold_pickup_date_cm.length()));
+                }
+
+            }
+
+            return infoBean;
+
+        }
+
+        return null;
     }
 }
