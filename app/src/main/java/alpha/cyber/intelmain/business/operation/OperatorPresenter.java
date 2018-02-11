@@ -66,9 +66,7 @@ public class OperatorPresenter {
                 if(temp.startsWith(SocketConstants.personal_name_ae)){
                     infoBean.setName(temp.substring(SocketConstants.personal_name_ae.length()));
                 }else if(temp.startsWith(SocketConstants.hold_items_limit_bz)){
-                    infoBean.setMaxcount(temp.substring(SocketConstants.hold_items_limit_bz.length()));
-                }else if(temp.startsWith(SocketConstants.has_borrowed_xt)){
-                    infoBean.setBorrowcount(temp.substring(SocketConstants.has_borrowed_xt.length()));
+                    infoBean.setMaxcount(Integer.parseInt(temp.substring(SocketConstants.hold_items_limit_bz.length())));
                 }else if(temp.startsWith(SocketConstants.patron_identifier_aa)){
                     infoBean.setCardnum(temp.substring(SocketConstants.patron_identifier_aa.length()));
                 }else if(temp.startsWith(SocketConstants.hold_items_as)){
@@ -77,7 +75,13 @@ public class OperatorPresenter {
 
             }
 
-            infoBean.setBookcodes(bookcodes);
+            if(bookcodes.size()>0){
+                infoBean.setBorrowcount(bookcodes.size());
+                infoBean.setBookcodes(bookcodes);
+
+            }else {
+                infoBean.setBorrowcount(0);
+            }
 
             return infoBean;
 
@@ -119,6 +123,9 @@ public class OperatorPresenter {
 
             @Override
             public void onSuccess(String result) {
+
+                BookInfoBean infoBean = parseBooks(result);
+
                 userView.getBorrowedBookInfo(parseBooks(result));
             }
 
@@ -152,12 +159,13 @@ public class OperatorPresenter {
                     infoBean.setEndtime(temp.substring(SocketConstants.due_date_ah.length()));
                 }else if(temp.startsWith(SocketConstants.hold_pickup_date_cm)){
                     infoBean.setBorrowtime(temp.substring(SocketConstants.hold_pickup_date_cm.length()));
+                }else if(temp.startsWith(SocketConstants.over_time_re)){
+                    infoBean.setLatedays(temp.substring(SocketConstants.over_time_re.length()));
                 }
 
             }
 
             return infoBean;
-
         }
 
         return null;

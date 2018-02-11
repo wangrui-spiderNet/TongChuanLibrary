@@ -111,5 +111,10 @@
     <string name="more">更多</string>
     <string name="input_account">请输入账号</string>
     <string name="please_input_pwd">请输入密码</string>
+    <string name="has_borrowed">已借图书</string>
+    <string name="book_name">书名</string>
+    <string name="borrow_date">借阅时间</string>
+    <string name="end_date">到期归还</string>
+    <string name="late_days">逾期天数</string>
 
 </resources>

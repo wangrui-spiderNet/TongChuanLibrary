@@ -9,8 +9,8 @@ import java.util.List;
 public class UserInfoBean {
     private String name;
     private String cardnum;
-    private String maxcount;
-    private String borrowcount;
+    private int maxcount;
+    private int borrowcount;
     private List<String > bookcodes;
 
     public List<String> getBookcodes() {
@@ -37,19 +37,19 @@ public class UserInfoBean {
         this.cardnum = cardnum;
     }
 
-    public String getMaxcount() {
+    public int getMaxcount() {
         return maxcount;
     }
 
-    public void setMaxcount(String maxcount) {
+    public void setMaxcount(int maxcount) {
         this.maxcount = maxcount;
     }
 
-    public String getBorrowcount() {
+    public int getBorrowcount() {
         return borrowcount;
     }
 
-    public void setBorrowcount(String borrowcount) {
+    public void setBorrowcount(int borrowcount) {
         this.borrowcount = borrowcount;
     }
 }

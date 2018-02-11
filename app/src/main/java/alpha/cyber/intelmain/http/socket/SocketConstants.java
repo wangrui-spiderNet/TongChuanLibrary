@@ -70,6 +70,9 @@ public class SocketConstants {
     public static final String valid_patron_password_cq = "CQ";
 
     public static final String has_borrowed_xt = "XT";
+    public static final String over_time_re = "RE";
+
+
 
 
 }

@@ -72,16 +72,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener ,
         rbIntroduction = findView(R.id.rb_introduction);
 
         images = new ArrayList<String>();
-        images.add("http://zl-teacher.oss-cn-hangzhou.aliyuncs.com/1516932966773%3D2.jpg");
-        images.add("http://zl-teacher.oss-cn-hangzhou.aliyuncs.com/1516933006088%3D4.jpg");
-        images.add("http://zl-teacher.oss-cn-hangzhou.aliyuncs.com/1516933029446%3D5.jpg");
 
+    }
+
+    private void setBanner() {
         banner.setImages(images).setImageLoader(new GlideImageLoaderImpl()).start();
         banner.setBannerAnimation(DefaultTransformer.class);
         banner.setDelayTime(3000);
         banner.setIndicatorGravity(BannerConfig.RIGHT);
-
-
     }
 
     @Override
@@ -165,16 +163,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener ,
 //        String userinfo_request = getResources().getString(R.string.userinfo_request);
 //        String userinfo_format = String.format(userinfo_request,time,cardnum,pwd);
 //        presenter.getUserInfo(userinfo_format);
-//        //书籍信息
-        String bookinfo_request=getResources().getString(R.string.bookinfo_request);
-        String bookinfo_format = String.format(bookinfo_request,time,Constant.book_code1);
-        presenter.getBookInfo(bookinfo_format);
 
-        String bookinfo_format1 = String.format(bookinfo_request,time,Constant.book_code2);
-        presenter.getBookInfo(bookinfo_format1);
-
-        String bookinfo_format2 = String.format(bookinfo_request,time,Constant.book_code3);
-        presenter.getBookInfo(bookinfo_format2);
 //
 //        //借书
 //        String borrow_book_request =getResources().getString(R.string.borrowbook_reuqest);
@@ -233,8 +222,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener ,
                     rbMore.setTag(newsBeanList.get(i).getImgUrl());
                 }else if(name.equals(getString(R.string.lib_intro))){
                     rbIntroduction.setTag(newsBeanList.get(i).getImgUrl());
+                }else if(name.equals("banner")){
+                    images.add(newsBeanList.get(i).getImgUrl());
                 }
             }
+
+            setBanner();
         }
 
     }

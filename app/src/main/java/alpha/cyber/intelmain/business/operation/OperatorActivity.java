@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -38,13 +40,13 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     private TextView tvBackBook;
     private TextView tvSearchBook;
     private TextView tvReaderInfo;
-    private LinearLayout layoutTable;
-    private MyTableView tableView;
+    private ListView lvTable;
 
     private CustomConfirmDialog confirmDialog;
     private OperatorPresenter presenter;
     private UserInfoBean userInfo;
     private List<BookInfoBean> bookInfoBeanList=new ArrayList<BookInfoBean>();
+    private BorrowBookAdapter mAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,19 +61,29 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         tvName = findView(R.id.tv_name);
         tvCardNumber = findView(R.id.tv_card_number);
         tvPermission = findView(R.id.tv_permission);
-        layoutTable = findView(R.id.layout_table);
         tvBorrowBook = findView(R.id.tv_borrow_book);
         tvBackBook = findView(R.id.tv_back_book);
         tvReaderInfo = findView(R.id.tv_reader_info);
         tvSearchBook = findView(R.id.tv_search_book);
+        lvTable = findView(R.id.lv_table);
 
         tvBackBook.setOnClickListener(this);
         tvBorrowBook.setOnClickListener(this);
         tvSearchBook.setOnClickListener(this);
         tvReaderInfo.setOnClickListener(this);
 
-        confirmDialog = new CustomConfirmDialog(this);
+        View headView= LayoutInflater.from(this).inflate(R.layout.item_table_headview,null);
+        lvTable.addHeaderView(headView);
 
+        confirmDialog = new CustomConfirmDialog(this);
+        BookInfoBean infoBean =new BookInfoBean();
+        infoBean.setBookname(getString(R.string.book_name));
+        infoBean.setBorrowtime(getString(R.string.borrow_date));
+        infoBean.setEndtime(getString(R.string.end_date));
+        infoBean.setLatedays(getString(R.string.late_days));
+        bookInfoBeanList.add(infoBean);
+        mAdapter = new BorrowBookAdapter(this,bookInfoBeanList);
+        lvTable.setAdapter(mAdapter);
     }
 
     @Override
@@ -119,7 +131,18 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         userInfo = userinfoBean;
         tvName.setText("姓名：" + userinfoBean.getName());
         tvCardNumber.setText("卡号：" + userinfoBean.getCardnum());
-        tvPermission.setText("权限：最多可借" + userinfoBean.getMaxcount() + "册,已借" + userinfoBean.getBorrowcount() + "册");
+        int max=userinfoBean.getMaxcount();
+        int hold=userinfoBean.getBorrowcount();
+
+        StringBuilder sb=new StringBuilder();
+        sb.append("权限：最多可借" );
+        sb.append(max);
+        sb.append("册，已借");
+        sb.append(hold);
+        sb.append("册，剩余可借");
+        sb.append(max-hold);
+        sb.append("册");
+        tvPermission.setText(sb.toString());
 
         String time = DateUtils.getSystemTime();
         String bookinfo_request = getResources().getString(R.string.bookinfo_request);
@@ -137,20 +160,11 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     public void getBorrowedBookInfo(BookInfoBean infoBean) {
 
         bookInfoBeanList.add(infoBean);
-
-        tableView.AddRow(new String[]{infoBean.getBookname(), infoBean.getBorrowtime(), infoBean.getEndtime(), "5"}, false);
-
-        if(userInfo.getBookcodes().size()==bookInfoBeanList.size()){
-            layoutTable.addView(tableView);
-        }
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
     protected void getIntentData() {
-
-        tableView = new MyTableView(this);
-        tableView.AddRow(new String[]{"已借图书"}, true);
-        tableView.AddRow(new String[]{"书名", "借阅时间", "到期归还", "逾期天数"}, false);
 
         presenter = new OperatorPresenter(this, this);
         Intent intent = getIntent();

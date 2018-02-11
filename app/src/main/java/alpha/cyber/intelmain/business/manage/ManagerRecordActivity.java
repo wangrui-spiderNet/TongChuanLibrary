@@ -1,12 +1,9 @@
 package alpha.cyber.intelmain.business.manage;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,7 +27,7 @@ public class ManagerRecordActivity extends BaseActivity implements View.OnClickL
     private ListView listView;
     private View headerView;
 
-    private RecordAdapter mAdapter;
+    private ManagerRecordAdapter mAdapter;
 
     private List<YearRecordBean> recordBeans;
 
@@ -38,7 +35,7 @@ public class ManagerRecordActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_record);
+        setContentView(R.layout.activity_manager_record);
     }
 
     @Override
@@ -69,7 +66,7 @@ public class ManagerRecordActivity extends BaseActivity implements View.OnClickL
             recordBeans.add(recordBean);
         }
 
-        mAdapter = new RecordAdapter(this,recordBeans);
+        mAdapter = new ManagerRecordAdapter(this,recordBeans);
         listView.setAdapter(mAdapter);
 
 
@@ -93,70 +90,6 @@ public class ManagerRecordActivity extends BaseActivity implements View.OnClickL
         }else if(btnPrePage == v){
 
         }
-    }
-
-    class RecordAdapter extends BaseAdapter{
-
-        private Context context;
-        private List<YearRecordBean> recordBeans;
-
-        public RecordAdapter (Context context,List<YearRecordBean> recordBeans){
-            this.context = context;
-            this.recordBeans = recordBeans;
-
-        }
-
-        @Override
-        public int getCount() {
-            return recordBeans.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return recordBeans.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            ViewHolder holder;
-            if(convertView==null){
-                convertView= LayoutInflater.from(context).inflate(R.layout.item_listview_table,null);
-                holder  = new ViewHolder(convertView);
-                convertView.setTag(holder);
-            }else{
-                holder =(ViewHolder) convertView.getTag();
-            }
-
-            holder.tvAddCount.setText(""+recordBeans.get(position).getAddCount());
-            holder.tvTime.setText(""+recordBeans.get(position).getTime());
-            holder.tvOutCount.setText(""+recordBeans.get(position).getOutCount());
-            holder.tvSum.setText(""+recordBeans.get(position).getSum());
-
-            return convertView;
-        }
-
-        class ViewHolder{
-
-            private TextView tvTime;
-            private TextView tvOutCount;
-            private TextView tvAddCount;
-            private TextView tvSum;
-
-            public ViewHolder (View view){
-                this.tvTime = (TextView) view.findViewById(R.id.tv_time);
-                this.tvOutCount = (TextView) view.findViewById(R.id.tv_out_count);
-                this.tvAddCount =(TextView) view.findViewById(R.id.tv_add_count);
-                this.tvSum =(TextView) view.findViewById(R.id.tv_sum);
-
-            }
-        }
-
     }
 
 

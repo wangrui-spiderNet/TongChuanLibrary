@@ -9,6 +9,15 @@ public class BookInfoBean {
     private String bookcode;
     private String endtime;
     private String borrowtime;
+    private String latedays;
+
+    public String getLatedays() {
+        return latedays;
+    }
+
+    public void setLatedays(String latedays) {
+        this.latedays = latedays;
+    }
 
     public String getBookname() {
         return bookname;

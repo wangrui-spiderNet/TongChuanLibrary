@@ -2,48 +2,43 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/dimen_70"
-    android:paddingTop="@dimen/dimen_50"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/dimen_50"
+    android:paddingTop="@dimen/dimen_50">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical"
         android:layout_marginTop="@dimen/dimen_30"
-        android:paddingLeft="@dimen/dimen_50"
+        android:layout_weight="1"
+        android:paddingLeft="@dimen/dimen_10"
+        android:orientation="vertical"
         >
 
         <TextView
             android:id="@+id/tv_name"
             style="@style/text_info_style"
-            android:text="姓名:张三"
-            />
+             />
 
         <TextView
             android:id="@+id/tv_card_number"
             style="@style/text_info_style"
-            android:text="卡号:61000032320000320"
             />
 
         <TextView
             android:id="@+id/tv_permission"
             style="@style/text_info_style"
-            android:text="权限:可借4册，已借2册，剩余可借2册。"
-            android:textColor="@color/colorRed"
-            />
+            android:textColor="@color/colorRed" />
 
-        <LinearLayout
-            android:id="@+id/layout_table"
-            android:layout_width="@dimen/table_width"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/dimen_20"
-            android:layout_marginTop="@dimen/dimen_10"
-            >
-
-        </LinearLayout>
+        <ListView
+            android:id="@+id/lv_table"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:divider="@color/transparent"
+            android:dividerHeight="0dp"
+            android:listSelector="@color/transparent"
+            android:scrollbars="none" />
 
     </LinearLayout>
 
@@ -51,36 +46,31 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:paddingTop="@dimen/dimen_50"
-        >
+        android:paddingTop="@dimen/dimen_50">
 
         <TextView
             android:id="@+id/tv_borrow_book"
             style="@style/operator_style"
-            android:text="@string/borrow_book"
-            />
+            android:text="@string/borrow_book" />
 
         <TextView
             android:id="@+id/tv_back_book"
             style="@style/operator_style"
-            android:text="@string/back_book"
             android:layout_toRightOf="@+id/tv_borrow_book"
-            />
+            android:text="@string/back_book" />
 
         <TextView
             android:id="@+id/tv_search_book"
             style="@style/operator_style"
-            android:text="@string/search_book"
             android:layout_below="@+id/tv_borrow_book"
-            />
+            android:text="@string/search_book" />
 
         <TextView
             android:id="@+id/tv_reader_info"
             style="@style/operator_style"
-            android:text="@string/reader_info"
-            android:layout_toRightOf="@+id/tv_search_book"
             android:layout_below="@+id/tv_back_book"
-            />
+            android:layout_toRightOf="@+id/tv_search_book"
+            android:text="@string/reader_info" />
 
     </RelativeLayout>
 
