@@ -12,6 +12,7 @@ import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.business.operation.OperatorActivity;
+import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.IntentUtils;
 import alpha.cyber.intelmain.util.StringUtils;
 import alpha.cyber.intelmain.util.ToastUtil;
@@ -60,6 +61,8 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
                 return;
             }
 
+            finish();
+            AppSharedPreference.getInstance().setLogIn(true);
             Bundle bundle=new Bundle();
             bundle.putString(Constant.ACCOUNT,etAccount.getText().toString());
             bundle.putString(Constant.PASSWORD,etPWd.getText().toString());

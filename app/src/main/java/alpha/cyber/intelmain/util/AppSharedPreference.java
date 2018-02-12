@@ -60,11 +60,11 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
         return editor.putBoolean(IS_BIND_OK, isLoginOk).commit();
     }
 
-    public boolean setHasLogoutIm(boolean hasLogoutIm){
+    public boolean setLogIn(boolean hasLogoutIm){
         return editor.putBoolean(HAS_LOGOUT_IM, hasLogoutIm).commit();
     }
 
-    public boolean hasLogoutIm(){
+    public boolean isLogin(){
         return app.getBoolean(HAS_LOGOUT_IM,false);
     }
 
