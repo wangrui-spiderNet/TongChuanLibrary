@@ -3,10 +3,8 @@ package alpha.cyber.intelmain.business.operation;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -22,10 +20,10 @@ import alpha.cyber.intelmain.business.borrowbook.BorrowDetailActivity;
 import alpha.cyber.intelmain.business.login.LoginActivity;
 import alpha.cyber.intelmain.business.search.SearchActivity;
 import alpha.cyber.intelmain.business.userinfo.UserInfoActivity;
+import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.DateUtils;
 import alpha.cyber.intelmain.util.IntentUtils;
 import alpha.cyber.intelmain.widget.CustomConfirmDialog;
-import alpha.cyber.intelmain.widget.MyTableView;
 
 /**
  * Created by wangrui on 2018/1/31.
@@ -104,16 +102,12 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     public void onClick(View v) {
         if (tvBorrowBook == v) {
             IntentUtils.startAty(this, BorrowBookActivity.class);
-
         } else if (tvBackBook == v) {
             IntentUtils.startAtyWithSingleParam(this, BorrowDetailActivity.class, Constant.BORROW_BACK, Constant.BACK_BOOK);
         } else if (tvReaderInfo == v) {
-
             IntentUtils.startAty(this, UserInfoActivity.class);
         } else if (tvSearchBook == v) {
-
             IntentUtils.startAty(this, SearchActivity.class);
-
         } else if (btnRightButton == v) {
             confirmDialog.setContent(getString(R.string.box_not_closed_exit));
             confirmDialog.show();
@@ -129,20 +123,10 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     public void getUserInfo(UserInfoBean userinfoBean) {
 
         userInfo = userinfoBean;
-        tvName.setText("姓名：" + userinfoBean.getName());
-        tvCardNumber.setText("卡号：" + userinfoBean.getCardnum());
-        int max=userinfoBean.getMaxcount();
-        int hold=userinfoBean.getBorrowcount();
 
-        StringBuilder sb=new StringBuilder();
-        sb.append("权限：最多可借" );
-        sb.append(max);
-        sb.append("册，已借");
-        sb.append(hold);
-        sb.append("册，剩余可借");
-        sb.append(max-hold);
-        sb.append("册");
-        tvPermission.setText(sb.toString());
+        tvName.setText(userinfoBean.getName());
+        tvCardNumber.setText(userinfoBean.getCardnum());
+        tvPermission.setText(userinfoBean.getPermission());
 
         String time = DateUtils.getSystemTime();
         String bookinfo_request = getResources().getString(R.string.bookinfo_request);
@@ -155,12 +139,15 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
 
     }
 
-
     @Override
     public void getBorrowedBookInfo(BookInfoBean infoBean) {
 
         bookInfoBeanList.add(infoBean);
         mAdapter.notifyDataSetChanged();
+
+        if(bookInfoBeanList.size()==userInfo.getBookcodes().size()){
+            AppSharedPreference.getInstance().saveBookInfos(bookInfoBeanList);
+        }
     }
 
     @Override

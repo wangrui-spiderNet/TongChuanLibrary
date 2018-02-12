@@ -11,7 +11,16 @@ public class UserInfoBean {
     private String cardnum;
     private int maxcount;
     private int borrowcount;
+    private String permission;
     private List<String > bookcodes;
+
+    public String getPermission() {
+        return permission;
+    }
+
+    public void setPermission(String permission) {
+        this.permission = permission;
+    }
 
     public List<String> getBookcodes() {
         return bookcodes;

@@ -9,7 +9,10 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.List;
 
+import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.MyApplication;
+import alpha.cyber.intelmain.bean.BookInfoBean;
+import alpha.cyber.intelmain.business.operation.UserInfoBean;
 
 /**
  * Created by huxin on 16/6/6.
@@ -41,62 +44,6 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
         return editor.putString(LOGIN_TOEN, string).commit();
     }
 
-    public long getUserId() {
-        return app.getLong(USER_ID, 0L);
-    }
-
-    public boolean setUserId(long userId) {
-        return editor.putLong(USER_ID, userId).commit();
-    }
-
-    public String getUserName() {
-        return app.getString(USER_NAME, "");
-    }
-
-    public boolean setUserName(String userName) {
-        return editor.putString(USER_NAME, userName).commit();
-    }
-
-    public String getUserIcon() {
-        return app.getString(USER_ICON, "");
-    }
-
-    public boolean setUserIcon(String userIcon) {
-        return editor.putString(USER_ICON, userIcon).commit();
-    }
-
-    public String getUserSchoolName() {
-        return app.getString(USER_SCHOOL_NAME, "");
-    }
-
-    public boolean setUserSchoolName(String userSchoolName) {
-        return editor.putString(USER_SCHOOL_NAME, userSchoolName).commit();
-    }
-
-    public boolean setUserPhone(String userPhone){
-        return editor.putString(USER_PHONE,userPhone).commit();
-    }
-
-    public String getUserPhone (){
-        return app.getString(USER_PHONE,"");
-    }
-
-    public long getUserSchoolId() {
-        return app.getLong(USER_SCHOOL_ID, 0);
-    }
-
-    public boolean  setUserSchoolId(long schoolid){
-        return editor.putLong(USER_SCHOOL_ID, schoolid).commit();
-    }
-
-    public boolean setSchoolAddress(String address){
-        return editor.putString(SCHOOL_ADDRESS,address).commit();
-    }
-
-    public String getSchoolAddress(){
-        return app.getString(SCHOOL_ADDRESS,"");
-    }
-
     public String getUserMac() {
         return app.getString(USER_MAC, "");
     }
@@ -112,7 +59,6 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
     public boolean setIsBindOk(boolean isLoginOk) {
         return editor.putBoolean(IS_BIND_OK, isLoginOk).commit();
     }
-
 
     public boolean setHasLogoutIm(boolean hasLogoutIm){
         return editor.putBoolean(HAS_LOGOUT_IM, hasLogoutIm).commit();
@@ -152,18 +98,6 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
         return app.getLong("server_timestamp", System.currentTimeMillis());
     }
 
-    public void setStatisticTime(long serverTs) {
-        editor.putLong("statistic_time", serverTs).commit();
-    }
-
-    public long getStatisticTime() {
-        return app.getLong("statistic_time", 0);
-    }
-
-    public void setUserType(int type){
-        editor.putInt(AppSharedPreferenceConfig.USER_TYPE,type).commit();
-    }
-
     public int getUserType(){
         return app.getInt(AppSharedPreferenceConfig.USER_TYPE,0);
     }
@@ -181,24 +115,24 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
      * 保存List
      * @param datalist
      */
-    public void setLogedUserList(String key, List<String> datalist) {
+    public void saveBookInfos(List<BookInfoBean> datalist) {
         if (null == datalist || datalist.size() <= 0)
             return;
         Gson gson = new Gson();
         //转换成json数据，再保存
         String strJson = gson.toJson(datalist);
-        editor.clear().putString(key, strJson).commit();
+        editor.clear().putString(AppSharedPreferenceConfig.BORROWED_BOOKS, strJson).commit();
     }
 
     /**
      * 获取List
      * @return
      */
-    public List<String> getAppVersionList(String key) {
-        List<String> datalist=new ArrayList<String>();
-        String strJson = app.getString(key, null);
+    public List<BookInfoBean> getbookInfos() {
+        List<BookInfoBean> datalist=new ArrayList<BookInfoBean>();
+        String strJson = app.getString(AppSharedPreferenceConfig.BORROWED_BOOKS, null);
         if (null == strJson) {
-            return datalist;
+            return null;
         }
         Gson gson = new Gson();
         datalist = gson.fromJson(strJson, new TypeToken<List<String>>() {
@@ -207,6 +141,33 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
         return datalist;
     }
 
+    /**
+     * 保存用户信息
+     * @param infoBean
+     */
+    public void saveUserInfo(UserInfoBean infoBean){
+        Gson gson=new Gson();
+
+        String userinfo=gson.toJson(infoBean);
+
+        editor.clear().putString(AppSharedPreferenceConfig.USER_INFO,userinfo).commit();
+
+    }
+
+    /**
+     * 获取用户信息
+     * @return
+     */
+    public UserInfoBean getUserInfo(){
+        String userJson=app.getString(AppSharedPreferenceConfig.USER_INFO,"");
+
+        if(!StringUtils.isEmpty(userJson)){
+            UserInfoBean userInfoBean=new Gson().fromJson(userJson,UserInfoBean.class);
+            return userInfoBean;
+        }
+
+        return null;
+    }
 
 
 }

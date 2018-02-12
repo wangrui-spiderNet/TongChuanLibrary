@@ -1,6 +1,7 @@
 package alpha.cyber.intelmain.business.operation;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.bean.BookInfoBean;
 import alpha.cyber.intelmain.http.socket.MyAsyncTask;
 import alpha.cyber.intelmain.http.socket.SocketConstants;
+import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.Log;
 
 /**
@@ -35,7 +37,11 @@ public class OperatorPresenter {
             @Override
             public void onSuccess(String result) {
 
-                userView.getUserInfo(parseUserInfo(result));
+                UserInfoBean userInfoBean = reSetUserInfo(parseUserInfo(result));
+
+                AppSharedPreference.getInstance().saveUserInfo(userInfoBean);
+
+                userView.getUserInfo(userInfoBean);
 
             }
 
@@ -50,6 +56,30 @@ public class OperatorPresenter {
             }
         }).execute(request);
 
+    }
+
+    private UserInfoBean reSetUserInfo(UserInfoBean userInfoBean) {
+
+        String name="姓名：" + userInfoBean.getName();
+        String cardnum="卡号：" + userInfoBean.getCardnum();
+        int max=userInfoBean.getMaxcount();
+        int hold=userInfoBean.getBorrowcount();
+
+        StringBuilder sb=new StringBuilder();
+        sb.append("权限：最多可借" );
+        sb.append(max);
+        sb.append("册，已借");
+        sb.append(hold);
+        sb.append("册，剩余可借");
+        sb.append(max-hold);
+        sb.append("册");
+
+        String permission=sb.toString();
+        userInfoBean.setPermission(permission);
+        userInfoBean.setCardnum(cardnum);
+        userInfoBean.setName(name);
+
+        return userInfoBean;
     }
 
     private UserInfoBean parseUserInfo(String result) {
@@ -126,7 +156,7 @@ public class OperatorPresenter {
 
                 BookInfoBean infoBean = parseBooks(result);
 
-                userView.getBorrowedBookInfo(parseBooks(result));
+                userView.getBorrowedBookInfo(infoBean);
             }
 
             @Override
