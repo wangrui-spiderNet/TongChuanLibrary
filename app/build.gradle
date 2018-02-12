@@ -42,6 +42,7 @@ android {
             keyAlias "tongchuanlib"
             keyPassword "tongchuanlib"
         }
+
     }
 
     buildTypes {

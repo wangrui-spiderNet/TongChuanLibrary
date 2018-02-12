@@ -41,13 +41,16 @@
             android:gravity="center"
             android:text="权限：可借4册，已借2册，剩余可借2册。" />
 
-        <LinearLayout
-            android:id="@+id/layout_table_borrowed"
-            android:layout_width="@dimen/table_width"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
 
-        </LinearLayout>
+        <ListView
+            android:id="@+id/lv_table"
+            android:layout_width="@dimen/table_width"
+            android:layout_height="280dp"
+            android:layout_weight="1"
+            android:divider="@color/transparent"
+            android:dividerHeight="0dp"
+            android:listSelector="@color/transparent"
+            android:scrollbars="none" />
 
         <TextView
             android:id="@+id/tv_overtime"

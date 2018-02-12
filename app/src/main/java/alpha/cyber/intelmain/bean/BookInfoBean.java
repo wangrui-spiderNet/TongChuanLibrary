@@ -50,4 +50,15 @@ public class BookInfoBean {
     public void setBorrowtime(String borrowtime) {
         this.borrowtime = borrowtime;
     }
+
+    @Override
+    public String toString() {
+        return "BookInfoBean{" +
+                "bookname='" + bookname + '\'' +
+                ", bookcode='" + bookcode + '\'' +
+                ", endtime='" + endtime + '\'' +
+                ", borrowtime='" + borrowtime + '\'' +
+                ", latedays='" + latedays + '\'' +
+                '}';
+    }
 }

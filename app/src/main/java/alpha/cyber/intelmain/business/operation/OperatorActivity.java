@@ -143,9 +143,9 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     public void getBorrowedBookInfo(BookInfoBean infoBean) {
 
         bookInfoBeanList.add(infoBean);
-        mAdapter.notifyDataSetChanged();
 
-        if(bookInfoBeanList.size()==userInfo.getBookcodes().size()){
+        if(bookInfoBeanList.size()==userInfo.getBookcodes().size()+1){
+            mAdapter.notifyDataSetChanged();
             AppSharedPreference.getInstance().saveBookInfos(bookInfoBeanList);
         }
     }

@@ -121,7 +121,7 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
         Gson gson = new Gson();
         //转换成json数据，再保存
         String strJson = gson.toJson(datalist);
-        editor.clear().putString(AppSharedPreferenceConfig.BORROWED_BOOKS, strJson).commit();
+        editor.putString(AppSharedPreferenceConfig.BORROWED_BOOKS, strJson).commit();
     }
 
     /**
@@ -135,7 +135,7 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
             return null;
         }
         Gson gson = new Gson();
-        datalist = gson.fromJson(strJson, new TypeToken<List<String>>() {
+        datalist = gson.fromJson(strJson, new TypeToken<List<BookInfoBean>>() {
         }.getType());
 
         return datalist;
@@ -150,7 +150,7 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
 
         String userinfo=gson.toJson(infoBean);
 
-        editor.clear().putString(AppSharedPreferenceConfig.USER_INFO,userinfo).commit();
+        editor.putString(AppSharedPreferenceConfig.USER_INFO,userinfo).commit();
 
     }
 

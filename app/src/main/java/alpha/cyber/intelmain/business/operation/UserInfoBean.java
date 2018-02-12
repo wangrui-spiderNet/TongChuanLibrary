@@ -61,4 +61,16 @@ public class UserInfoBean {
     public void setBorrowcount(int borrowcount) {
         this.borrowcount = borrowcount;
     }
+
+    @Override
+    public String toString() {
+        return "UserInfoBean{" +
+                "name='" + name + '\'' +
+                ", cardnum='" + cardnum + '\'' +
+                ", maxcount=" + maxcount +
+                ", borrowcount=" + borrowcount +
+                ", permission='" + permission + '\'' +
+                ", bookcodes=" + bookcodes +
+                '}';
+    }
 }

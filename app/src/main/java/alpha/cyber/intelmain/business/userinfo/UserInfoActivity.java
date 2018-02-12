@@ -2,12 +2,23 @@ package alpha.cyber.intelmain.business.userinfo;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.List;
+
+import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
+import alpha.cyber.intelmain.bean.BookInfoBean;
+import alpha.cyber.intelmain.business.operation.BorrowBookAdapter;
+import alpha.cyber.intelmain.business.operation.OperatorPresenter;
+import alpha.cyber.intelmain.business.operation.UserInfoBean;
+import alpha.cyber.intelmain.util.AppSharedPreference;
+import alpha.cyber.intelmain.util.Log;
 import alpha.cyber.intelmain.widget.MyTableView;
 
 /**
@@ -20,7 +31,10 @@ public class UserInfoActivity extends BaseActivity {
     private TextView tvCardNumber;
     private TextView tvPermission;
     private TextView tvOvertime;
-    private LinearLayout layoutTable;
+    private UserInfoBean userInfoBean;
+    private List<BookInfoBean> bookInfoBeanList;
+    private ListView lvTable;
+    private BorrowBookAdapter mAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,26 +49,22 @@ public class UserInfoActivity extends BaseActivity {
         tvCardNumber = findView(R.id.tv_card_number);
         tvPermission = findView(R.id.tv_permission);
         tvOvertime = findView(R.id.tv_overtime);
-        layoutTable = findView(R.id.layout_table_borrowed);
+        lvTable = findView(R.id.lv_table);
 
+        tvName.setText(userInfoBean.getName());
+        tvCardNumber.setText(userInfoBean.getCardnum());
+        tvPermission.setText(userInfoBean.getPermission());
+        View headView= LayoutInflater.from(this).inflate(R.layout.item_table_headview,null);
+        lvTable.addHeaderView(headView);
+
+        mAdapter = new BorrowBookAdapter(this,bookInfoBeanList);
+        lvTable.setAdapter(mAdapter);
     }
 
     @Override
     protected void initComponent() {
 
-        MyTableView stv1=new MyTableView(this,4);
-        stv1.AddRow(new String[]{"已借图书"},true);
-        stv1.AddRow(new String[]{"书名","借阅时间","到期归还","逾期天数"},false);
-        stv1.AddRow(new Object[]{"笑傲江湖","2018-1-23","2019-01-24","5"},false);
-        stv1.AddRow(new Object[]{"射雕英雄传","2018-1-23","2019-01-24","5"},false);
-        stv1.AddRow(new Object[]{"倚天屠龙记","2018-1-23","2019-01-24","5"},false);
-        stv1.AddRow(new Object[]{"天龙八部","2018-1-23","2019-01-24","5"},false);
-        stv1.AddRow(new Object[]{"神雕侠侣","2018-1-23","2019-01-24","5"},false);
-        stv1.AddRow(new Object[]{"碧血剑","2018-1-23","2019-01-24","5"},false);
-
-        layoutTable.addView(stv1);
     }
-
 
     @Override
     protected void onResume() {
@@ -64,6 +74,13 @@ public class UserInfoActivity extends BaseActivity {
 
     @Override
     protected void getIntentData() {
+
+        userInfoBean = AppSharedPreference.getInstance().getUserInfo();
+        bookInfoBeanList = AppSharedPreference.getInstance().getbookInfos();
+
+        if(null==userInfoBean){
+
+        }
 
     }
 }
