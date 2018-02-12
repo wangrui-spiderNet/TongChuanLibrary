@@ -93,36 +93,68 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener ,
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.rb_news:
-                        Glide.with(MyApplication.getInstance().getApplicationContext())
-                                .load(rbNews.getTag().toString())
-                                .into(ivPhoto);
+                        if(null!=rbNews.getTag()){
+                            Glide.with(MyApplication.getInstance().getApplicationContext())
+                                    .load(rbNews.getTag().toString())
+                                    .into(ivPhoto);
+                        }else{
+//                            rbNews.setVisibility(View.GONE);
+                        }
+
                         break;
 
                     case R.id.rb_apply_card:
-                        Glide.with(MyApplication.getInstance().getApplicationContext())
-                                .load(rbApplyCard.getTag().toString())
-                                .into(ivPhoto);
+                        if(null!=rbApplyCard.getTag()){
+                            Glide.with(MyApplication.getInstance().getApplicationContext())
+                                    .load(rbApplyCard.getTag().toString())
+                                    .into(ivPhoto);
+                        }else{
+//                            rbApplyCard.setVisibility(View.GONE);
+                        }
+
                         break;
                     case R.id.rb_introduction:
-                        Glide.with(MyApplication.getInstance().getApplicationContext())
-                                .load(rbIntroduction.getTag().toString())
-                                .into(ivPhoto);
+
+                        if(null!=rbIntroduction.getTag()){
+                            Glide.with(MyApplication.getInstance().getApplicationContext())
+                                    .load(rbIntroduction.getTag().toString())
+                                    .into(ivPhoto);
+                        }else{
+//                            rbIntroduction.setVisibility(View.GONE);
+                        }
+
                         break;
                     case R.id.rb_open_time:
-                        Glide.with(MyApplication.getInstance().getApplicationContext())
-                                .load(rbOpenTime.getTag().toString())
-                                .into(ivPhoto);
+                        if(null!=rbOpenTime.getTag()){
+                            Glide.with(MyApplication.getInstance().getApplicationContext())
+                                    .load(rbOpenTime.getTag().toString())
+                                    .into(ivPhoto);
+                        }else{
+//                            rbOpenTime.setVisibility(View.GONE);
+                        }
+
                         break;
                     case R.id.rb_use_gide:
-                        Glide.with(MyApplication.getInstance().getApplicationContext())
-                                .load(rbUseGuide.getTag().toString())
-                                .into(ivPhoto);
+
+                        if(null!=rbUseGuide.getTag()){
+                            Glide.with(MyApplication.getInstance().getApplicationContext())
+                                    .load(rbUseGuide.getTag().toString())
+                                    .into(ivPhoto);
+                        }else{
+//                            rbUseGuide.setVisibility(View.GONE);
+                        }
+
                         break;
                     case R.id.rb_more:
 
-                        Glide.with(MyApplication.getInstance().getApplicationContext())
-                                .load(rbMore.getTag().toString())
-                                .into(ivPhoto);
+                        if(null!=rbMore.getTag()){
+                            Glide.with(MyApplication.getInstance().getApplicationContext())
+                                    .load(rbMore.getTag().toString())
+                                    .into(ivPhoto);
+                        }else{
+//                            rbMore.setVisibility(View.GONE);
+                        }
+
                         break;
                     default:
                         break;
