@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import alpha.cyber.intelmain.bean.BookInfoBean;
 import alpha.cyber.intelmain.bean.ContactsBean;
 import alpha.cyber.intelmain.bean.ContactsGroups;
 import alpha.cyber.intelmain.bean.ContactsInformation;
@@ -30,9 +31,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase database,
                          ConnectionSource connectionSource) {
         try {
-            TableUtils.createTable(connectionSource, ContactsBean.class);
-            TableUtils.createTable(connectionSource, ContactsGroups.class);
-            TableUtils.createTable(connectionSource, ContactsInformation.class);
+//            TableUtils.createTable(connectionSource, ContactsBean.class);
+//            TableUtils.createTable(connectionSource, ContactsGroups.class);
+//            TableUtils.createTable(connectionSource, ContactsInformation.class);
+            TableUtils.createTable(connectionSource, BookInfoBean.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -63,14 +65,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         context = context.getApplicationContext();
         if (instance == null) {
             synchronized (DatabaseHelper.class) {
-                if (instance == null)
+                if (instance == null){
                     instance = new DatabaseHelper(context);
+                }
+
             }
         }
 
         return instance;
     }
 
+    @Override
     public synchronized Dao getDao(Class clazz) throws SQLException {
         Dao dao = null;
         String className = clazz.getSimpleName();

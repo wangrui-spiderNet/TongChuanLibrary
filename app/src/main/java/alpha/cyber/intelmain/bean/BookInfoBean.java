@@ -1,15 +1,34 @@
 package alpha.cyber.intelmain.bean;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 /**
  * Created by wangrui on 2018/2/11.
  */
-
+@DatabaseTable(tableName = "book_table")
 public class BookInfoBean {
+
+    @DatabaseField (generatedId = true)
+    private long bookid;
+    @DatabaseField
     private String bookname;
+    @DatabaseField
     private String bookcode;
+    @DatabaseField
     private String endtime;
+    @DatabaseField
     private String borrowtime;
+    @DatabaseField
     private String latedays;
+
+    public long getBookid() {
+        return bookid;
+    }
+
+    public void setBookid(long bookid) {
+        this.bookid = bookid;
+    }
 
     public String getLatedays() {
         return latedays;

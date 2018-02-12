@@ -4,22 +4,17 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.List;
 
-import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.bean.BookInfoBean;
 import alpha.cyber.intelmain.business.operation.BorrowBookAdapter;
-import alpha.cyber.intelmain.business.operation.OperatorPresenter;
-import alpha.cyber.intelmain.business.operation.UserInfoBean;
+import alpha.cyber.intelmain.bean.UserInfoBean;
 import alpha.cyber.intelmain.util.AppSharedPreference;
-import alpha.cyber.intelmain.util.Log;
-import alpha.cyber.intelmain.widget.MyTableView;
 
 /**
  * Created by wangrui on 2018/2/2.

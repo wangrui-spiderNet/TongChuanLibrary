@@ -1,13 +1,13 @@
 package alpha.cyber.intelmain.business.operation;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.bean.BookInfoBean;
+import alpha.cyber.intelmain.bean.UserInfoBean;
 import alpha.cyber.intelmain.http.socket.MyAsyncTask;
 import alpha.cyber.intelmain.http.socket.SocketConstants;
 import alpha.cyber.intelmain.util.AppSharedPreference;
@@ -183,7 +183,7 @@ public class OperatorPresenter {
 
                 if(temp.startsWith(SocketConstants.title_identifier_aj)){
                     infoBean.setBookname(temp.substring(SocketConstants.title_identifier_aj.length()));
-                }else if(temp.startsWith(SocketConstants.hold_items_limit_bz)){
+                }else if(temp.startsWith(SocketConstants.item_identifier_ab)){
                     infoBean.setBookcode(temp.substring(SocketConstants.item_identifier_ab.length()));
                 }else if(temp.startsWith(SocketConstants.due_date_ah)){
                     infoBean.setEndtime(temp.substring(SocketConstants.due_date_ah.length()));

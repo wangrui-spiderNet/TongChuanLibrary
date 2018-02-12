@@ -25,6 +25,7 @@ import alpha.cyber.intelmain.bean.HomeNewsBean;
 import alpha.cyber.intelmain.business.login.InPutPwdActivity;
 import alpha.cyber.intelmain.business.login.LoginActivity;
 import alpha.cyber.intelmain.business.login.LoginPresenter;
+import alpha.cyber.intelmain.db.BookDao;
 import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.DateUtils;
 import alpha.cyber.intelmain.util.IntentUtils;
@@ -52,6 +53,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         presenter = new LoginPresenter(this);
         homePresenter = new HomePresenter(this, this);
         homePresenter.getHomeNews();
+        new BookDao(this).deleteAll();
     }
 
     @Override
@@ -98,8 +100,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                             Glide.with(MyApplication.getInstance().getApplicationContext())
                                     .load(rbNews.getTag().toString())
                                     .into(ivPhoto);
-                        } else {
-//                            rbNews.setVisibility(View.GONE);
                         }
 
                         break;
@@ -109,8 +109,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                             Glide.with(MyApplication.getInstance().getApplicationContext())
                                     .load(rbApplyCard.getTag().toString())
                                     .into(ivPhoto);
-                        } else {
-//                            rbApplyCard.setVisibility(View.GONE);
                         }
 
                         break;
@@ -120,8 +118,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                             Glide.with(MyApplication.getInstance().getApplicationContext())
                                     .load(rbIntroduction.getTag().toString())
                                     .into(ivPhoto);
-                        } else {
-//                            rbIntroduction.setVisibility(View.GONE);
                         }
 
                         break;
@@ -130,8 +126,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                             Glide.with(MyApplication.getInstance().getApplicationContext())
                                     .load(rbOpenTime.getTag().toString())
                                     .into(ivPhoto);
-                        } else {
-//                            rbOpenTime.setVisibility(View.GONE);
                         }
 
                         break;
@@ -141,8 +135,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                             Glide.with(MyApplication.getInstance().getApplicationContext())
                                     .load(rbUseGuide.getTag().toString())
                                     .into(ivPhoto);
-                        } else {
-//                            rbUseGuide.setVisibility(View.GONE);
                         }
 
                         break;
@@ -152,8 +144,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                             Glide.with(MyApplication.getInstance().getApplicationContext())
                                     .load(rbMore.getTag().toString())
                                     .into(ivPhoto);
-                        } else {
-//                            rbMore.setVisibility(View.GONE);
                         }
 
                         break;
@@ -170,11 +160,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         super.onResume();
         tvBack.setVisibility(View.INVISIBLE);
 
-        if (AppSharedPreference.getInstance().isLogin()) {
-            btnRightButton.setVisibility(View.INVISIBLE);
-        } else {
-            btnRightButton.setVisibility(View.VISIBLE);
-        }
+//        if (AppSharedPreference.getInstance().isLogin()) {
+//            btnRightButton.setVisibility(View.INVISIBLE);
+//        } else {
+//            btnRightButton.setVisibility(View.VISIBLE);
+//        }
 
     }
 

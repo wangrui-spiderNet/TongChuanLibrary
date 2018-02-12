@@ -1,4 +1,4 @@
-package alpha.cyber.intelmain.business.operation;
+package alpha.cyber.intelmain.bean;
 
 import java.util.List;
 

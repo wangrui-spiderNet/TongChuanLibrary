@@ -3,6 +3,7 @@ package alpha.cyber.intelmain.business.operation;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
@@ -15,11 +16,13 @@ import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.bean.BookInfoBean;
+import alpha.cyber.intelmain.bean.UserInfoBean;
 import alpha.cyber.intelmain.business.borrowbook.BorrowBookActivity;
 import alpha.cyber.intelmain.business.borrowbook.BorrowDetailActivity;
 import alpha.cyber.intelmain.business.login.LoginActivity;
 import alpha.cyber.intelmain.business.search.SearchActivity;
 import alpha.cyber.intelmain.business.userinfo.UserInfoActivity;
+import alpha.cyber.intelmain.db.BookDao;
 import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.DateUtils;
 import alpha.cyber.intelmain.util.IntentUtils;
@@ -45,6 +48,8 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     private UserInfoBean userInfo;
     private List<BookInfoBean> bookInfoBeanList=new ArrayList<BookInfoBean>();
     private BorrowBookAdapter mAdapter;
+
+    BookDao bookDao;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,16 +91,25 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     protected void initComponent() {
-
+        bookDao = new BookDao(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        tvBack.setVisibility(View.INVISIBLE);
         btnRightButton.setText(R.string.exit_login);
         btnRightButton.setVisibility(View.VISIBLE);
         btnRightButton.setOnClickListener(this);
         confirmDialog.setConfirmListener(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        AppSharedPreference.getInstance().setLogIn(false);
+        super.onBackPressed();
+
     }
 
     @Override
@@ -108,7 +122,11 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
             IntentUtils.startAty(this, UserInfoActivity.class);
         } else if (tvSearchBook == v) {
             IntentUtils.startAty(this, SearchActivity.class);
+
+            Log.e(Constant.TAG,"数据库数据:"+bookDao.queryAllBooks().toString());
+
         } else if (btnRightButton == v) {
+
             confirmDialog.setContent(getString(R.string.box_not_closed_exit));
             confirmDialog.show();
         }
@@ -116,6 +134,9 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onButtonClick(View view) {
+
+        AppSharedPreference.getInstance().clear();
+        AppSharedPreference.getInstance().setLogIn(false);
         IntentUtils.startAty(this, LoginActivity.class);
     }
 
@@ -143,6 +164,8 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     public void getBorrowedBookInfo(BookInfoBean infoBean) {
 
         bookInfoBeanList.add(infoBean);
+
+        bookDao.insertBook(infoBean);
 
         if(bookInfoBeanList.size()==userInfo.getBookcodes().size()+1){
             mAdapter.notifyDataSetChanged();

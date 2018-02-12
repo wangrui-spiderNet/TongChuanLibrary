@@ -9,10 +9,9 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.List;
 
-import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.MyApplication;
 import alpha.cyber.intelmain.bean.BookInfoBean;
-import alpha.cyber.intelmain.business.operation.UserInfoBean;
+import alpha.cyber.intelmain.bean.UserInfoBean;
 
 /**
  * Created by huxin on 16/6/6.
@@ -52,14 +51,6 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
         return editor.putString(USER_MAC, mac).commit();
     }
 
-    public boolean getIsBindOk() {
-        return app.getBoolean(IS_BIND_OK, false);
-    }
-
-    public boolean setIsBindOk(boolean isLoginOk) {
-        return editor.putBoolean(IS_BIND_OK, isLoginOk).commit();
-    }
-
     public boolean setLogIn(boolean hasLogoutIm){
         return editor.putBoolean(HAS_LOGOUT_IM, hasLogoutIm).commit();
     }
@@ -67,7 +58,6 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
     public boolean isLogin(){
         return app.getBoolean(HAS_LOGOUT_IM,false);
     }
-
 
     //设置是否第一次登陆
     public void setFirstEnter(Boolean isFirstEnter) {
@@ -79,16 +69,13 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
         return app.getBoolean(IS_FIRST_ENTER, true);
     }
 
-
     public void setFirstActive(boolean isFirstActive) {
         editor.putBoolean(IS_FIRST_ACTIVE, isFirstActive).commit();
     }
 
-
     public void clear() {
         editor.clear().commit();
     }
-
 
     public void setServerTimeStamp(long serverTs) {
         editor.putLong("server_timestamp", serverTs).commit();
