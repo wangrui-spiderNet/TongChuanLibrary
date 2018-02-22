@@ -59,7 +59,7 @@
         <activity android:name="alpha.cyber.intelmain.business.login.LoginActivity"></activity>
         <activity android:name="alpha.cyber.intelmain.business.login.InPutPwdActivity"></activity>
         <activity android:name="alpha.cyber.intelmain.business.operation.OperatorActivity"></activity>
-        <activity android:name="alpha.cyber.intelmain.business.borrowbook.BorrowBookActivity"></activity>
+        <activity android:name="alpha.cyber.intelmain.business.borrowbook.OpenBoxActivity"></activity>
         <activity android:name="alpha.cyber.intelmain.business.borrowbook.BorrowDetailActivity"></activity>
         <activity android:name="alpha.cyber.intelmain.business.search.SearchActivity"></activity>
         <activity android:name="alpha.cyber.intelmain.business.userinfo.UserInfoActivity"></activity>

@@ -25,6 +25,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
 
+
 public class InventoryParaActivity extends BaseActivity implements OnClickListener {
     public static final int RESULT_OK = 1;
     public static final int RESULT_CANCEL = 2;

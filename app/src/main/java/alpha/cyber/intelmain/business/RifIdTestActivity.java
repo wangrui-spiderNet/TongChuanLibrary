@@ -240,8 +240,10 @@ public class RifIdTestActivity extends BaseActivity implements OnClickListener {
         conStr = String.format("RDType=RD5100;CommType=COM;ComPath=/dev/ttyXRM0;Baund=38400;Frame=8E1;Addr=255");
         if (m_reader.RDR_Open(conStr) == ApiErrDefinition.NO_ERROR) {
             ToastUtils.showShortToast("打开设备成功");
-        } else
+        } else{
             ToastUtils.showShortToast("打开设备失败");
+        }
+
     }
 
     private void resetFactory() {
@@ -368,6 +370,7 @@ public class RifIdTestActivity extends BaseActivity implements OnClickListener {
     private boolean b_inventoryThreadRun = false;
 
     private class InventoryThrd implements Runnable {
+        @Override
         public void run() {
             int failedCnt = 0;
             Object hInvenParamSpecList = null;
@@ -476,8 +479,6 @@ public class RifIdTestActivity extends BaseActivity implements OnClickListener {
         }
 
     }
-
-    ;
 
     private Handler mHandler = new MyHandler(this);
 

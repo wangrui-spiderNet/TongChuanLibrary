@@ -17,9 +17,8 @@ import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.bean.BookInfoBean;
 import alpha.cyber.intelmain.bean.UserInfoBean;
-import alpha.cyber.intelmain.business.borrowbook.BorrowBookActivity;
+import alpha.cyber.intelmain.business.borrowbook.OpenBoxActivity;
 import alpha.cyber.intelmain.business.borrowbook.BorrowDetailActivity;
-import alpha.cyber.intelmain.business.login.LoginActivity;
 import alpha.cyber.intelmain.business.search.SearchActivity;
 import alpha.cyber.intelmain.business.userinfo.UserInfoActivity;
 import alpha.cyber.intelmain.db.BookDao;
@@ -46,10 +45,9 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     private CustomConfirmDialog confirmDialog;
     private OperatorPresenter presenter;
     private UserInfoBean userInfo;
-    private List<BookInfoBean> bookInfoBeanList=new ArrayList<BookInfoBean>();
+    private List<BookInfoBean> bookInfoBeanList=new ArrayList<>();
     private BorrowBookAdapter mAdapter;
-
-    BookDao bookDao;
+    private BookDao bookDao;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -115,7 +113,7 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         if (tvBorrowBook == v) {
-            IntentUtils.startAty(this, BorrowBookActivity.class);
+            IntentUtils.startAty(this, OpenBoxActivity.class);
         } else if (tvBackBook == v) {
             IntentUtils.startAtyWithSingleParam(this, BorrowDetailActivity.class, Constant.BORROW_BACK, Constant.BACK_BOOK);
         } else if (tvReaderInfo == v) {
@@ -137,7 +135,7 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
 
         AppSharedPreference.getInstance().clear();
         AppSharedPreference.getInstance().setLogIn(false);
-        IntentUtils.startAty(this, LoginActivity.class);
+        finish();
     }
 
     @Override

@@ -172,8 +172,10 @@ public class LockTestActivity extends BaseActivity implements OnClickListener, L
             mStateThrd.start();
             mOpen.setEnabled(false);
 
-        } else
+        } else {
             ToastUtils.showShortToast("打开设备失败");
+        }
+
     }
 
     private void close() {
@@ -357,20 +359,17 @@ public class LockTestActivity extends BaseActivity implements OnClickListener, L
 
     @Override
     public void onGetProtocalVerison(int version) {
-        // TODO Auto-generated method stub
 
     }
 
 
     @Override
     public void onGetLockState(int id, byte state) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void onGetAllLockState(byte[] state) {
-        // TODO Auto-generated method stub
         Logger.d("onGetAllLockState");
         System.arraycopy(state, 0, grimState, 0, state.length);
 

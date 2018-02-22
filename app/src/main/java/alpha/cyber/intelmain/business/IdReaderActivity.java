@@ -34,7 +34,6 @@ public class IdReaderActivity extends BaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_id_reader);
         IdNumTxt = (TextView) findViewById(R.id.nummber_display);
@@ -78,12 +77,9 @@ public class IdReaderActivity extends BaseActivity {
             mOutputStream = mIdReaderSerialPort.getOutputStream();
 
         } catch (SecurityException e) {
-
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return false;
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return false;
         }
