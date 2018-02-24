@@ -6,6 +6,7 @@ import java.util.List;
 
 import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.base.AppException;
+import alpha.cyber.intelmain.bean.AppUpgradeInfo;
 import alpha.cyber.intelmain.bean.HomeNewsBean;
 import alpha.cyber.intelmain.http.DefaultSubscriber;
 import alpha.cyber.intelmain.http.model.Request;
@@ -42,6 +43,25 @@ public class HomePresenter {
 
                         homeView.onGetHomePageSuccess(lessonMenuList);
 
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+
+                        AppException.handleException(context, errorCode, errorMessage);
+                    }
+                });
+    }
+
+    public void checkVersion(){
+        module.getUpGradeInfo(new Request.Builder().withParam("","").build())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DefaultSubscriber<AppUpgradeInfo>() {
+                    @Override
+                    public void onSuccess(AppUpgradeInfo upgradeInfo) {
+
+                        homeView.checkVersion(upgradeInfo);
                     }
 
                     @Override

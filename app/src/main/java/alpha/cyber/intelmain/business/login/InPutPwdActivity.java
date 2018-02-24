@@ -1,6 +1,5 @@
 package alpha.cyber.intelmain.business.login;
 
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -32,7 +31,6 @@ import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.bean.BookInfoBean;
 import alpha.cyber.intelmain.bean.InventoryReport;
 import alpha.cyber.intelmain.bean.UserInfoBean;
-import alpha.cyber.intelmain.business.MainActivity;
 import alpha.cyber.intelmain.business.operation.IUserView;
 import alpha.cyber.intelmain.business.operation.OperatorActivity;
 import alpha.cyber.intelmain.business.operation.OperatorPresenter;
@@ -121,10 +119,7 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
             IntentUtils.startAty(this, OperatorActivity.class, bundle);
 
 
-            String time = DateUtils.getSystemTime();
-            String bookcode = "A1010400";
-            String request = "17001" + time + "AO|AB" + bookcode + "|AY0AZ";
-            presenter.getBookInfo(request);
+
         }
     }
 
@@ -133,6 +128,15 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
         super.onResume();
         //扫描全书柜，更新到本地数据库中
 //        openDevice();
+
+        String time = DateUtils.getSystemTime();
+        String bookcode = "00834470";
+        String bookcode2 = "00834472";
+
+        String request = "17001" + time + "AO|AB" + bookcode + "|AY0AZ";
+        String request2 = "17001" + time + "AO|AB" + bookcode2 + "|AY0AZ";
+        presenter.getBookInfo(request);
+        presenter.getBookInfo(request2);
 
     }
 
@@ -310,67 +314,13 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
             boolean b_find = false;
             switch (msg.what) {
                 case INVENTORY_MSG:
-                    // if (pt.bBuzzer)
-                    // {
-                    // VoicePlayer.GetInst(pt).Play();
-                    // }
 
-                    @SuppressWarnings("unchecked")
-                    Vector<Object> tagList = (Vector<Object>) msg.obj;
-                    if (pt.bRealShowTag && !pt.inventoryList.isEmpty()) {
-                        pt.inventoryList.clear();
-                    }
-                    if (!tagList.isEmpty() && pt.bBuzzer) {
-                        VoicePlayer.GetInst(pt).Play();
-                    }
-                    for (int i = 0; i < tagList.size(); i++) {
-                        b_find = false;
-                        // ISO15693 TAG
-                        if (tagList.get(i) instanceof ISO15693Tag) {
-                            ISO15693Tag tagData = (ISO15693Tag) tagList.get(i);
-                            String uidStr = GFunction.encodeHexStr(tagData.uid);
-                            for (int j = 0; j < pt.inventoryList.size(); j++) {
-                                InventoryReport mReport = pt.inventoryList.get(j);
-                                if (mReport.getUidStr().equals(uidStr)) {
-                                    mReport.setFindCnt(mReport.getFindCnt() + 1);
-                                    b_find = true;
-                                    break;
-                                }
-                            }
-                            if (!b_find) {
-                                long mCnt = pt.bRealShowTag ? 0 : 1;
-                                String tagName = ISO15693Interface
-                                        .GetTagNameById(tagData.tag_id);
-                                pt.inventoryList.add(new InventoryReport(uidStr,
-                                        tagName, mCnt));
-
-                            }
-                        } else if (tagList.get(i) instanceof ISO14443ATag) {
-                            ISO14443ATag tagData = (ISO14443ATag) tagList.get(i);
-                            String uidStr = GFunction.encodeHexStr(tagData.uid);
-                            for (int j = 0; j < pt.inventoryList.size(); j++) {
-                                InventoryReport mReport = pt.inventoryList.get(j);
-                                if (mReport.getUidStr().equals(uidStr)) {
-                                    mReport.setFindCnt(mReport.getFindCnt() + 1);
-                                    b_find = true;
-                                    break;
-                                }
-                            }
-                            if (!b_find) {
-                                long mCnt = pt.bRealShowTag ? 0 : 1;
-                                String tagName = ISO14443AInterface
-                                        .GetTagNameById(tagData.tag_id);
-                                pt.inventoryList.add(new InventoryReport(uidStr,
-                                        tagName, mCnt));
-
-                            }
-                        }
-
-                    }
+                    getInventoryList(pt, msg);
 
                     Log.e(Constant.TAG, pt.inventoryList.toString());
 
-                    bookDao.deleteAll();
+                    clearBookDb();
+
                     byte connectMode = 0;
 
                     for (int i = 0; i < inventoryList.size(); i++) {
@@ -381,10 +331,10 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
                                     RfidDef.RFID_ISO15693_PICC_ICODE_SLI_ID, connectMode,
                                     connectUid);
 
+                            Log.e(Constant.TAG, "连接：" + iret);
+
                             String time = DateUtils.getSystemTime();
                             String bookinfo_request = getResources().getString(R.string.bookinfo_request);
-
-                            Log.e(Constant.TAG, "连接：" + iret);
 
                             String bookCode = UiReadBlock(i, i + 1);
 
@@ -394,8 +344,7 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
 
                     }
 
-                    m_reader.RDR_SetCommuImmeTimeout();
-                    b_inventoryThreadRun = false;
+                    stopLoop();
 
                     break;
                 case INVENTORY_FAIL_MSG:
@@ -412,6 +361,71 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
+    private void stopLoop() {
+        m_reader.RDR_SetCommuImmeTimeout();
+        b_inventoryThreadRun = false;
+    }
+
+    private void getInventoryList(InPutPwdActivity pt, Message msg) {
+        @SuppressWarnings("unchecked")
+        Vector<Object> tagList = (Vector<Object>) msg.obj;
+        if (pt.bRealShowTag && !pt.inventoryList.isEmpty()) {
+            pt.inventoryList.clear();
+        }
+        if (!tagList.isEmpty() && pt.bBuzzer) {
+            VoicePlayer.GetInst(pt).Play();
+        }
+        boolean b_find;
+        for (int i = 0; i < tagList.size(); i++) {
+            b_find = false;
+            // ISO15693 TAG
+            if (tagList.get(i) instanceof ISO15693Tag) {
+                ISO15693Tag tagData = (ISO15693Tag) tagList.get(i);
+                String uidStr = GFunction.encodeHexStr(tagData.uid);
+                for (int j = 0; j < pt.inventoryList.size(); j++) {
+                    InventoryReport mReport = pt.inventoryList.get(j);
+                    if (mReport.getUidStr().equals(uidStr)) {
+                        mReport.setFindCnt(mReport.getFindCnt() + 1);
+                        b_find = true;
+                        break;
+                    }
+                }
+                if (!b_find) {
+                    long mCnt = pt.bRealShowTag ? 0 : 1;
+                    String tagName = ISO15693Interface
+                            .GetTagNameById(tagData.tag_id);
+                    pt.inventoryList.add(new InventoryReport(uidStr,
+                            tagName, mCnt));
+
+                }
+            } else if (tagList.get(i) instanceof ISO14443ATag) {
+                ISO14443ATag tagData = (ISO14443ATag) tagList.get(i);
+                String uidStr = GFunction.encodeHexStr(tagData.uid);
+                for (int j = 0; j < pt.inventoryList.size(); j++) {
+                    InventoryReport mReport = pt.inventoryList.get(j);
+                    if (mReport.getUidStr().equals(uidStr)) {
+                        mReport.setFindCnt(mReport.getFindCnt() + 1);
+                        b_find = true;
+                        break;
+                    }
+                }
+                if (!b_find) {
+                    long mCnt = pt.bRealShowTag ? 0 : 1;
+                    String tagName = ISO14443AInterface
+                            .GetTagNameById(tagData.tag_id);
+                    pt.inventoryList.add(new InventoryReport(uidStr,
+                            tagName, mCnt));
+
+                }
+            }
+
+        }
+    }
+
+    private void clearBookDb() {
+        bookDao.deleteAll();
+    }
+
     private String UiReadBlock(int blkAddr, int numOfBlksToRead) {
         if (blkAddr + numOfBlksToRead > 28) {// 数据块地址溢出
             numOfBlksToRead = 28 - blkAddr;
@@ -426,6 +440,7 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
         }
 
         String strData = GFunction.encodeHexStr(bufBlocks);
+        Log.e(Constant.TAG,"转换后的书码："+strData);
 
         return strData;
     }

@@ -13,6 +13,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Locale;
 
+import alpha.cyber.intelmain.MyApplication;
+
 /**
  * Created by huxin on 16/6/28.
  */
@@ -159,5 +161,9 @@ public class FileUtils {
      */
     public static boolean deleteDir(String path) {
         return deleteDir(new File(path));
+    }
+
+    public static String getUpgradeApkPath(){
+        return getRootPath( MyApplication.getAppContext(),true)+"library";
     }
 }

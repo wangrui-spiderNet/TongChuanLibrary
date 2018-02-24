@@ -2,6 +2,7 @@ package alpha.cyber.intelmain.business.home;
 
 import java.util.List;
 
+import alpha.cyber.intelmain.bean.AppUpgradeInfo;
 import alpha.cyber.intelmain.bean.HomeNewsBean;
 import alpha.cyber.intelmain.http.model.Request;
 import retrofit2.http.Body;
@@ -17,4 +18,6 @@ public interface HomePageModule {
     @POST("/weitu/getIndexImgs?address=address1")
     Observable<List<HomeNewsBean>> getHomeNews(@Body Request data);
 
+    @POST("/weitu/getAppVersion?address=address1")
+    Observable<AppUpgradeInfo> getUpGradeInfo(@Body Request data);
 }

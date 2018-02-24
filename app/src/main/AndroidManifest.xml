@@ -56,6 +56,14 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".reciever.SilentInstallReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
         <activity android:name="alpha.cyber.intelmain.business.login.LoginActivity"></activity>
         <activity android:name="alpha.cyber.intelmain.business.login.InPutPwdActivity"></activity>
         <activity android:name="alpha.cyber.intelmain.business.operation.OperatorActivity"></activity>

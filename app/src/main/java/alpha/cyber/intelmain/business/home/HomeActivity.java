@@ -1,34 +1,52 @@
 package alpha.cyber.intelmain.business.home;
 
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.loader.GlideImageLoaderImpl;
 import com.youth.banner.transformer.DefaultTransformer;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.MyApplication;
 import alpha.cyber.intelmain.R;
+import alpha.cyber.intelmain.base.AppException;
 import alpha.cyber.intelmain.base.BaseActivity;
+import alpha.cyber.intelmain.bean.AppUpgradeInfo;
 import alpha.cyber.intelmain.bean.HomeNewsBean;
 import alpha.cyber.intelmain.business.login.InPutPwdActivity;
 import alpha.cyber.intelmain.business.login.LoginActivity;
 import alpha.cyber.intelmain.business.login.LoginPresenter;
 import alpha.cyber.intelmain.db.BookDao;
+import alpha.cyber.intelmain.http.RequestHandler;
 import alpha.cyber.intelmain.util.AppSharedPreference;
+import alpha.cyber.intelmain.util.AppThreadManager;
 import alpha.cyber.intelmain.util.DateUtils;
+import alpha.cyber.intelmain.util.DeviceUtils;
+import alpha.cyber.intelmain.util.FileUtils;
 import alpha.cyber.intelmain.util.IntentUtils;
+import alpha.cyber.intelmain.util.PackageUtils;
+import alpha.cyber.intelmain.util.ShellUtils;
 
 /**
  * Created by wangrui on 2018/1/29.
@@ -166,7 +184,29 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 //            btnRightButton.setVisibility(View.VISIBLE);
 //        }
 
+
+        if (checkVersion()) {
+            if (ShellUtils.checkRootPermission()) {
+
+                //TODO 下载APK的成功
+
+                String apkPath = FileUtils.getRootPath(MyApplication.getInstance().getApplicationContext(),true) +"/library";
+
+                int resultCode = PackageUtils.installSilent(MyApplication.getInstance().getApplicationContext(),apkPath);
+                if (resultCode != PackageUtils.INSTALL_SUCCEEDED) {
+                    Log.e(Constant.TAG,"升级失败");
+                }
+            }
+        }
+
     }
+
+    private boolean checkVersion() {
+
+        return true;
+    }
+
+
 
     @Override
     public void onClick(View v) {
@@ -192,9 +232,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 //        String userinfo_request = getResources().getString(R.string.userinfo_request);
 //        String userinfo_format = String.format(userinfo_request,time,cardnum,pwd);
 //        presenter.getUserInfo(userinfo_format);
-
 //
-
 
 
     }
@@ -251,6 +289,80 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void getIntentData() {
 
+    }
+
+    /**
+     * 检查版本更新
+     *
+     * @author hwp
+     * @since v0.0.1
+     */
+    @Override
+    public void checkVersion(final AppUpgradeInfo appUpgradeInfo) {
+        try {
+            AppThreadManager.getInstance().start(new Runnable() {
+
+                @Override
+                public void run() {
+                    if (appUpgradeInfo != null && appUpgradeInfo.getUpdateType() != 0 && !isUpgrade) {
+                        Log.d(Constant.TAG,
+                                "当前版本信息===" + DeviceUtils.getVersionCode(MyApplication.getAppContext()) + "  name=" + DeviceUtils.getVersionName(mContext));
+                        Log.d(Constant.TAG, "server版本信息===" + appUpgradeInfo.getVersionCode() + "  name=" + appUpgradeInfo.getVersion());
+                        if (DeviceUtils.getVersionCode(MyApplication.getAppContext()) < appUpgradeInfo.getVersionCode()) {
+                            FileUtils.deleteDir(FileUtils.getUpgradeApkPath());
+                            downloadUpdate(appUpgradeInfo.getVersion(), appUpgradeInfo.getDownLoadUrl());
+                        }
+                    }
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private HttpUtils mHttpUtils;
+    private boolean isUpgrade=false;
+
+    private void downloadUpdate(String versionName, String downloadURL) {
+
+        final String update_localpath = FileUtils.getUpgradeApkPath() + versionName + ".apk";
+        mHttpUtils = new HttpUtils();
+        mHttpUtils.download(downloadURL, update_localpath, true, // 如果目标文件存在，接着未完成的部分继续下载。服务器不支持RANGE时将从新下载。
+                false, // 如果从请求返回信息中获取到文件名，下载完成后自动重命名。
+                new RequestCallBack<File>() {
+
+                    @Override
+                    public void onSuccess(ResponseInfo<File> responseInfo) {
+                        if (!TextUtils.isEmpty(update_localpath)) {
+                            File f = new File(FileUtils.getUpgradeApkPath());
+                            File[] files = f.listFiles();
+                            if (null != files && files.length > 0) {
+                                for (File file : files) {
+                                    String apkFilePath = file.getAbsolutePath();
+                                    PackageManager pm = MyApplication.getAppContext().getPackageManager();
+                                    PackageInfo info = pm.getPackageArchiveInfo(apkFilePath, PackageManager.GET_ACTIVITIES);
+                                    ApplicationInfo appInfo = null;
+                                    if (info != null) {
+                                        appInfo = info.applicationInfo;
+                                        String packageName = appInfo.packageName;
+                                        if (!packageName.equalsIgnoreCase(DeviceUtils.getAppPackageName(MyApplication.getAppContext()))) {
+                                            file.delete();
+                                        }
+                                    }
+                                }
+                            }
+                            FileUtils.ApkInstall(MyApplication.getAppContext(), update_localpath);
+                            isUpgrade = false;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(com.lidroid.xutils.exception.HttpException arg0, String arg1) {
+                        FileUtils.deleteDir(FileUtils.getUpgradeApkPath());
+                        isUpgrade = false;
+                    }
+                });
     }
 
 

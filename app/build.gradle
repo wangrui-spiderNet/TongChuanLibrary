@@ -34,6 +34,7 @@ android {
     def API_DEV_HOST = '"http://opac.shuduier.com"'
 
     //签名
+
     signingConfigs {
         myConfig {
             storeFile file("../app/key/tongchuan_lib.jks")
@@ -51,6 +52,7 @@ android {
             buildConfigField('boolean', 'PRINT_LOG', 'true')
             buildConfigField('String', 'API_HOST', "${API_DEV_HOST}")
             minifyEnabled false
+
             // 混淆文件的位置
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             //debug
@@ -137,11 +139,9 @@ android {
                                     TALKINGDATA_ID: "778917A8BF12475E948992A672F09BA2"]
         }
     }
-
 }
 
 def compileTime() {
-
     return new Date().format("yyyy_MM_dd", java.util.TimeZone.getTimeZone("GMT+8"))
 }
 
