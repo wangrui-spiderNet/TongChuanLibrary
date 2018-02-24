@@ -5,8 +5,8 @@ import java.io.File;
 
 import alpha.cyber.intellib.utils.Logger;
 import alpha.cyber.intellib.utils.ToastUtils;
-import alpha.cyber.serial.Command;
-import alpha.cyber.serial.SerialPortController;
+import android_serialport_api.Command;
+import android_serialport_api.SerialPortController;
 
 import android.os.Handler;
 

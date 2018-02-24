@@ -227,9 +227,7 @@ public class DateUtils {
         return format.format(date);
     }
 
-//    public static void main(String [] strs){
-//        System.out.print("系统时间:"+getSystemTime());
-//    }
+
 
     /**
      * 获取当前日期是星期几<br>

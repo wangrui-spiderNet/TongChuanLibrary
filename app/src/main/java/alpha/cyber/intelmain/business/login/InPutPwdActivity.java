@@ -1,5 +1,6 @@
 package alpha.cyber.intelmain.business.login;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,9 +29,16 @@ import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.VoicePlayer;
 import alpha.cyber.intelmain.base.BaseActivity;
+import alpha.cyber.intelmain.bean.BookInfoBean;
 import alpha.cyber.intelmain.bean.InventoryReport;
+import alpha.cyber.intelmain.bean.UserInfoBean;
+import alpha.cyber.intelmain.business.MainActivity;
+import alpha.cyber.intelmain.business.operation.IUserView;
 import alpha.cyber.intelmain.business.operation.OperatorActivity;
+import alpha.cyber.intelmain.business.operation.OperatorPresenter;
+import alpha.cyber.intelmain.db.BookDao;
 import alpha.cyber.intelmain.util.AppSharedPreference;
+import alpha.cyber.intelmain.util.DateUtils;
 import alpha.cyber.intelmain.util.IntentUtils;
 import alpha.cyber.intelmain.util.Log;
 import alpha.cyber.intelmain.util.StringUtils;
@@ -40,12 +48,13 @@ import alpha.cyber.intelmain.util.ToastUtil;
  * Created by wangrui on 2018/1/31.
  */
 
-public class InPutPwdActivity extends BaseActivity implements View.OnClickListener{
+public class InPutPwdActivity extends BaseActivity implements View.OnClickListener, IUserView {
 
-    private EditText etPWd,etAccount;
+    private EditText etPWd, etAccount;
     private Button btnLogin;
 
     private ADReaderInterface m_reader = new ADReaderInterface();
+    private ISO15693Interface mTag = new ISO15693Interface();
     private Thread m_inventoryThrd = null;
     private boolean b_inventoryThreadRun = false;
     private boolean bOnlyReadNew = false;
@@ -63,14 +72,17 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
     private static final int INVENTORY_FAIL_MSG = 4;
     private static final int THREAD_END = 3;
 
+    private OperatorPresenter presenter;
+
     private List<InventoryReport> inventoryList = new ArrayList<InventoryReport>();
 
+    private BookDao bookDao;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_pwd);
-
+        bookDao = new BookDao(InPutPwdActivity.this);
     }
 
     @Override
@@ -83,29 +95,36 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
 
         etAccount.setText(Constant.cardnum);
         etPWd.setText(Constant.pwd);
+        presenter = new OperatorPresenter(this, this);
 
     }
 
     @Override
     public void onClick(View v) {
-        if(v==btnLogin){
+        if (v == btnLogin) {
 
-            if(StringUtils.isEmpty(etAccount.getText().toString())){
+            if (StringUtils.isEmpty(etAccount.getText().toString())) {
                 ToastUtil.showToast("账号不能为空");
                 return;
             }
 
-            if(StringUtils.isEmpty(etPWd.getText().toString())){
+            if (StringUtils.isEmpty(etPWd.getText().toString())) {
                 ToastUtil.showToast("密码不能为空");
                 return;
             }
 
             finish();
             AppSharedPreference.getInstance().setLogIn(true);
-            Bundle bundle=new Bundle();
-            bundle.putString(Constant.ACCOUNT,etAccount.getText().toString());
-            bundle.putString(Constant.PASSWORD,etPWd.getText().toString());
-            IntentUtils.startAty(this, OperatorActivity.class,bundle);
+            Bundle bundle = new Bundle();
+            bundle.putString(Constant.ACCOUNT, etAccount.getText().toString());
+            bundle.putString(Constant.PASSWORD, etPWd.getText().toString());
+            IntentUtils.startAty(this, OperatorActivity.class, bundle);
+
+
+            String time = DateUtils.getSystemTime();
+            String bookcode = "A1010400";
+            String request = "17001" + time + "AO|AB" + bookcode + "|AY0AZ";
+            presenter.getBookInfo(request);
         }
     }
 
@@ -146,7 +165,7 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
 
             m_inventoryThrd = new Thread(new InventoryThrd());
             m_inventoryThrd.start();
-        } else{
+        } else {
             ToastUtils.showShortToast("打开设备失败");
         }
 
@@ -275,7 +294,7 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
 
     private Handler mHandler = new MyHandler(this);
 
-    private static class MyHandler extends Handler {
+    private class MyHandler extends Handler {
         private final WeakReference<InPutPwdActivity> mActivity;
 
         public MyHandler(InPutPwdActivity activity) {
@@ -349,33 +368,79 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
 
                     }
 
-//                    pt.tv_inventoryInfo.setText(pt
-//                            .getString(R.string.tx_info_tagCnt)
-//                            + pt.inventoryList.size()
-//                            + pt.getString(R.string.tx_info_loopCnt) + pt.mLoopCnt
-//                            + pt.getString(R.string.tx_info_failCnt) + msg.arg1);
-//                    pt.inventoryAdapter.notifyDataSetChanged();
+                    Log.e(Constant.TAG, pt.inventoryList.toString());
 
-                    Log.e(Constant.TAG,pt.inventoryList.toString());
+                    bookDao.deleteAll();
+                    byte connectMode = 0;
+
+                    for (int i = 0; i < inventoryList.size(); i++) {
+
+                        byte[] connectUid = GFunction.decodeHex(inventoryList.get(i).getUidStr());
+                        if (connectUid != null) {
+                            int iret = mTag.ISO15693_Connect(m_reader,
+                                    RfidDef.RFID_ISO15693_PICC_ICODE_SLI_ID, connectMode,
+                                    connectUid);
+
+                            String time = DateUtils.getSystemTime();
+                            String bookinfo_request = getResources().getString(R.string.bookinfo_request);
+
+                            Log.e(Constant.TAG, "连接：" + iret);
+
+                            String bookCode = UiReadBlock(i, i + 1);
+
+                            String bookinfo_format = String.format(bookinfo_request, time,bookCode);
+                            presenter.getBookInfo(bookinfo_format);
+                        }
+
+                    }
+
+                    m_reader.RDR_SetCommuImmeTimeout();
+                    b_inventoryThreadRun = false;
+
                     break;
                 case INVENTORY_FAIL_MSG:
-//                    pt.tv_inventoryInfo.setText(pt
-//                            .getString(R.string.tx_info_tagCnt)
-//                            + pt.inventoryList.size()
-//                            + pt.getString(R.string.tx_info_loopCnt) + pt.mLoopCnt
-//                            + pt.getString(R.string.tx_info_failCnt) + msg.arg1);
 
-                    Log.e(Constant.TAG,"》》》》》失败》》》》》");
+                    Log.e(Constant.TAG, "》》》》》失败》》》》》");
+
                     break;
                 case THREAD_END:
-//                    pt.FinishInventory();
-
 
                     break;
                 default:
                     break;
             }
         }
+    }
+
+    private String UiReadBlock(int blkAddr, int numOfBlksToRead) {
+        if (blkAddr + numOfBlksToRead > 28) {// 数据块地址溢出
+            numOfBlksToRead = 28 - blkAddr;
+        }
+        Integer numOfBlksRead = 0;
+        Long bytesBlkDatRead = (long) 0;
+        byte bufBlocks[] = new byte[4 * numOfBlksToRead];
+        int iret = mTag.ISO15693_ReadMultiBlocks(false, blkAddr,
+                numOfBlksToRead, numOfBlksRead, bufBlocks, bytesBlkDatRead);
+        if (iret != ApiErrDefinition.NO_ERROR) {
+            Log.e(Constant.TAG, "错误");
+        }
+
+        String strData = GFunction.encodeHexStr(bufBlocks);
+
+        return strData;
+    }
+
+    @Override
+    public void getUserInfo(UserInfoBean userinfoBean) {
+
+    }
+
+    @Override
+    public void getBorrowedBookInfo(BookInfoBean infoBean) {
+
+        Log.e(Constant.TAG,"返回+++++++ ："+infoBean.toString());
+
+        bookDao.insertBook(infoBean);
     }
 
     @Override

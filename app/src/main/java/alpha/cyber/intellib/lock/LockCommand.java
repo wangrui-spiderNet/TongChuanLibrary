@@ -2,7 +2,8 @@ package alpha.cyber.intellib.lock;
 
 import java.nio.ByteBuffer;
 
-import alpha.cyber.serial.Command;
+import android_serialport_api.Command;
+
 
 public class LockCommand extends Command {
 	

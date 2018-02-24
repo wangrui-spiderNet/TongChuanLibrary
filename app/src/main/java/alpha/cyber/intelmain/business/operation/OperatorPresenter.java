@@ -183,7 +183,8 @@ public class OperatorPresenter {
 
                 if(temp.startsWith(SocketConstants.title_identifier_aj)){
                     infoBean.setBookname(temp.substring(SocketConstants.title_identifier_aj.length()));
-                }else if(temp.startsWith(SocketConstants.item_identifier_ab)){
+                }else if(temp.startsWith(SocketConstants.hold_items_limit_bz)){
+
                     infoBean.setBookcode(temp.substring(SocketConstants.item_identifier_ab.length()));
                 }else if(temp.startsWith(SocketConstants.due_date_ah)){
                     infoBean.setEndtime(temp.substring(SocketConstants.due_date_ah.length()));

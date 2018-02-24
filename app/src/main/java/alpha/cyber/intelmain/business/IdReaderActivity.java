@@ -10,9 +10,8 @@ import alpha.cyber.intellib.utils.HexTools;
 import alpha.cyber.intellib.utils.Logger;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
-import alpha.cyber.serial.SerialPort;
+import android_serialport_api.SerialPort;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
