@@ -34,13 +34,13 @@ android {
     def API_DEV_HOST = '"http://opac.shuduier.com"'
 
     //签名
-
     signingConfigs {
         myConfig {
             storeFile file("../app/key/tongchuan_lib.jks")
             storePassword "tongchuanlib"
             keyAlias "tongchuanlib"
             keyPassword "tongchuanlib"
+
         }
 
     }

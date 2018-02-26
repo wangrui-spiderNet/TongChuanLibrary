@@ -190,11 +190,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
                 //TODO 下载APK的成功
 
-                String apkPath = FileUtils.getRootPath(MyApplication.getInstance().getApplicationContext(),true) +"/library";
+                String apkPath = FileUtils.getRootPath(MyApplication.getInstance().getApplicationContext(), true) + "/library";
 
-                int resultCode = PackageUtils.installSilent(MyApplication.getInstance().getApplicationContext(),apkPath);
+                int resultCode = PackageUtils.installSilent(MyApplication.getInstance().getApplicationContext(), apkPath);
                 if (resultCode != PackageUtils.INSTALL_SUCCEEDED) {
-                    Log.e(Constant.TAG,"升级失败");
+                    Log.e(Constant.TAG, "升级失败");
                 }
             }
         }
@@ -205,7 +205,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
         return true;
     }
-
 
 
     @Override
@@ -322,7 +321,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private HttpUtils mHttpUtils;
-    private boolean isUpgrade=false;
+    private boolean isUpgrade = false;
 
     private void downloadUpdate(String versionName, String downloadURL) {
 
@@ -352,7 +351,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                                     }
                                 }
                             }
-                            FileUtils.ApkInstall(MyApplication.getAppContext(), update_localpath);
+
+                            int resultCode = PackageUtils.installSilent(MyApplication.getAppContext(), update_localpath);
+                            if (resultCode != PackageUtils.INSTALL_SUCCEEDED) {
+                                Log.e(Constant.TAG, "升级失败");
+                            }
                             isUpgrade = false;
                         }
                     }

@@ -3,7 +3,6 @@ package alpha.cyber.intelmain.business.operation;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
@@ -19,9 +18,9 @@ import alpha.cyber.intelmain.bean.BookInfoBean;
 import alpha.cyber.intelmain.bean.UserInfoBean;
 import alpha.cyber.intelmain.business.borrowbook.OpenBoxActivity;
 import alpha.cyber.intelmain.business.borrowbook.BorrowDetailActivity;
+import alpha.cyber.intelmain.business.login.IUserView;
 import alpha.cyber.intelmain.business.search.SearchActivity;
 import alpha.cyber.intelmain.business.userinfo.UserInfoActivity;
-import alpha.cyber.intelmain.db.BookDao;
 import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.DateUtils;
 import alpha.cyber.intelmain.util.IntentUtils;
@@ -47,7 +46,6 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     private UserInfoBean userInfo;
     private List<BookInfoBean> bookInfoBeanList=new ArrayList<>();
     private BorrowBookAdapter mAdapter;
-    private BookDao bookDao;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,7 +87,6 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     protected void initComponent() {
-        bookDao = new BookDao(this);
     }
 
     @Override
@@ -121,7 +118,6 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         } else if (tvSearchBook == v) {
             IntentUtils.startAty(this, SearchActivity.class);
 
-            Log.e(Constant.TAG,"数据库数据:"+bookDao.queryAllBooks().toString());
 
         } else if (btnRightButton == v) {
 
@@ -159,11 +155,9 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     }
 
     @Override
-    public void getBorrowedBookInfo(BookInfoBean infoBean) {
+    public void getAllBoxBooks(BookInfoBean infoBean) {
 
         bookInfoBeanList.add(infoBean);
-
-        bookDao.insertBook(infoBean);
 
         if(bookInfoBeanList.size()==userInfo.getBookcodes().size()+1){
             mAdapter.notifyDataSetChanged();

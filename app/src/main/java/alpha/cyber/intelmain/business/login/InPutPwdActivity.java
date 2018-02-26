@@ -31,7 +31,6 @@ import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.bean.BookInfoBean;
 import alpha.cyber.intelmain.bean.InventoryReport;
 import alpha.cyber.intelmain.bean.UserInfoBean;
-import alpha.cyber.intelmain.business.operation.IUserView;
 import alpha.cyber.intelmain.business.operation.OperatorActivity;
 import alpha.cyber.intelmain.business.operation.OperatorPresenter;
 import alpha.cyber.intelmain.db.BookDao;
@@ -127,16 +126,16 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
     protected void onResume() {
         super.onResume();
         //扫描全书柜，更新到本地数据库中
-//        openDevice();
+        openDevice();
 
-        String time = DateUtils.getSystemTime();
-        String bookcode = "00834470";
-        String bookcode2 = "00834472";
-
-        String request = "17001" + time + "AO|AB" + bookcode + "|AY0AZ";
-        String request2 = "17001" + time + "AO|AB" + bookcode2 + "|AY0AZ";
-        presenter.getBookInfo(request);
-        presenter.getBookInfo(request2);
+//        String time = DateUtils.getSystemTime();
+//        String bookcode = "00834470";
+//        String bookcode2 = "00834472";
+//
+//        String request = "17001" + time + "AO|AB" + bookcode + "|AY0AZ";
+//        String request2 = "17001" + time + "AO|AB" + bookcode2 + "|AY0AZ";
+//        presenter.getBookInfo(request);
+//        presenter.getBookInfo(request2);
 
     }
 
@@ -336,7 +335,8 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
                             String time = DateUtils.getSystemTime();
                             String bookinfo_request = getResources().getString(R.string.bookinfo_request);
 
-                            String bookCode = UiReadBlock(i, i + 1);
+                            String bookCode = UiReadBlock(i, 2);
+                            bookCode = bookCode.substring(6,14);
 
                             String bookinfo_format = String.format(bookinfo_request, time,bookCode);
                             presenter.getBookInfo(bookinfo_format);
@@ -451,9 +451,7 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
     }
 
     @Override
-    public void getBorrowedBookInfo(BookInfoBean infoBean) {
-
-        Log.e(Constant.TAG,"返回+++++++ ："+infoBean.toString());
+    public void getAllBoxBooks(BookInfoBean infoBean) {
 
         bookDao.insertBook(infoBean);
     }

@@ -6,8 +6,8 @@ import com.j256.ormlite.table.DatabaseTable;
 /**
  * Created by wangrui on 2018/2/11.
  */
-@DatabaseTable(tableName = "box_book_table")
-public class BookInfoBean {
+@DatabaseTable(tableName = "borrow_book_table")
+public class BorrowBookBean {
 
     @DatabaseField (generatedId = true)
     private long bookid;

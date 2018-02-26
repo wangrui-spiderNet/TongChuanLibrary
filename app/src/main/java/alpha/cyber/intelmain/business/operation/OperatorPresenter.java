@@ -8,6 +8,7 @@ import java.util.List;
 import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.bean.BookInfoBean;
 import alpha.cyber.intelmain.bean.UserInfoBean;
+import alpha.cyber.intelmain.business.login.IUserView;
 import alpha.cyber.intelmain.http.socket.MyAsyncTask;
 import alpha.cyber.intelmain.http.socket.SocketConstants;
 import alpha.cyber.intelmain.util.AppSharedPreference;
@@ -156,7 +157,7 @@ public class OperatorPresenter {
 
                 BookInfoBean infoBean = parseBooks(result);
 
-                userView.getBorrowedBookInfo(infoBean);
+                userView.getAllBoxBooks(infoBean);
             }
 
             @Override

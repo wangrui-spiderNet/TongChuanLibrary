@@ -13,13 +13,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import alpha.cyber.intelmain.bean.BookInfoBean;
+import alpha.cyber.intelmain.bean.BorrowBookBean;
 import alpha.cyber.intelmain.bean.ContactsBean;
 import alpha.cyber.intelmain.bean.ContactsGroups;
 import alpha.cyber.intelmain.bean.ContactsInformation;
 
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
-    private static final String DB_NAME = "cicada_pos.db";
+    private static final String DB_NAME = "tongchuan_lib.db";
 
     private Map<String, Dao> daos = new HashMap<String, Dao>();
 
@@ -35,6 +36,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 //            TableUtils.createTable(connectionSource, ContactsGroups.class);
 //            TableUtils.createTable(connectionSource, ContactsInformation.class);
             TableUtils.createTable(connectionSource, BookInfoBean.class);
+            TableUtils.createTable(connectionSource, BorrowBookBean.class);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -44,9 +47,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onUpgrade(SQLiteDatabase database,
                           ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
-            TableUtils.dropTable(connectionSource, ContactsBean.class, true);
-            TableUtils.dropTable(connectionSource, ContactsGroups.class, true);
-            TableUtils.dropTable(connectionSource, ContactsInformation.class, true);
+//            TableUtils.dropTable(connectionSource, ContactsBean.class, true);
+            TableUtils.dropTable(connectionSource, BorrowBookBean.class, true);
+            TableUtils.dropTable(connectionSource, BookInfoBean.class, true);
+
+
             onCreate(database, connectionSource);
         } catch (SQLException e) {
             e.printStackTrace();
