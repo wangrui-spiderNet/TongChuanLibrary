@@ -11,7 +11,6 @@ import alpha.cyber.intelmain.bean.HomeNewsBean;
 import alpha.cyber.intelmain.http.DefaultSubscriber;
 import alpha.cyber.intelmain.http.model.Request;
 import alpha.cyber.intelmain.http.utils.RetrofitUtils;
-import alpha.cyber.intelmain.util.Log;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 

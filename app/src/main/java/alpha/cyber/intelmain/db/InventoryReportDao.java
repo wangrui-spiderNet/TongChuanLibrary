@@ -9,35 +9,35 @@ import java.util.List;
 
 import alpha.cyber.intelmain.bean.BookInfoBean;
 import alpha.cyber.intelmain.bean.BorrowBookBean;
+import alpha.cyber.intelmain.bean.InventoryReport;
 
 /**
  * Created by wangrui on 2018/2/12.
  */
 
-public class HoldBookDao {
+public class InventoryReportDao {
 
     private Context context;
     private DatabaseHelper dbHelper;
-    private static Dao<BorrowBookBean, Integer> bookDao;
+    private static Dao<InventoryReport, Integer> inventoryDao;
 
-    public HoldBookDao(Context context) {
+    public InventoryReportDao(Context context) {
         this.context = context;
         try {
             dbHelper = DatabaseHelper.getHelper(context);
-            bookDao = dbHelper.getDao(BookInfoBean.class);
+            inventoryDao = dbHelper.getDao(InventoryReport.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
-    public boolean insertBook(BorrowBookBean bookInfoBean) {
+    public boolean insertBook(InventoryReport inventoryReport) {
 
         try {
             initDao();
-            Dao.CreateOrUpdateStatus status= bookDao.createOrUpdate(bookInfoBean);
+            Dao.CreateOrUpdateStatus status = inventoryDao.createOrUpdate(inventoryReport);
 
-            if(status.isCreated()||status.isUpdated()){
+            if (status.isCreated() || status.isUpdated()) {
                 return true;
             }
             return false;
@@ -50,40 +50,40 @@ public class HoldBookDao {
     }
 
     private void initDao() throws SQLException {
-        if (null == bookDao) {
-            bookDao = dbHelper.getDao(BookInfoBean.class);
+        if (null == inventoryDao) {
+            inventoryDao = dbHelper.getDao(BookInfoBean.class);
         }
     }
 
-    public List<BorrowBookBean> queryAllBooks(){
-        List<BorrowBookBean> allBooks =null;
+    public List<InventoryReport> queryAllBooks() {
+        List<InventoryReport> allBooks = null;
 
         try {
             initDao();
-            allBooks =bookDao.queryForAll();
-        }catch (SQLException e){
+            allBooks = inventoryDao.queryForAll();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return allBooks;
     }
 
-    public int deleteBookInfo(BorrowBookBean bookInfoBean){
+    public int deleteBookInfo(InventoryReport bookInfoBean) {
         try {
             initDao();
-            return bookDao.delete(bookInfoBean);
-        }catch (SQLException e){
+            return inventoryDao.delete(bookInfoBean);
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return 0;
     }
 
-    public void deleteAll(){
+    public void deleteAll() {
         try {
             initDao();
-            bookDao.deleteBuilder().delete();
-        }catch (SQLException e){
+            inventoryDao.deleteBuilder().delete();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 

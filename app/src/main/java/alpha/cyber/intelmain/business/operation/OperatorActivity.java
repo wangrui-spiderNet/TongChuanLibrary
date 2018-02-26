@@ -47,11 +47,14 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     private List<BookInfoBean> bookInfoBeanList=new ArrayList<>();
     private BorrowBookAdapter mAdapter;
 
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_operator);
+
     }
 
     @Override
@@ -98,6 +101,19 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         btnRightButton.setOnClickListener(this);
         confirmDialog.setConfirmListener(this);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+
+    }
+
+
+
+
+
+
 
     @Override
     public void onBackPressed() {
@@ -186,4 +202,7 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         String userinfo_format = String.format(userinfo_request, time, cardnum, pwd);
         presenter.getUserInfo(userinfo_format);
     }
+
+
+
 }

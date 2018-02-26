@@ -17,6 +17,7 @@ import alpha.cyber.intelmain.bean.BorrowBookBean;
 import alpha.cyber.intelmain.bean.ContactsBean;
 import alpha.cyber.intelmain.bean.ContactsGroups;
 import alpha.cyber.intelmain.bean.ContactsInformation;
+import alpha.cyber.intelmain.bean.InventoryReport;
 
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
@@ -35,8 +36,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 //            TableUtils.createTable(connectionSource, ContactsBean.class);
 //            TableUtils.createTable(connectionSource, ContactsGroups.class);
 //            TableUtils.createTable(connectionSource, ContactsInformation.class);
+
             TableUtils.createTable(connectionSource, BookInfoBean.class);
             TableUtils.createTable(connectionSource, BorrowBookBean.class);
+            TableUtils.createTable(connectionSource, InventoryReport.class);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -50,7 +53,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 //            TableUtils.dropTable(connectionSource, ContactsBean.class, true);
             TableUtils.dropTable(connectionSource, BorrowBookBean.class, true);
             TableUtils.dropTable(connectionSource, BookInfoBean.class, true);
-
+            TableUtils.dropTable(connectionSource, InventoryReport.class, true);
 
             onCreate(database, connectionSource);
         } catch (SQLException e) {

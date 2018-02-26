@@ -1,6 +1,6 @@
 package alpha.cyber.intelmain.business.home;
 
-import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.lidroid.xutils.HttpUtils;
@@ -30,16 +29,12 @@ import java.util.List;
 import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.MyApplication;
 import alpha.cyber.intelmain.R;
-import alpha.cyber.intelmain.base.AppException;
 import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.bean.AppUpgradeInfo;
 import alpha.cyber.intelmain.bean.HomeNewsBean;
 import alpha.cyber.intelmain.business.login.InPutPwdActivity;
-import alpha.cyber.intelmain.business.login.LoginActivity;
 import alpha.cyber.intelmain.business.login.LoginPresenter;
 import alpha.cyber.intelmain.db.BookDao;
-import alpha.cyber.intelmain.http.RequestHandler;
-import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.AppThreadManager;
 import alpha.cyber.intelmain.util.DateUtils;
 import alpha.cyber.intelmain.util.DeviceUtils;
@@ -178,12 +173,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         super.onResume();
         tvBack.setVisibility(View.INVISIBLE);
 
-//        if (AppSharedPreference.getInstance().isLogin()) {
-//            btnRightButton.setVisibility(View.INVISIBLE);
-//        } else {
-//            btnRightButton.setVisibility(View.VISIBLE);
-//        }
-
+        Intent intent=new Intent(this,CheckBookService.class);
+        startService(intent);
 
         if (checkVersion()) {
             if (ShellUtils.checkRootPermission()) {
@@ -203,7 +194,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
     private boolean checkVersion() {
 
-        return true;
+        return false;
     }
 
 
@@ -262,7 +253,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
             for (int i = 0; i < newsBeanList.size(); i++) {
                 String name = newsBeanList.get(i).getName();
-                Log.e(Constant.TAG, "name:" + name);
+
                 if (name.equals(getString(R.string.hot_news))) {
                     rbNews.setTag(newsBeanList.get(i).getImgUrl());
                 } else if (name.equals(getString(R.string.apply_card))) {

@@ -42,11 +42,13 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
     private static final int FRESH_VIEW = 2;
     private static final byte BOARD_ADDRESS = 0x01;
     private boolean b_stateThreadRun = false;
+    private boolean lc = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_box);
+        lc = initController();
     }
 
     @Override
@@ -79,31 +81,38 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        open();
-        //TODO 开锁
-        mLockController.openGrid((byte) (position + 1), BOARD_ADDRESS);
+        if (open()) {
+            //TODO 开锁需要验证
+            mLockController.openGrid((byte) (position + 1), BOARD_ADDRESS);
+        }
 
         IntentUtils.startAtyWithSingleParam(this, BorrowDetailActivity.class, Constant.BORROW_BACK, Constant.BORROW_BOOK);
+
     }
 
-    private void open() {
-        boolean lc = false;
-        lc = initController();
+    private boolean open() {
+
         if (lc) {
             mLockController.start();
             mLockController.open();
             mStateThrd = new Thread(new StateThrd());
             mStateThrd.start();
 
+            return true;
         } else {
-            ToastUtils.showShortToast("打开设备失败");
+            initController();
         }
+
+        return false;
 
     }
 
     private void close() {
         b_stateThreadRun = false;
-        mStateThrd.interrupt();
+        if(null!=mStateThrd){
+            mStateThrd.interrupt();
+        }
+
     }
 
     private class StateThrd implements Runnable {
@@ -142,9 +151,7 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
     protected void onDestroy() {
         super.onDestroy();
 
-        if (mStateThrd != null) {
-            mStateThrd.interrupt();
-        }
+        close();
     }
 
     @Override
@@ -155,6 +162,9 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
     @Override
     public void onGetLockState(int id, byte state) {
 
+        if (state == 0) {
+            IntentUtils.startAtyWithSingleParam(this, BorrowDetailActivity.class, Constant.BORROW_BACK, Constant.BORROW_BOOK);
+        }
     }
 
     @Override
@@ -186,7 +196,7 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
         msg.what = FRESH_VIEW;
         mHandler.sendMessage(msg);
 
-        Log.e(Constant.TAG,"开锁状态:"+stateList.toString());
+        Log.e(Constant.TAG, "开锁状态:" + stateList.toString());
     }
 
     private Handler mHandler = new LockHandler(this);

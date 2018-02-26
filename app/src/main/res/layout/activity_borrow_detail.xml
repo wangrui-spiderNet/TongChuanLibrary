@@ -28,7 +28,7 @@
 
         <LinearLayout
             android:id="@+id/layout_table_borrowed"
-            android:layout_width="@dimen/table_width"
+            android:layout_width="@dimen/borrow_book_table_width"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:orientation="vertical">
@@ -37,7 +37,7 @@
 
         <LinearLayout
             android:id="@+id/layout_table_back"
-            android:layout_width="@dimen/table_width"
+            android:layout_width="@dimen/borrow_book_table_width"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dimen_10"
@@ -47,7 +47,7 @@
 
         <LinearLayout
             android:id="@+id/layout_table_will_borrow"
-            android:layout_width="@dimen/table_width"
+            android:layout_width="@dimen/borrow_book_table_width"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dimen_10"

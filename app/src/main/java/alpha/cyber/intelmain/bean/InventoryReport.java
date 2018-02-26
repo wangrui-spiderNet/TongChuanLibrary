@@ -1,13 +1,21 @@
 package alpha.cyber.intelmain.bean;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 /**
  * Created by wangrui on 2018/2/22.
  */
-
+@DatabaseTable(tableName = "inventory_table")
 public class InventoryReport {
 
+    @DatabaseField(generatedId = true)
+    private long uid;
+    @DatabaseField
     private String uidStr;
+    @DatabaseField
     private String TagTypeStr;
+    @DatabaseField
     private long findCnt = 0;
 
     public InventoryReport() {
@@ -19,6 +27,14 @@ public class InventoryReport {
         this.setUidStr(uid);
         this.setTagTypeStr(tayType);
         this.setFindCnt(cnt);
+    }
+
+    public long getUid() {
+        return uid;
+    }
+
+    public void setUid(long uid) {
+        this.uid = uid;
     }
 
     public String getUidStr() {

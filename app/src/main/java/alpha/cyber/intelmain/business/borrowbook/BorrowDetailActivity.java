@@ -2,12 +2,17 @@ package alpha.cyber.intelmain.business.borrowbook;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.j256.ormlite.stmt.query.In;
+
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +20,9 @@ import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.bean.BookInfoBean;
+import alpha.cyber.intelmain.bean.InventoryReport;
 import alpha.cyber.intelmain.bean.UserInfoBean;
+import alpha.cyber.intelmain.business.home.CheckBookService;
 import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.DateUtils;
 import alpha.cyber.intelmain.widget.CustomConfirmDialog;
@@ -30,7 +37,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     private TextView tvName;
     private TextView tvCardNumber;
     private TextView tvPermission;
-    private LinearLayout layoutTableBorrowed,layoutTableBack,layoutTableWillBorrow;
+    private LinearLayout layoutTableBorrowed, layoutTableBack, layoutTableWillBorrow;
 
     private CustomConfirmDialog customDialog;
     private int from;
@@ -41,12 +48,44 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     private List<BookInfoBean> backBookList;
 
     private BorrowBookPresenter presenter;
+    private CheckBookHelper bookHelper;
+
+    private Handler mHandler = new MyHandler();
+
+    private class MyHandler extends Handler {
+
+        @Override
+        public void handleMessage(Message msg) {
+
+            switch (msg.what) {
+                case CheckBookHelper.INVENTORY_MSG:
+
+                    List<InventoryReport> reportList = bookHelper.getInventoryList(msg);
+
+
+                    break;
+                case CheckBookHelper.INVENTORY_FAIL_MSG:
+
+                    Log.e(Constant.TAG, "》》》》》失败》》》》》");
+
+                    break;
+                case CheckBookHelper.THREAD_END:
+
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_borrow_detail);
+        bookHelper = new CheckBookHelper(mHandler);
+
+        bookHelper.openDevice();
     }
 
     @Override
@@ -84,26 +123,26 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         borrowBookBean.setLatedays(getString(R.string.late_days));
         borrowBookList.add(borrowBookBean);
 
-        MyTableView tableBorrowed=new MyTableView(this,4);
-        tableBorrowed.AddRow(new String[]{getString(R.string.has_borrowed)},true);
-        for(int i=0;i<holdBookList.size();i++){
-            tableBorrowed.AddRow(new Object[]{holdBookList.get(i).getBookname(),holdBookList.get(i).getBorrowtime(),holdBookList.get(i).getEndtime(),holdBookList.get(i).getLatedays()},false);
+        MyTableView tableBorrowed = new MyTableView(this, 4);
+        tableBorrowed.AddRow(new String[]{getString(R.string.has_borrowed)}, true);
+        for (int i = 0; i < holdBookList.size(); i++) {
+            tableBorrowed.AddRow(new Object[]{holdBookList.get(i).getBookname(), holdBookList.get(i).getBorrowtime(), holdBookList.get(i).getEndtime(), holdBookList.get(i).getLatedays()}, false);
         }
 
         layoutTableBorrowed.addView(tableBorrowed);
 
-        MyTableView tableBack=new MyTableView(this,4);
-        tableBack.AddRow(new String[]{"已还图书"},true);
-        tableBack.AddRow(new String[]{"书名","还书时间","到期归还","逾期天数"},false);
-        tableBack.AddRow(new Object[]{"倚天屠龙记","2018-01-23","2019-01-24","5"},false);
-        tableBack.AddRow(new Object[]{"天龙八部","2018-01-23","2019-01-24","5"},false);
+        MyTableView tableBack = new MyTableView(this, 4);
+        tableBack.AddRow(new String[]{"已还图书"}, true);
+        tableBack.AddRow(new String[]{"书名", "还书时间", "到期归还", "逾期天数"}, false);
+        tableBack.AddRow(new Object[]{"倚天屠龙记", "2018-01-23", "2019-01-24", "5"}, false);
+        tableBack.AddRow(new Object[]{"天龙八部", "2018-01-23", "2019-01-24", "5"}, false);
         layoutTableBack.addView(tableBack);
 
-        MyTableView tableWillBorrow=new MyTableView(this,4);
-        tableWillBorrow.AddRow(new String[]{"本次借阅"},true);
-        tableWillBorrow.AddRow(new String[]{"书名","借阅时间","到期归还","逾期天数"},false);
-        tableWillBorrow.AddRow(new Object[]{"神雕侠侣","2018-01-23","2019-01-24","5"},false);
-        tableWillBorrow.AddRow(new Object[]{"碧血剑","2018-01-23","2019-01-24","5"},false);
+        MyTableView tableWillBorrow = new MyTableView(this, 4);
+        tableWillBorrow.AddRow(new String[]{"本次借阅"}, true);
+        tableWillBorrow.AddRow(new String[]{"书名", "借阅时间", "到期归还", "逾期天数"}, false);
+        tableWillBorrow.AddRow(new Object[]{"神雕侠侣", "2018-01-23", "2019-01-24", "5"}, false);
+        tableWillBorrow.AddRow(new Object[]{"碧血剑", "2018-01-23", "2019-01-24", "5"}, false);
         layoutTableWillBorrow.addView(tableWillBorrow);
 
     }
@@ -160,7 +199,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
     }
 
-    private void borrowBook(String cardnum,String bookcode){
+    private void borrowBook(String cardnum, String bookcode) {
         String time = DateUtils.getSystemTime();
 
         String time1 = time.substring(0, 8);
@@ -168,13 +207,13 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         Log.e(Constant.TAG, "time:" + time);
 
 //        借书
-        String borrow_book_request =getResources().getString(R.string.borrowbook_reuqest);
-        String borrow_book_format = String.format(borrow_book_request,time1,time2,time1,time2,cardnum,bookcode);
+        String borrow_book_request = getResources().getString(R.string.borrowbook_reuqest);
+        String borrow_book_format = String.format(borrow_book_request, time1, time2, time1, time2, cardnum, bookcode);
         presenter.borrowBook(borrow_book_format);
 
     }
 
-    private void reBorrow(String bookcode,String pwd){
+    private void reBorrow(String bookcode, String pwd) {
 
         String time = DateUtils.getSystemTime();
 
@@ -183,19 +222,19 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
 //        续借
         String continue_borrow_request = getResources().getString(R.string.re_borrow_book_request);
-        String continue_borrow_format = String.format(continue_borrow_request,time1,time2,time1,time2,pwd,bookcode);
+        String continue_borrow_format = String.format(continue_borrow_request, time1, time2, time1, time2, pwd, bookcode);
         presenter.continueBorrowBook(continue_borrow_format);
 
     }
 
-    private void backBook(String bookcode){
+    private void backBook(String bookcode) {
         String time = DateUtils.getSystemTime();
 
         String time1 = time.substring(0, 8);
         String time2 = time.substring(8, time.length());
 //        还书
         String back_book_request = getResources().getString(R.string.back_book_request);
-        String back_book_format = String.format(back_book_request,time1,time2,bookcode);
+        String back_book_format = String.format(back_book_request, time1, time2, bookcode);
         presenter.backBook(back_book_format);
     }
 
