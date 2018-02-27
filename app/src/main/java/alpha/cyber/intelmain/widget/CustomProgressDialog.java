@@ -2,6 +2,8 @@ package alpha.cyber.intelmain.widget;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.annotation.Nullable;
 import android.widget.TextView;
 
 import alpha.cyber.intelmain.R;
@@ -28,5 +30,6 @@ public class CustomProgressDialog extends Dialog {
 	public void setMessage(CharSequence message) {
 		((TextView) findViewById(R.id.progress_dialog_msg)).setText(message);
 	}
-	
+
+
 }

@@ -32,14 +32,13 @@ public class CheckBookService extends Service implements IUserView {
 
 
     public List<InventoryReport> inventoryList;
-    public boolean bRealShowTag = false;
-    public boolean bBuzzer = true;
     private BookDao bookDao;
     private InventoryReportDao reportDao;
     private OperatorPresenter presenter;
 
     private CheckBookHelper helper;
     private boolean deviceOpen = false;
+
 
     @Nullable
     @Override

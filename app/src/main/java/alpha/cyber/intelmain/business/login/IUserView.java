@@ -1,5 +1,6 @@
 package alpha.cyber.intelmain.business.login;
 
+import alpha.cyber.intelmain.base.IBaseView;
 import alpha.cyber.intelmain.bean.BookInfoBean;
 import alpha.cyber.intelmain.bean.UserInfoBean;
 

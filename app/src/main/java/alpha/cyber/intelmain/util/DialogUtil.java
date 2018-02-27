@@ -21,7 +21,7 @@ public class DialogUtil {
 
     public static void showProgressDialog(Context mContext, String message) {
         //此处必关必申请！想重复用就在BaseActivity中封装私有dialog，封装成所有activity用就要区分mContext是否同一个！
-        closeProgressDialog();
+//        closeProgressDialog();
         progressDialog = new CustomProgressDialog(mContext);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setMessage(message);

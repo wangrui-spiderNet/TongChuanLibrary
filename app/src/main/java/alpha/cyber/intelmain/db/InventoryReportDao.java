@@ -55,7 +55,7 @@ public class InventoryReportDao {
         }
     }
 
-    public List<InventoryReport> queryAllBooks() {
+    public List<InventoryReport> queryAllReports() {
         List<InventoryReport> allBooks = null;
 
         try {

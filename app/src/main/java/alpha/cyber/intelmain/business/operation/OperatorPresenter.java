@@ -33,6 +33,7 @@ public class OperatorPresenter {
             @Override
             public void onStart() {
 
+
             }
 
             @Override

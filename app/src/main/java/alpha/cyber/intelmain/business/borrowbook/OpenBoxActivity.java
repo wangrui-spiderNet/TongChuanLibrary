@@ -31,9 +31,9 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
     private GridView gvBoxes;
     private BoxesAdapter mAdapter;
     private List<BoxBean> boxBeans;
+
     private LockController mLockController = null;
     private Thread mStateThrd = null;
-
     private List<StateReport> stateList = new ArrayList<StateReport>();
     private byte[] grimState = new byte[24];
     private boolean firstInit = true;
@@ -112,7 +112,6 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
         if(null!=mStateThrd){
             mStateThrd.interrupt();
         }
-
     }
 
     private class StateThrd implements Runnable {

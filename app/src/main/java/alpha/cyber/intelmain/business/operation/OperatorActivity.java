@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import alpha.cyber.intelmain.Constant;
+import alpha.cyber.intelmain.MyApplication;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.bean.BookInfoBean;
@@ -21,10 +22,14 @@ import alpha.cyber.intelmain.business.borrowbook.BorrowDetailActivity;
 import alpha.cyber.intelmain.business.login.IUserView;
 import alpha.cyber.intelmain.business.search.SearchActivity;
 import alpha.cyber.intelmain.business.userinfo.UserInfoActivity;
+import alpha.cyber.intelmain.db.BookDao;
+import alpha.cyber.intelmain.db.InventoryReportDao;
 import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.DateUtils;
+import alpha.cyber.intelmain.util.DialogUtil;
 import alpha.cyber.intelmain.util.IntentUtils;
 import alpha.cyber.intelmain.widget.CustomConfirmDialog;
+import alpha.cyber.intelmain.widget.CustomProgressDialog;
 
 /**
  * Created by wangrui on 2018/1/31.
@@ -46,8 +51,6 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     private UserInfoBean userInfo;
     private List<BookInfoBean> bookInfoBeanList=new ArrayList<>();
     private BorrowBookAdapter mAdapter;
-
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,19 +106,6 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-
-    }
-
-
-
-
-
-
-
-    @Override
     public void onBackPressed() {
 
         AppSharedPreference.getInstance().setLogIn(false);
@@ -133,10 +123,7 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
             IntentUtils.startAty(this, UserInfoActivity.class);
         } else if (tvSearchBook == v) {
             IntentUtils.startAty(this, SearchActivity.class);
-
-
         } else if (btnRightButton == v) {
-
             confirmDialog.setContent(getString(R.string.box_not_closed_exit));
             confirmDialog.show();
         }
@@ -147,6 +134,9 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
 
         AppSharedPreference.getInstance().clear();
         AppSharedPreference.getInstance().setLogIn(false);
+        new BookDao(this).deleteAll();
+        new InventoryReportDao(this).deleteAll();
+
         finish();
     }
 
@@ -178,6 +168,7 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         if(bookInfoBeanList.size()==userInfo.getBookcodes().size()+1){
             mAdapter.notifyDataSetChanged();
             AppSharedPreference.getInstance().saveBookInfos(bookInfoBeanList);
+            closeDialog();
         }
     }
 
@@ -200,9 +191,9 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         //读者信息
         String userinfo_request = getResources().getString(R.string.userinfo_request);
         String userinfo_format = String.format(userinfo_request, time, cardnum, pwd);
+
+        showDialog("正在加载");
         presenter.getUserInfo(userinfo_format);
     }
-
-
 
 }
