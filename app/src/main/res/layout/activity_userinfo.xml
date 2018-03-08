@@ -56,22 +56,30 @@
             android:id="@+id/tv_overtime"
             style="@style/text_info_style"
             android:layout_width="match_parent"
-            android:gravity="center"
-            android:text="逾期滞纳金2.5元，请尽快缴纳。" />
+            android:gravity="left"
+            />
+
+        <TextView
+            android:id="@+id/tv_tip"
+            style="@style/text_info_style"
+            android:layout_width="match_parent"
+            android:gravity="left"
+            android:text="友情提示："
+            />
 
         <TextView
             android:id="@+id/tv_tips"
             style="@style/text_info_style"
             android:layout_width="match_parent"
-            android:gravity="center"
-            android:text="@string/overtime_tips1" />
+            android:gravity="left"
+            />
 
         <TextView
             android:id="@+id/tv_tips2"
             style="@style/text_info_style"
             android:layout_width="match_parent"
-            android:layout_marginLeft="320dp"
-            android:text="@string/overtime_tips2" />
+            android:gravity="left"
+            />
 
     </LinearLayout>
 

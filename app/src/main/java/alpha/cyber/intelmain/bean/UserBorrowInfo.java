@@ -1,7 +1,6 @@
 package alpha.cyber.intelmain.bean;
 
 import com.google.gson.Gson;
-
 import java.util.List;
 
 /**
@@ -33,7 +32,7 @@ public class UserBorrowInfo {
 
     private String global_lib_rest;
     private String print_line;
-    private String fee;
+    private double fee;
     private String patron_identifier;
     private String lib_hold;
     private String personal_name;
@@ -49,6 +48,7 @@ public class UserBorrowInfo {
     private String readertype;
     private List<String> hold_items;
     private List<CheckoutListBean> checkoutList;
+    private List<String> warning;
 
     public static UserBorrowInfo objectFromData(String str) {
 
@@ -71,11 +71,11 @@ public class UserBorrowInfo {
         this.print_line = print_line;
     }
 
-    public String getFee() {
+    public double getFee() {
         return fee;
     }
 
-    public void setFee(String fee) {
+    public void setFee(double fee) {
         this.fee = fee;
     }
 
@@ -197,5 +197,13 @@ public class UserBorrowInfo {
 
     public void setCheckoutList(List<CheckoutListBean> checkoutList) {
         this.checkoutList = checkoutList;
+    }
+
+    public List<String> getWarning() {
+        return warning;
+    }
+
+    public void setWarning(List<String> warning) {
+        this.warning = warning;
     }
 }

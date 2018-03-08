@@ -21,19 +21,16 @@ import alpha.cyber.intelmain.bean.UserBorrowInfo;
 import alpha.cyber.intelmain.bean.UserInfoBean;
 import alpha.cyber.intelmain.business.borrowbook.OpenBoxActivity;
 import alpha.cyber.intelmain.business.borrowbook.BorrowDetailActivity;
-import alpha.cyber.intelmain.business.login.IUserView;
+import alpha.cyber.intelmain.business.home.CheckBookService;
 import alpha.cyber.intelmain.business.search.SearchActivity;
 import alpha.cyber.intelmain.business.userinfo.UserInfoActivity;
 import alpha.cyber.intelmain.db.BookDao;
 import alpha.cyber.intelmain.db.InventoryReportDao;
 import alpha.cyber.intelmain.db.UserDao;
 import alpha.cyber.intelmain.util.AppSharedPreference;
-import alpha.cyber.intelmain.util.DateUtils;
-import alpha.cyber.intelmain.util.DialogUtil;
 import alpha.cyber.intelmain.util.IntentUtils;
 import alpha.cyber.intelmain.util.ToastUtil;
 import alpha.cyber.intelmain.widget.CustomConfirmDialog;
-import alpha.cyber.intelmain.widget.CustomProgressDialog;
 
 /**
  * Created by wangrui on 2018/1/31.
@@ -136,7 +133,6 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onButtonClick(View view) {
 
-        AppSharedPreference.getInstance().clear();
         AppSharedPreference.getInstance().setLogIn(false);
         new BookDao(this).deleteAll();
         new InventoryReportDao(this).deleteAll();
@@ -171,7 +167,10 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         bookInfoBeanList.addAll(infoBean.getCheckoutList());
         mAdapter.notifyDataSetChanged();
         AppSharedPreference.getInstance().saveBookInfos(bookInfoBeanList);
+        AppSharedPreference.getInstance().saveBorrowBookUserInfo(infoBean);
 
+        Intent intent = new Intent(this, CheckBookService.class);
+        startService(intent);
     }
 
     @Override

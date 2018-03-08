@@ -32,5 +32,6 @@ public class AppSharedPreferenceConfig {
 
     public static final String USER_INFO = "user_info";
     public static final String BORROWED_BOOKS = "borrowed_books";
+    public static final String USER_BORROW_BOOK_INFO = "borrow_book_info";
 
 }

@@ -235,4 +235,30 @@ public class CheckoutListBean {
     public void setCurlib(String Curlib) {
         this.Curlib = Curlib;
     }
+
+    @Override
+    public String toString() {
+        return "CheckoutListBean{" +
+                "bookid=" + bookid +
+                ", item_properties='" + item_properties + '\'' +
+                ", permanent_location='" + permanent_location + '\'' +
+                ", overdue_days='" + overdue_days + '\'' +
+                ", hold_pickup_date='" + hold_pickup_date + '\'' +
+                ", item_author='" + item_author + '\'' +
+                ", callno='" + callno + '\'' +
+                ", patron_identifier='" + patron_identifier + '\'' +
+                ", due_date='" + due_date + '\'' +
+                ", title_identifier='" + title_identifier + '\'' +
+                ", screen_message='" + screen_message + '\'' +
+                ", item_identifier='" + item_identifier + '\'' +
+                ", institution_id='" + institution_id + '\'' +
+                ", Page_num='" + Page_num + '\'' +
+                ", media_type='" + media_type + '\'' +
+                ", reservation='" + reservation + '\'' +
+                ", publisher='" + publisher + '\'' +
+                ", circulation_type='" + circulation_type + '\'' +
+                ", current_location='" + current_location + '\'' +
+                ", Curlib='" + Curlib + '\'' +
+                '}';
+    }
 }

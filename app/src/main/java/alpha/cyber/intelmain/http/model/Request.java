@@ -62,7 +62,7 @@ public class Request {
         private String clientOs = DeviceUtils.getOS();
         private String cNet = DeviceUtils.getNetworkType(MyApplication.getInstance());
         private String clientMac = DeviceUtils.getMacAddressByWifi(MyApplication.getInstance().getApplicationContext());
-        private String clientToken = AppSharedPreference.getInstance().getLoginToken();
+        private String clientToken = AppSharedPreference.getInstance().getClientXgToken();
 
         public String getClientToken() {
             return clientToken;

@@ -38,7 +38,7 @@ public class MyApplication extends Application {
             public void onSuccess(Object data, int flag) {
                 Log.e(Constant.TAG, "注册成功，设备token为：" + data);
 
-                AppSharedPreference.getInstance().setLoginToken(data.toString());
+                AppSharedPreference.getInstance().setClientXgToken(data.toString());
             }
             @Override
             public void onFail(Object data, int errCode, String msg) {

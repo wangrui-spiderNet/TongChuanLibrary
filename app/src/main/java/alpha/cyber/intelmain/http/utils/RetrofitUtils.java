@@ -113,8 +113,8 @@ public class RetrofitUtils {
         public Response intercept(Chain chain) throws IOException {
             Request.Builder newBuilder = chain.request().newBuilder();
             HttpUrl url = chain.request().url();//TODO
-//            newBuilder.url(url+"?token="+ AppSharedPreference.getInstance().getLoginToken());
-            Log.v("the self_token is "+ AppSharedPreference.getInstance().getLoginToken());
+//            newBuilder.url(url+"?token="+ AppSharedPreference.getInstance().getClientXgToken());
+            Log.v("the self_token is "+ AppSharedPreference.getInstance().getClientXgToken());
             return chain.proceed(newBuilder.build());
         }
     }
@@ -133,8 +133,8 @@ public class RetrofitUtils {
         public Response intercept(Chain chain) throws IOException {
             Request.Builder newBuilder = chain.request().newBuilder();
             HttpUrl url = chain.request().url();
-            //newBuilder.url(url+"?token="+ AppSharedPreference.getInstance().getLoginToken());
-            String lastUrl = url+"?pageSize="+numInPage+"&pageIndex="+pageIndex+"&token="+ AppSharedPreference.getInstance().getLoginToken();
+            //newBuilder.url(url+"?token="+ AppSharedPreference.getInstance().getClientXgToken());
+            String lastUrl = url+"?pageSize="+numInPage+"&pageIndex="+pageIndex+"&token="+ AppSharedPreference.getInstance().getClientXgToken();
             //String lastUrl = url+"?pageSize="+numInPage+"&pageIndex="+pageIndex+"&token="+ "aa94edd9-59fd-4e51-87df-af2fd7b3a31d";
             Log.v(lastUrl);
             newBuilder.url(lastUrl);

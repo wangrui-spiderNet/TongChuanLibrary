@@ -110,7 +110,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                     case R.id.rb_news:
                         if (null != homeNewsBean && null != homeNewsBean.getOrgImgInfo()) {
                             Glide.with(MyApplication.getInstance().getApplicationContext())
-                                    .load(baseUrl+homeNewsBean.getOrgImgInfo().getNews())
+                                    .load(homeNewsBean.getOrgImgInfo().getNews())
                                     .into(ivPhoto);
                         }
 
@@ -119,7 +119,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                     case R.id.rb_apply_card:
                         if (null != homeNewsBean && null != homeNewsBean.getOrgImgInfo()) {
                             Glide.with(MyApplication.getInstance().getApplicationContext())
-                                    .load(baseUrl+homeNewsBean.getOrgImgInfo().getNotice())
+                                    .load(homeNewsBean.getOrgImgInfo().getNotice())
                                     .into(ivPhoto);
                         }
 
@@ -128,7 +128,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
                         if (null != homeNewsBean && null != homeNewsBean.getOrgImgInfo()) {
                             Glide.with(MyApplication.getInstance().getApplicationContext())
-                                    .load(baseUrl+homeNewsBean.getOrgImgInfo().getIntroduce())
+                                    .load(homeNewsBean.getOrgImgInfo().getIntroduce())
                                     .into(ivPhoto);
                         }
 
@@ -136,7 +136,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                     case R.id.rb_open_time:
                         if (null != homeNewsBean && null != homeNewsBean.getOrgImgInfo()) {
                             Glide.with(MyApplication.getInstance().getApplicationContext())
-                                    .load(baseUrl+homeNewsBean.getOrgImgInfo().getOpentime())
+                                    .load(homeNewsBean.getOrgImgInfo().getOpentime())
                                     .into(ivPhoto);
                         }
 
@@ -145,7 +145,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
                         if (null != homeNewsBean && null != homeNewsBean.getOrgImgInfo()) {
                             Glide.with(MyApplication.getInstance().getApplicationContext())
-                                    .load(baseUrl+homeNewsBean.getOrgImgInfo().getTip())
+                                    .load(homeNewsBean.getOrgImgInfo().getTip())
                                     .into(ivPhoto);
                         }
 
@@ -154,7 +154,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
                         if (null != homeNewsBean && null != homeNewsBean.getOrgImgInfo()) {
                             Glide.with(MyApplication.getInstance().getApplicationContext())
-                                    .load(baseUrl+homeNewsBean.getOrgImgInfo().getMore())
+                                    .load(homeNewsBean.getOrgImgInfo().getMore())
                                     .into(ivPhoto);
                         }
 
@@ -172,8 +172,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         super.onResume();
         tvBack.setVisibility(View.INVISIBLE);
 
-        Intent intent = new Intent(this, CheckBookService.class);
-        startService(intent);
+
 
         if (checkVersion()) {
             if (ShellUtils.checkRootPermission()) {
@@ -231,13 +230,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                     .into(ivPhoto);
 
             for (int i = 0; i < newsBean.getOrgImgSlideList().size(); i++) {
-                images.add(baseUrl+newsBean.getOrgImgSlideList().get(i).getUrl());
+                images.add(newsBean.getOrgImgSlideList().get(i).getUrl());
             }
 
             setBanner();
 
             Glide.with(MyApplication.getInstance().getApplicationContext())
-                    .load(baseUrl+newsBean.getLogo())
+                    .load(newsBean.getLogo())
                     .into(ivLogo);
 
             tvTel.setText("TEL:"+newsBean.getService_telephone());

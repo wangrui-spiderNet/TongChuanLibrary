@@ -11,7 +11,9 @@ import java.util.List;
 
 import alpha.cyber.intelmain.MyApplication;
 import alpha.cyber.intelmain.bean.BookInfoBean;
+import alpha.cyber.intelmain.bean.BorrowBookBean;
 import alpha.cyber.intelmain.bean.CheckoutListBean;
+import alpha.cyber.intelmain.bean.UserBorrowInfo;
 import alpha.cyber.intelmain.bean.UserInfoBean;
 
 /**
@@ -36,11 +38,11 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
         return instance;
     }
 
-    public String getLoginToken() {
+    public String getClientXgToken() {
         return app.getString(LOGIN_TOEN, "");
     }
 
-    public boolean setLoginToken(String string) {
+    public boolean setClientXgToken(String string) {
         return editor.putString(LOGIN_TOEN, string).commit();
     }
 
@@ -217,5 +219,32 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
         return null;
     }
 
+    /**
+     * 保存用户信息
+     * @param infoBean
+     */
+    public void saveBorrowBookUserInfo(UserBorrowInfo infoBean){
+        Gson gson=new Gson();
+
+        String userinfo=gson.toJson(infoBean);
+
+        editor.putString(AppSharedPreferenceConfig.USER_BORROW_BOOK_INFO,userinfo).commit();
+
+    }
+
+    /**
+     * 获取用户信息
+     * @return
+     */
+    public UserBorrowInfo getBorrowBookUserInfo(){
+        String userJson=app.getString(AppSharedPreferenceConfig.USER_BORROW_BOOK_INFO,"");
+
+        if(!StringUtils.isEmpty(userJson)){
+            UserBorrowInfo userInfoBean=new Gson().fromJson(userJson,UserBorrowInfo.class);
+            return userInfoBean;
+        }
+
+        return null;
+    }
 
 }

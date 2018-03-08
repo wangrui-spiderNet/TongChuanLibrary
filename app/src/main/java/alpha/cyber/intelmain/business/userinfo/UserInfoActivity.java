@@ -13,6 +13,7 @@ import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.bean.BookInfoBean;
 import alpha.cyber.intelmain.bean.CheckoutListBean;
+import alpha.cyber.intelmain.bean.UserBorrowInfo;
 import alpha.cyber.intelmain.business.operation.BorrowBookAdapter;
 import alpha.cyber.intelmain.bean.UserInfoBean;
 import alpha.cyber.intelmain.util.AppSharedPreference;
@@ -27,8 +28,8 @@ public class UserInfoActivity extends BaseActivity {
     private TextView tvCardNumber;
     private TextView tvPermission;
     private TextView tvOvertime;
-    private UserInfoBean userInfoBean;
-    private List<CheckoutListBean> bookInfoBeanList;
+    private TextView tvTips1,tvTips2;
+    private UserBorrowInfo borrowInfo;
     private ListView lvTable;
     private BorrowBookAdapter mAdapter;
 
@@ -44,16 +45,26 @@ public class UserInfoActivity extends BaseActivity {
         tvCardNumber = findView(R.id.tv_card_number);
         tvPermission = findView(R.id.tv_permission);
         tvOvertime = findView(R.id.tv_overtime);
+        tvTips1 = findView(R.id.tv_tips);
+        tvTips2 = findView(R.id.tv_tips2);
         lvTable = findView(R.id.lv_table);
 
-        tvName.setText(userInfoBean.getPersonal_name());
-        tvCardNumber.setText(userInfoBean.getPatron_identifier());
-        tvPermission.setText(userInfoBean.getScreen_message());
+        tvName.setText(borrowInfo.getPersonal_name());
+        tvCardNumber.setText(borrowInfo.getPatron_identifier());
+        tvPermission.setText(borrowInfo.getScreen_message());
         View headView= LayoutInflater.from(this).inflate(R.layout.item_table_headview,null);
         lvTable.addHeaderView(headView);
 
-        mAdapter = new BorrowBookAdapter(this,bookInfoBeanList);
+        mAdapter = new BorrowBookAdapter(this,borrowInfo.getCheckoutList());
         lvTable.setAdapter(mAdapter);
+
+
+        if(borrowInfo.getFee()>0){
+            tvOvertime.setText("逾期滞纳金："+borrowInfo.getFee()+",请尽快缴纳");
+        }
+
+        tvTips1.setText(borrowInfo.getWarning().get(0));
+        tvTips2.setText(borrowInfo.getWarning().get(1));
     }
 
     @Override
@@ -69,9 +80,7 @@ public class UserInfoActivity extends BaseActivity {
 
     @Override
     protected void getIntentData() {
-
-        userInfoBean = AppSharedPreference.getInstance().getUserInfo();
-        bookInfoBeanList = AppSharedPreference.getInstance().getbookInfos();
+        borrowInfo = AppSharedPreference.getInstance().getBorrowBookUserInfo();
 
     }
 }
