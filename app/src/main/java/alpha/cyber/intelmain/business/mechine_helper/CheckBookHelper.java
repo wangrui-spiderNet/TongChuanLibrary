@@ -1,4 +1,4 @@
-package alpha.cyber.intelmain.business.borrowbook;
+package alpha.cyber.intelmain.business.mechine_helper;
 
 import android.os.Handler;
 import android.os.Message;
@@ -21,7 +21,10 @@ import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.MyApplication;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.bean.BookInfoBean;
+import alpha.cyber.intelmain.bean.CheckoutListBean;
 import alpha.cyber.intelmain.bean.InventoryReport;
+import alpha.cyber.intelmain.business.home.CheckBoxPresenter;
+import alpha.cyber.intelmain.business.home.CheckCallBack;
 import alpha.cyber.intelmain.http.socket.MyAsyncTask;
 import alpha.cyber.intelmain.http.socket.SocketConstants;
 import alpha.cyber.intelmain.util.AppSharedPreference;
@@ -41,13 +44,16 @@ public class CheckBookHelper {
     public boolean bUseISO15693 = false;
     public boolean bUseISO14443A = false;
 
-    public static final int INVENTORY_MSG = 1;
+    public static final int INVENTORY_MSG = 11;
     public static final int GETSCANRECORD = 2;
     public static final int INVENTORY_FAIL_MSG = 4;
     public static final int THREAD_END = 3;
 
     public static final int BORROW_BOOK_INVENTORY_FINISH = 5;
     public static final int BACK_BOOK_INVENTORY_FINISH = 6;
+
+    public static final int ACTION_TYPE_BORROW = 1;
+    public static final int ACTION_TYPE_BACK = 2;
 
     private boolean b_inventoryThreadRun = false;
     private boolean bOnlyReadNew = false;
@@ -333,100 +339,62 @@ public class CheckBookHelper {
 
             String bookCode = getBookCode(i, inventoryList.get(i).getUidStr());
 
-            String time = DateUtils.getSystemTime();
-            String bookinfo_request = MyApplication.getAppContext().getResources().getString(R.string.bookinfo_request);
-
             bookCode = bookCode.substring(6, 14);
 
-            String bookinfo_format = String.format(bookinfo_request, time, bookCode);
-
-            getBookInfo(bookinfo_format, type, reportList.size());
+            getBookInfo(bookCode, type, reportList.size());
 
         }
 
     }
 
-    private List<BookInfoBean> borrowBookList = new ArrayList<BookInfoBean>();
-    private List<BookInfoBean> backBookList = new ArrayList<BookInfoBean>();
+    private List<CheckoutListBean> borrowBookList = new ArrayList<CheckoutListBean>();
+    private List<CheckoutListBean> backBookList = new ArrayList<CheckoutListBean>();
 
-    public void getBookInfo(String request, final int type, final int count) {
 
-        new MyAsyncTask(new MyAsyncTask.OnSocketRequestListener() {
-            @Override
-            public void onStart() {
+    private CheckBoxPresenter presenter = new CheckBoxPresenter(new CheckCallBack() {
+        @Override
+        public void getBookInfoByCode(CheckoutListBean infoBean) {
+            if (type == ACTION_TYPE_BORROW) {//借书
 
-            }
+                borrowBookList.add(infoBean);
+                if (borrowBookList.size() == count) {
+                    AppSharedPreference.getInstance().saveBorrowBookInfos(borrowBookList);
+                    borrowBookList.clear();
 
-            @Override
-            public void onSuccess(String result) {
-                BookInfoBean infoBean = parseBooks(result);
-                if (type == 1) {//借书
-                    borrowBookList.add(infoBean);
-                    if (borrowBookList.size() == count) {
-                        AppSharedPreference.getInstance().saveBorrowBookInfos(borrowBookList);
-                        borrowBookList.clear();
-
-                        Message msg = mHandler.obtainMessage();
-                        msg.what = BORROW_BOOK_INVENTORY_FINISH;
+                    Message msg = mHandler.obtainMessage();
+                    msg.what = BORROW_BOOK_INVENTORY_FINISH;
 //                        msg.obj = tagList;
 //                        msg.arg1 = failedCnt;
-                        mHandler.sendMessage(msg);
-                    }
-                } else if (type == 2) {//还书
-                    backBookList.add(infoBean);
-                    if (backBookList.size() == count) {
-                        AppSharedPreference.getInstance().saveBackBookInfos(backBookList);
-                        backBookList.clear();
+                    mHandler.sendMessage(msg);
+                }
+            } else if (type == ACTION_TYPE_BACK) {//还书
 
-                        Message msg = mHandler.obtainMessage();
-                        msg.what = BACK_BOOK_INVENTORY_FINISH;
+                backBookList.add(infoBean);
+                if (backBookList.size() == count) {
+                    AppSharedPreference.getInstance().saveBackBookInfos(backBookList);
+                    backBookList.clear();
+
+                    Message msg = mHandler.obtainMessage();
+                    msg.what = BACK_BOOK_INVENTORY_FINISH;
 //                        msg.obj = tagList;
 //                        msg.arg1 = failedCnt;
-                        mHandler.sendMessage(msg);
-                    }
+                    mHandler.sendMessage(msg);
                 }
             }
 
-            @Override
-            public void onFail(String errorMessage) {
-
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-        }).execute(request);
-
-    }
-
-    private BookInfoBean parseBooks(String result) {
-        if (null != result) {
-            String[] results = result.split("\\|");
-
-            BookInfoBean infoBean = new BookInfoBean();
-            for (int i = 0; i < results.length; i++) {
-                Log.e(Constant.TAG, results[i]);
-
-                String temp = results[i];
-
-                if (temp.startsWith(SocketConstants.title_identifier_aj)) {
-                    infoBean.setBookname(temp.substring(SocketConstants.title_identifier_aj.length()));
-                } else if (temp.startsWith(SocketConstants.hold_items_limit_bz)) {
-                    infoBean.setBookcode(temp.substring(SocketConstants.item_identifier_ab.length()));
-                } else if (temp.startsWith(SocketConstants.due_date_ah)) {
-                    infoBean.setEndtime(temp.substring(SocketConstants.due_date_ah.length()));
-                } else if (temp.startsWith(SocketConstants.hold_pickup_date_cm)) {
-                    infoBean.setBorrowtime(temp.substring(SocketConstants.hold_pickup_date_cm.length()));
-                } else if (temp.startsWith(SocketConstants.over_time_re)) {
-                    infoBean.setLatedays(temp.substring(SocketConstants.over_time_re.length()));
-                }
-
-            }
-
-            return infoBean;
         }
+    }, MyApplication.getAppContext());
 
-        return null;
+    private int type;
+    private int count;
+    public void getBookInfo(String bookCode, final int type, final int count) {
+
+        this.type = type;
+        this.count = count;
+
+        presenter.getBookInfoByCode(bookCode);
+
     }
+
+
 }

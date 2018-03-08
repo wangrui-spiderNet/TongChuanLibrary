@@ -12,17 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import alpha.cyber.intelmain.Constant;
-import alpha.cyber.intelmain.R;
-import alpha.cyber.intelmain.bean.BookInfoBean;
 import alpha.cyber.intelmain.bean.CheckoutListBean;
 import alpha.cyber.intelmain.bean.InventoryReport;
-import alpha.cyber.intelmain.bean.UserInfoBean;
-import alpha.cyber.intelmain.business.borrowbook.CheckBookHelper;
-import alpha.cyber.intelmain.business.login.IUserView;
-import alpha.cyber.intelmain.business.operation.OperatorPresenter;
+import alpha.cyber.intelmain.business.mechine_helper.CheckBookHelper;
 import alpha.cyber.intelmain.db.InventoryReportDao;
 import alpha.cyber.intelmain.db.BookDao;
-import alpha.cyber.intelmain.util.DateUtils;
 import alpha.cyber.intelmain.util.Log;
 import alpha.cyber.intelmain.util.ToastUtil;
 

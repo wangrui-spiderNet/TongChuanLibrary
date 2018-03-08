@@ -1,9 +1,11 @@
 package alpha.cyber.intelmain.business.borrowbook;
 
+import java.io.Serializable;
+
 /**
  * Created by wangrui on 2018/2/22.
  */
-public class StateReport {
+public class StateReport implements Serializable {
 
     private String lockId;
     private String lockState;

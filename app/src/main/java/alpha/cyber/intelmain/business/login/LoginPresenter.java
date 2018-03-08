@@ -7,6 +7,7 @@ import alpha.cyber.intelmain.bean.UserInfoBean;
 import alpha.cyber.intelmain.http.DefaultSubscriber;
 import alpha.cyber.intelmain.http.model.Request;
 import alpha.cyber.intelmain.http.utils.RetrofitUtils;
+import alpha.cyber.intelmain.util.ToastUtil;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -38,7 +39,13 @@ public class LoginPresenter {
                 .subscribe(new DefaultSubscriber<UserInfoBean>() {
                     @Override
                     public void onSuccess(UserInfoBean userInfoBean) {
-                        userView.getUserInfo(userInfoBean);
+                        if(null!=userInfoBean){
+                            userView.getUserInfo(userInfoBean);
+                            userView.hideLoadingDialog();
+                        }else{
+                            ToastUtil.showToast("请检查账号和密码是否输入正确！");
+                        }
+
                         userView.hideLoadingDialog();
                     }
 

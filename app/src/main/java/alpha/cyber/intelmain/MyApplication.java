@@ -11,6 +11,7 @@ import com.tendcloud.tenddata.TCAgent;
 
 import alpha.cyber.intelmain.util.ActivityManager;
 import alpha.cyber.intelmain.util.AppSharedPreference;
+import alpha.cyber.intelmain.util.ToastUtil;
 
 /**
  * Created by wangrui on 2016/6/19.
@@ -36,6 +37,7 @@ public class MyApplication extends Application {
         XGPushManager.registerPush(this, new XGIOperateCallback() {
             @Override
             public void onSuccess(Object data, int flag) {
+                ToastUtil.showToast("信鸽注册成功 设备token为：" + data);
                 Log.e(Constant.TAG, "注册成功，设备token为：" + data);
 
                 AppSharedPreference.getInstance().setClientXgToken(data.toString());
@@ -43,6 +45,7 @@ public class MyApplication extends Application {
             @Override
             public void onFail(Object data, int errCode, String msg) {
                 Log.e(Constant.TAG, "注册失败，错误码：" + errCode + ",错误信息：" + msg);
+                ToastUtil.showToast("信鸽注册失败");
             }
         });
 

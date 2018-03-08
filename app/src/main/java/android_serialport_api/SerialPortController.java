@@ -98,7 +98,7 @@ public abstract class SerialPortController {
     public void clear() {
         byte buf[] = new byte[4096];
         try {
-            while (mInputStream.available() > 0) {
+            while (null!=mInputStream&&mInputStream.available() > 0) {
                 mInputStream.read(buf);
             }
 
@@ -200,6 +200,11 @@ public abstract class SerialPortController {
 
     private void doSendCommand(Command cmd) {
         try {
+
+            if(null==mOutputStream){
+                return;
+            }
+
             mOutputStream.write(cmd.getCmd());
             Logger.i("doSendCommand : " + HexTools.bytesToHexString(cmd.getCmd()));
 
@@ -229,7 +234,7 @@ public abstract class SerialPortController {
             do {
                 sleep(5);
                 recvLen = 0;
-                if (mInputStream.available() > 0) {
+                if (null!=mInputStream&&mInputStream.available() > 0) {
                     recvLen = mInputStream.read(buffer);
                 }
                 //		Logger.eLine("recvLen = " + recvLen);

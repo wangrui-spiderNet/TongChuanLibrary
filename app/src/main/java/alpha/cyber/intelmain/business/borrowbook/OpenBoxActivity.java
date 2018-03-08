@@ -13,13 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import alpha.cyber.intellib.lock.LockCallback;
-import alpha.cyber.intellib.lock.LockController;
-import alpha.cyber.intellib.utils.Logger;
-import alpha.cyber.intellib.utils.ToastUtils;
 import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.bean.BoxBean;
+import alpha.cyber.intelmain.business.mechine_helper.LockHelper;
 import alpha.cyber.intelmain.util.IntentUtils;
 import alpha.cyber.intelmain.util.Log;
 
@@ -32,23 +30,13 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
     private BoxesAdapter mAdapter;
     private List<BoxBean> boxBeans;
 
-    private LockController mLockController = null;
-    private Thread mStateThrd = null;
-    private List<StateReport> stateList = new ArrayList<StateReport>();
-    private byte[] grimState = new byte[24];
-    private boolean firstInit = true;
-
-    private static final int STATE_LISTEN_MSG = 1;
-    private static final int FRESH_VIEW = 2;
-    private static final byte BOARD_ADDRESS = 0x01;
-    private boolean b_stateThreadRun = false;
-    private boolean lc = false;
+    private LockHelper lockHelper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_box);
-        lc = initController();
+        lockHelper = new LockHelper(mHandler);
     }
 
     @Override
@@ -81,70 +69,11 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        if (open()) {
-            mLockController.openGrid((byte) (position + 1), BOARD_ADDRESS);
+        if (lockHelper.open(this)) {
+            lockHelper.openGride(position);
         }
 
         IntentUtils.startAtyWithSingleParam(this, BorrowDetailActivity.class, Constant.BORROW_BACK, Constant.BORROW_BOOK);
-
-    }
-
-    private boolean open() {
-
-        if (lc) {
-            mLockController.start();
-            mLockController.open();
-            mStateThrd = new Thread(new StateThrd());
-            mStateThrd.start();
-
-            return true;
-        } else {
-            initController();
-        }
-
-        return false;
-
-    }
-
-    private void close() {
-        b_stateThreadRun = false;
-        if(null!=mStateThrd){
-            mStateThrd.interrupt();
-        }
-    }
-
-    private class StateThrd implements Runnable {
-
-        @Override
-        public void run() {
-            b_stateThreadRun = true;
-
-            while (b_stateThreadRun) {
-                try {
-                    Thread.sleep(200);
-                    Message msg = mHandler.obtainMessage();
-                    msg.what = STATE_LISTEN_MSG;
-                    mHandler.sendMessage(msg);
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private boolean initController() {
-        mLockController = new LockController(9600);
-
-        if (mLockController.mSerialPort == null) {
-            ToastUtils.showShortToast("打开设备失败");
-            mLockController = null;
-            return false;
-        }else{
-            ToastUtils.showShortToast("打开设备成功");
-        }
-        mLockController.setCallBack(this);
-        return true;
 
     }
 
@@ -152,12 +81,13 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
     protected void onDestroy() {
         super.onDestroy();
 
-        close();
+        lockHelper.close();
     }
 
     @Override
     public void onGetProtocalVerison(int version) {
 
+        Log.e(Constant.TAG, "version:" + version);
     }
 
     @Override
@@ -165,70 +95,40 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
 
         if (state == 0) {
             IntentUtils.startAtyWithSingleParam(this, BorrowDetailActivity.class, Constant.BORROW_BACK, Constant.BORROW_BOOK);
+        } else {
+
         }
     }
 
     @Override
     public void onGetAllLockState(byte[] state) {
-        System.arraycopy(state, 0, grimState, 0, state.length);
 
         for (int i = 0; i < state.length; i++) {
-            if (firstInit == true) {
-                StateReport sReport = null;
-                if (grimState[i] == 0) {
-                    sReport = new StateReport(String.valueOf(i + 1), "开");
-                } else {
-                    sReport = new StateReport(String.valueOf(i + 1), "关");
-
-                }
-                stateList.add(sReport);
+            if (state[i] == 0) {
+                Log.e(Constant.TAG,i+":开");
             } else {
-                StateReport sReport0 = stateList.get(i);
-                if (grimState[i] == 0) {
-                    sReport0.setLockState("开");
-                } else {
-                    sReport0.setLockState("关");
-                }
+                Log.e(Constant.TAG,i+":关");
             }
         }
-        firstInit = false;
-        //gridStateAdapter.notifyDataSetChanged();
-        Message msg = mHandler.obtainMessage();
-        msg.what = FRESH_VIEW;
-        mHandler.sendMessage(msg);
-
-        Log.e(Constant.TAG, "开锁状态:" + stateList.toString());
     }
 
-    private Handler mHandler = new LockHandler(this);
-
-    private static class LockHandler extends Handler {
-        private final WeakReference<OpenBoxActivity> mActivity;
-
-        public LockHandler(OpenBoxActivity activity) {
-            mActivity = new WeakReference<OpenBoxActivity>(activity);
-        }
+    private Handler mHandler = new  Handler() {
 
         @Override
         public void handleMessage(Message msg) {
-            OpenBoxActivity pt = mActivity.get();
-            if (pt == null) {
-                return;
-            }
-            switch (msg.what) {
-                case STATE_LISTEN_MSG:
-                    pt.mLockController.getAllDoorState(BOARD_ADDRESS);
-                    Logger.d("Handler STATE_LISTEN_MSG ");
-                    break;
-                case FRESH_VIEW:
 
-                    pt.mAdapter.notifyDataSetChanged();
+            switch (msg.what) {
+                case LockHelper.STATE_LISTEN_MSG://查看所有所状态
+
+                    lockHelper.getAllDoorState();
+
                     break;
+
                 default:
                     break;
             }
         }
-    }
+    };
 
     @Override
     protected void onResume() {
