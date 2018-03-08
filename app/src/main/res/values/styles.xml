@@ -463,6 +463,7 @@
         <item name="android:paddingTop">@dimen/dimen_10</item>
         <item name="android:paddingBottom">@dimen/dimen_10</item>
         <item name="android:gravity">center</item>
+        <item name="android:maxLines">1</item>
         <item name="android:textSize">@dimen/font_size_22</item>
     </style>
 

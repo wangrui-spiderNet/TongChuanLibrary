@@ -26,7 +26,7 @@ public class HomePresenter {
 
     public HomePresenter (Context context,IHomeView homeView){
         this.context = context;
-        this.module = RetrofitUtils.createService(HomePageModule.class);;
+        this.module = RetrofitUtils.createService(HomePageModule.class);
         this.homeView = homeView;
     }
 
@@ -36,12 +36,11 @@ public class HomePresenter {
                 .build())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DefaultSubscriber<List<HomeNewsBean>>() {
+                .subscribe(new DefaultSubscriber<HomeNewsBean>() {
                     @Override
-                    public void onSuccess(List<HomeNewsBean> lessonMenuList) {
+                    public void onSuccess(HomeNewsBean lessonMenuList) {
 
                         homeView.onGetHomePageSuccess(lessonMenuList);
-
                     }
 
                     @Override

@@ -5,6 +5,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import alpha.cyber.intelmain.MyApplication;
+import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.DeviceUtils;
 
 /**
@@ -12,16 +13,11 @@ import alpha.cyber.intelmain.util.DeviceUtils;
  */
 public class Request {
 
-    private String style;
     private ClientInfo clientInfo;
     private Map<String, Object> data = new Hashtable<>();
 
     public void setClientInfo(ClientInfo clientInfo) {
         this.clientInfo = clientInfo;
-    }
-
-    public void setStyle(String style) {
-        this.style = style;
     }
 
     public void setData(Map<String, Object> data) {
@@ -30,7 +26,6 @@ public class Request {
 
     public static class Builder {
         private ClientInfo clientInfo = new ClientInfo();
-        private String style = "black";
         private Map<String, Object> data = new Hashtable<>();
 
         public Builder() {
@@ -39,11 +34,6 @@ public class Request {
 
         public Builder withClientInfo(ClientInfo clientInfo) {
             this.clientInfo = clientInfo;
-            return this;
-        }
-
-        public Builder withStyle(String style) {
-            this.style = style;
             return this;
         }
 
@@ -59,7 +49,6 @@ public class Request {
 
         public Request build() {
             Request request = new Request();
-            request.setStyle(this.style);
             request.setClientInfo(this.clientInfo);
             request.setData(this.data);
             return request;
@@ -72,7 +61,16 @@ public class Request {
         private String clientModel = DeviceUtils.getDeviceModel();
         private String clientOs = DeviceUtils.getOS();
         private String cNet = DeviceUtils.getNetworkType(MyApplication.getInstance());
+        private String clientMac = DeviceUtils.getMacAddressByWifi(MyApplication.getInstance().getApplicationContext());
+        private String clientToken = AppSharedPreference.getInstance().getLoginToken();
 
+        public String getClientToken() {
+            return clientToken;
+        }
+
+        public void setClientToken(String clientToken) {
+            this.clientToken = clientToken;
+        }
 
         public String getVersion() {
             return version;
@@ -112,6 +110,14 @@ public class Request {
 
         public void setcNet(String cNet) {
             this.cNet = cNet;
+        }
+
+        public String getClientMac() {
+            return clientMac;
+        }
+
+        public void setClientMac(String clientMac) {
+            this.clientMac = clientMac;
         }
     }
 }

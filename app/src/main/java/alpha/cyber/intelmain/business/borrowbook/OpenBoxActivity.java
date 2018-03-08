@@ -82,7 +82,6 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         if (open()) {
-            //TODO 开锁需要验证
             mLockController.openGrid((byte) (position + 1), BOARD_ADDRESS);
         }
 
@@ -136,10 +135,13 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
 
     private boolean initController() {
         mLockController = new LockController(9600);
+
         if (mLockController.mSerialPort == null) {
             ToastUtils.showShortToast("打开设备失败");
             mLockController = null;
             return false;
+        }else{
+            ToastUtils.showShortToast("打开设备成功");
         }
         mLockController.setCallBack(this);
         return true;
@@ -219,6 +221,7 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
                     Logger.d("Handler STATE_LISTEN_MSG ");
                     break;
                 case FRESH_VIEW:
+
                     pt.mAdapter.notifyDataSetChanged();
                     break;
                 default:

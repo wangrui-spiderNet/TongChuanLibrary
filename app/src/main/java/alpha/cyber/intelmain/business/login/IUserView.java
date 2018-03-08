@@ -8,9 +8,8 @@ import alpha.cyber.intelmain.bean.UserInfoBean;
  * Created by wangrui on 2018/2/11.
  */
 
-public interface IUserView {
+public interface IUserView extends IBaseView{
 
-    public void getUserInfo(UserInfoBean userinfoBean);
-    void getAllBoxBooks(BookInfoBean infoBean);
+    void getUserInfo(UserInfoBean userinfoBean);
 
 }

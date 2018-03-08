@@ -5,7 +5,9 @@ import android.os.Looper;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.http.BaseURL;
+import alpha.cyber.intelmain.util.Log;
 import alpha.cyber.intelmain.util.NetworkUtils;
 
 
@@ -16,19 +18,20 @@ public class AppException extends Exception implements Thread.UncaughtExceptionH
 
     static Context mContext;
 
-    public AppException(Context context){
+    public AppException(Context context) {
         AppException.mContext = context;
     }
 
-    public static boolean handleException(Context context, String errorCode, String errorMessage){
-        if(!NetworkUtils.isNetworkAvailable(context)){
-            if(!NetworkUtils.isHaveNet(context))
+    public static boolean handleException(Context context, String errorCode, String errorMessage) {
+        if (!NetworkUtils.isNetworkAvailable(context)) {
+            if (!NetworkUtils.isHaveNet(context)) {
                 return true;
+            }
             handleExceptionNetworkNo(context);
             return true;
         }
-        if(BaseURL.APP_EXCEPTION_HTTP_TIMEOUT.equalsIgnoreCase(errorCode)){
-            handleExceptionConnectTimeOut(context,errorCode,errorMessage);
+        if (BaseURL.APP_EXCEPTION_HTTP_TIMEOUT.equalsIgnoreCase(errorCode)) {
+            handleExceptionConnectTimeOut(context, errorCode, errorMessage);
             return true;
         }
         if (BaseURL.APP_EXCEPTION_HTTP_404.equalsIgnoreCase(errorCode)
@@ -40,6 +43,14 @@ public class AppException extends Exception implements Thread.UncaughtExceptionH
             handleExceptionSelf(context, errorCode, errorMessage);
             return true;
         }
+
+        if (BaseURL.APP_EXCEPTION_DEVICE_ERROR.equalsIgnoreCase(errorCode)
+                || BaseURL.APP_EXCEPTION_PARAMS_ERROR.equalsIgnoreCase(errorCode)
+                || BaseURL.APP_EXCEPTION_NO_DEVICE_ERROR.equalsIgnoreCase(errorCode)) {
+
+            handlePrintException(context, errorCode, errorMessage);
+        }
+
         if (errorCode.length() != 7) {
             handleExceptionServer(context, errorCode, errorMessage);
         } else {
@@ -50,7 +61,7 @@ public class AppException extends Exception implements Thread.UncaughtExceptionH
 
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
-        if(Looper.getMainLooper().getThread()!=thread){
+        if (Looper.getMainLooper().getThread() != thread) {
             return;
         }
     }
@@ -62,10 +73,10 @@ public class AppException extends Exception implements Thread.UncaughtExceptionH
      * @author xnjiang
      * @since v0.0.1
      */
-    private static void handleExceptionNetworkNo(Context context){
-        if(!NetworkUtils.isNetworkAvailable(context)){
-            Toast toast = Toast.makeText(context,"网络链接异常", Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER,0,0);
+    private static void handleExceptionNetworkNo(Context context) {
+        if (!NetworkUtils.isNetworkAvailable(context)) {
+            Toast toast = Toast.makeText(context, "网络链接异常", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
         }
     }
@@ -78,9 +89,13 @@ public class AppException extends Exception implements Thread.UncaughtExceptionH
      * @since v0.0.1
      */
     private static void handleExceptionConnectTimeOut(Context context, String errorCode, String errorMessage) {
-        Toast toast = Toast.makeText(context,"网络差，请尝试断开从新链接", Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.CENTER,0,0);
+        Toast toast = Toast.makeText(context, "网络差，请尝试断开从新链接", Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
+    }
+
+    private static void handlePrintException(Context context, String errorCode, String errorMessage) {
+        Log.e(Constant.TAG, "错误信息："+errorCode+":"+errorMessage);
     }
 
     /**
@@ -91,8 +106,8 @@ public class AppException extends Exception implements Thread.UncaughtExceptionH
      * @since v0.0.1
      */
     private static void handleExceptionServer(Context context, String errorCode, String errorMessage) {
-        Toast toast = Toast.makeText(context,"服务器异常", Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.CENTER,0,0);
+        Toast toast = Toast.makeText(context, "服务器异常", Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
     }
 
@@ -106,8 +121,8 @@ public class AppException extends Exception implements Thread.UncaughtExceptionH
      * @since v0.0.1
      */
     private static void handleExceptionSelf(Context context, String errorCode, String errorMessage) {
-        Toast toast = Toast.makeText(context,errorMessage, Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.CENTER,0,0);
+        Toast toast = Toast.makeText(context, errorMessage, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
     }
 
@@ -122,8 +137,8 @@ public class AppException extends Exception implements Thread.UncaughtExceptionH
      */
     private static void handleExceptionBusiness(Context context, String errorCode, String errorMessage) {
         if (NetworkUtils.isNetworkAvailable(context)) {
-            Toast toast = Toast.makeText(context,errorMessage, Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER,0,0);
+            Toast toast = Toast.makeText(context, errorMessage, Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
         } else {
             AppException.handleExceptionNetworkNo(context);

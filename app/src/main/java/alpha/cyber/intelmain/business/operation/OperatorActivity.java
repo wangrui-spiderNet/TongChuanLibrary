@@ -16,6 +16,8 @@ import alpha.cyber.intelmain.MyApplication;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.bean.BookInfoBean;
+import alpha.cyber.intelmain.bean.CheckoutListBean;
+import alpha.cyber.intelmain.bean.UserBorrowInfo;
 import alpha.cyber.intelmain.bean.UserInfoBean;
 import alpha.cyber.intelmain.business.borrowbook.OpenBoxActivity;
 import alpha.cyber.intelmain.business.borrowbook.BorrowDetailActivity;
@@ -24,10 +26,12 @@ import alpha.cyber.intelmain.business.search.SearchActivity;
 import alpha.cyber.intelmain.business.userinfo.UserInfoActivity;
 import alpha.cyber.intelmain.db.BookDao;
 import alpha.cyber.intelmain.db.InventoryReportDao;
+import alpha.cyber.intelmain.db.UserDao;
 import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.DateUtils;
 import alpha.cyber.intelmain.util.DialogUtil;
 import alpha.cyber.intelmain.util.IntentUtils;
+import alpha.cyber.intelmain.util.ToastUtil;
 import alpha.cyber.intelmain.widget.CustomConfirmDialog;
 import alpha.cyber.intelmain.widget.CustomProgressDialog;
 
@@ -35,7 +39,7 @@ import alpha.cyber.intelmain.widget.CustomProgressDialog;
  * Created by wangrui on 2018/1/31.
  */
 
-public class OperatorActivity extends BaseActivity implements View.OnClickListener, CustomConfirmDialog.CustomDialogConfirmListener, IUserView {
+public class OperatorActivity extends BaseActivity implements View.OnClickListener, CustomConfirmDialog.CustomDialogConfirmListener ,IOperatorView{
 
     private TextView tvName;
     private TextView tvCardNumber;
@@ -49,7 +53,7 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     private CustomConfirmDialog confirmDialog;
     private OperatorPresenter presenter;
     private UserInfoBean userInfo;
-    private List<BookInfoBean> bookInfoBeanList=new ArrayList<>();
+    private List<CheckoutListBean> bookInfoBeanList=new ArrayList<>();
     private BorrowBookAdapter mAdapter;
 
     @Override
@@ -81,11 +85,11 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         lvTable.addHeaderView(headView);
 
         confirmDialog = new CustomConfirmDialog(this);
-        BookInfoBean infoBean =new BookInfoBean();
-        infoBean.setBookname(getString(R.string.book_name));
-        infoBean.setBorrowtime(getString(R.string.borrow_date));
-        infoBean.setEndtime(getString(R.string.end_date));
-        infoBean.setLatedays(getString(R.string.late_days));
+        CheckoutListBean infoBean =new CheckoutListBean();
+        infoBean.setTitle_identifier(getString(R.string.book_name));
+        infoBean.setHold_pickup_date(getString(R.string.borrow_date));
+        infoBean.setDue_date(getString(R.string.end_date));
+        infoBean.setOverdue_days(getString(R.string.late_days));
         bookInfoBeanList.add(infoBean);
         mAdapter = new BorrowBookAdapter(this,bookInfoBeanList);
         lvTable.setAdapter(mAdapter);
@@ -136,40 +140,38 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         AppSharedPreference.getInstance().setLogIn(false);
         new BookDao(this).deleteAll();
         new InventoryReportDao(this).deleteAll();
+        new UserDao().deleteAll();
 
         finish();
     }
 
     @Override
-    public void getUserInfo(UserInfoBean userinfoBean) {
-
-        userInfo = userinfoBean;
-
-        tvName.setText(userinfoBean.getName());
-        tvCardNumber.setText(userinfoBean.getCardnum());
-        tvPermission.setText(userinfoBean.getPermission());
-
-        String time = DateUtils.getSystemTime();
-        String bookinfo_request = getResources().getString(R.string.bookinfo_request);
-
-        for (int i = 0; i < userinfoBean.getBookcodes().size(); i++) {
-            String bookinfo_format = String.format(bookinfo_request, time,
-                    userinfoBean.getBookcodes().get(i));
-            presenter.getBookInfo(bookinfo_format);
-        }
-
+    public void showLoadingDialog() {
+        showDialog("正在加载");
     }
 
     @Override
-    public void getAllBoxBooks(BookInfoBean infoBean) {
+    public void hideLoadingDialog() {
+        closeDialog();
+    }
 
-        bookInfoBeanList.add(infoBean);
+    @Override
+    public void showErrorMsg(String msg) {
 
-        if(bookInfoBeanList.size()==userInfo.getBookcodes().size()+1){
-            mAdapter.notifyDataSetChanged();
-            AppSharedPreference.getInstance().saveBookInfos(bookInfoBeanList);
-            closeDialog();
-        }
+        ToastUtil.showToast(msg);
+    }
+
+    @Override
+    public void getAllBorrowBookInfo(UserBorrowInfo infoBean) {
+
+        tvName.setText("姓名:"+infoBean.getPersonal_name());
+        tvCardNumber.setText("卡号:"+infoBean.getPatron_identifier());
+        tvPermission.setText("权限:"+infoBean.getScreen_message());
+
+        bookInfoBeanList.addAll(infoBean.getCheckoutList());
+        mAdapter.notifyDataSetChanged();
+        AppSharedPreference.getInstance().saveBookInfos(bookInfoBeanList);
+
     }
 
     @Override
@@ -179,21 +181,8 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         Intent intent = getIntent();
 
         String cardnum = intent.getStringExtra(Constant.ACCOUNT);
-        String pwd = intent.getStringExtra(Constant.PASSWORD);
 
-        String time = DateUtils.getSystemTime();
-
-        //读者状态信息
-//        String userstate_request = getResources().getString(R.string.userstate_request);
-//        String userstate_format = String.format(userstate_request, time1, time2,"", cardnum, pwd);
-//        presenter.getUserState(userstate_format);
-
-        //读者信息
-        String userinfo_request = getResources().getString(R.string.userinfo_request);
-        String userinfo_format = String.format(userinfo_request, time, cardnum, pwd);
-
-        showDialog("正在加载");
-        presenter.getUserInfo(userinfo_format);
+        presenter.getBorrowBookInfo(cardnum);
     }
 
 }

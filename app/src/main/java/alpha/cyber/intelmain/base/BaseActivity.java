@@ -30,6 +30,7 @@ import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.MyApplication;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.business.manage.ManagerLoginActivity;
+import alpha.cyber.intelmain.http.BaseURL;
 import alpha.cyber.intelmain.util.ActivityManager;
 import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.DateUtils;
@@ -49,6 +50,8 @@ public abstract class BaseActivity  extends FragmentActivity {
     public Context mContext;
     protected int screenWidth;
     protected int screenHeight;
+
+    public String baseUrl;
 
     /**
      * 中间内容区域的容器
@@ -70,6 +73,9 @@ public abstract class BaseActivity  extends FragmentActivity {
     public Button btnRightButton;
     public ImageView ivLogo;
 
+    public TextView tvTel;
+    public TextView tvTec;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,6 +85,8 @@ public abstract class BaseActivity  extends FragmentActivity {
         getWindow().setFlags(WindowManager.LayoutParams. FLAG_FULLSCREEN , WindowManager.LayoutParams. FLAG_FULLSCREEN);
 
         instance = this;
+
+        baseUrl = BaseURL.getBaseURL();
 
         // api15 以上打开硬件加速
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
@@ -150,6 +158,8 @@ public abstract class BaseActivity  extends FragmentActivity {
         this.ivLogo = findView(R.id.iv_logo);
         this.base_content =  findView(R.id.base_content);
         this.btnRightButton = findView(R.id.btn_right_bottom);
+        this.tvTel = findView(R.id.tv_tel);
+        this.tvTec = findView(R.id.tv_tech_service);
 
         ivLogo.setOnClickListener(new View.OnClickListener() {
             @Override

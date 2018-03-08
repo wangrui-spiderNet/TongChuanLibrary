@@ -25,13 +25,13 @@ android {
 //                    XG_ACCESS_ID : "2100276680",
 //                    XG_ACCESS_KEY: "A3H2KIU7S76V"
 //            ]
-
         }
     }
+
     //正式环境
     def API_RELEASE_HOST = '"http://opac.shuduier.com"'
     //开发环境
-    def API_DEV_HOST = '"http://opac.shuduier.com"'
+    def API_DEV_HOST = '"http://59.110.41.172"'
 
     //签名
     signingConfigs {

@@ -54,8 +54,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     private ImageView ivPhoto;
 
     private List<String> images;
-    private LoginPresenter presenter;
     private HomePresenter homePresenter;
+    private HomeNewsBean homeNewsBean;
 
     private RadioButton rbNews, rbApplyCard, rbIntroduction, rbOpenTime, rbUseGuide, rbMore;
 
@@ -63,7 +63,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        presenter = new LoginPresenter(this);
         homePresenter = new HomePresenter(this, this);
         homePresenter.getHomeNews();
         new BookDao(this).deleteAll();
@@ -109,53 +108,53 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.rb_news:
-                        if (null != rbNews.getTag()) {
+                        if (null != homeNewsBean && null != homeNewsBean.getOrgImgInfo()) {
                             Glide.with(MyApplication.getInstance().getApplicationContext())
-                                    .load(rbNews.getTag().toString())
+                                    .load(baseUrl+homeNewsBean.getOrgImgInfo().getNews())
                                     .into(ivPhoto);
                         }
 
                         break;
 
                     case R.id.rb_apply_card:
-                        if (null != rbApplyCard.getTag()) {
+                        if (null != homeNewsBean && null != homeNewsBean.getOrgImgInfo()) {
                             Glide.with(MyApplication.getInstance().getApplicationContext())
-                                    .load(rbApplyCard.getTag().toString())
+                                    .load(baseUrl+homeNewsBean.getOrgImgInfo().getNotice())
                                     .into(ivPhoto);
                         }
 
                         break;
                     case R.id.rb_introduction:
 
-                        if (null != rbIntroduction.getTag()) {
+                        if (null != homeNewsBean && null != homeNewsBean.getOrgImgInfo()) {
                             Glide.with(MyApplication.getInstance().getApplicationContext())
-                                    .load(rbIntroduction.getTag().toString())
+                                    .load(baseUrl+homeNewsBean.getOrgImgInfo().getIntroduce())
                                     .into(ivPhoto);
                         }
 
                         break;
                     case R.id.rb_open_time:
-                        if (null != rbOpenTime.getTag()) {
+                        if (null != homeNewsBean && null != homeNewsBean.getOrgImgInfo()) {
                             Glide.with(MyApplication.getInstance().getApplicationContext())
-                                    .load(rbOpenTime.getTag().toString())
+                                    .load(baseUrl+homeNewsBean.getOrgImgInfo().getOpentime())
                                     .into(ivPhoto);
                         }
 
                         break;
                     case R.id.rb_use_gide:
 
-                        if (null != rbUseGuide.getTag()) {
+                        if (null != homeNewsBean && null != homeNewsBean.getOrgImgInfo()) {
                             Glide.with(MyApplication.getInstance().getApplicationContext())
-                                    .load(rbUseGuide.getTag().toString())
+                                    .load(baseUrl+homeNewsBean.getOrgImgInfo().getTip())
                                     .into(ivPhoto);
                         }
 
                         break;
                     case R.id.rb_more:
 
-                        if (null != rbMore.getTag()) {
+                        if (null != homeNewsBean && null != homeNewsBean.getOrgImgInfo()) {
                             Glide.with(MyApplication.getInstance().getApplicationContext())
-                                    .load(rbMore.getTag().toString())
+                                    .load(baseUrl+homeNewsBean.getOrgImgInfo().getMore())
                                     .into(ivPhoto);
                         }
 
@@ -173,7 +172,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         super.onResume();
         tvBack.setVisibility(View.INVISIBLE);
 
-        Intent intent=new Intent(this,CheckBookService.class);
+        Intent intent = new Intent(this, CheckBookService.class);
         startService(intent);
 
         if (checkVersion()) {
@@ -202,29 +201,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     public void onClick(View v) {
         if (v == btnRightButton) {
             IntentUtils.startAty(this, InPutPwdActivity.class);
-//            requestTest();
         }
-    }
-
-    private void requestTest() {
-
-        String time = DateUtils.getSystemTime();
-
-        String time1 = time.substring(0, 8);
-        String time2 = time.substring(8, time.length());
-        Log.e(Constant.TAG, "time:" + time);
-
-        //读者状态信息
-//        String userstate_request = getResources().getString(R.string.userstate_request);
-//        String userstate_format = String.format(userstate_request, time1, time2,"", cardnum, pwd);
-//        presenter.getUserState(userstate_format);
-//        //读者信息
-//        String userinfo_request = getResources().getString(R.string.userinfo_request);
-//        String userinfo_format = String.format(userinfo_request,time,cardnum,pwd);
-//        presenter.getUserInfo(userinfo_format);
-//
-
-
     }
 
     @Override
@@ -243,36 +220,31 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     @Override
-    public void onGetHomePageSuccess(List<HomeNewsBean> newsBeanList) {
+    public void onGetHomePageSuccess(HomeNewsBean newsBean) {
 
-        if (null != newsBeanList && newsBeanList.size() > 0) {
+        if (null != newsBean && null != newsBean.getOrgImgSlideList() && newsBean.getOrgImgSlideList().size() > 0) {
             rg_tabs.check(R.id.rb_news);
+            homeNewsBean = newsBean;
+
             Glide.with(MyApplication.getInstance().getApplicationContext())
-                    .load(newsBeanList.get(0).getImgUrl())
+                    .load(newsBean.getOrgImgInfo().getNews())
                     .into(ivPhoto);
 
-            for (int i = 0; i < newsBeanList.size(); i++) {
-                String name = newsBeanList.get(i).getName();
-
-                if (name.equals(getString(R.string.hot_news))) {
-                    rbNews.setTag(newsBeanList.get(i).getImgUrl());
-                } else if (name.equals(getString(R.string.apply_card))) {
-                    rbApplyCard.setTag(newsBeanList.get(i).getImgUrl());
-                } else if (name.equals(getString(R.string.open_time))) {
-                    rbOpenTime.setTag(newsBeanList.get(i).getImgUrl());
-                } else if (name.equals(getString(R.string.use_guide))) {
-                    rbUseGuide.setTag(newsBeanList.get(i).getImgUrl());
-                } else if (name.equals(getString(R.string.more))) {
-                    rbMore.setTag(newsBeanList.get(i).getImgUrl());
-                } else if (name.equals(getString(R.string.lib_intro))) {
-                    rbIntroduction.setTag(newsBeanList.get(i).getImgUrl());
-                } else if (name.equals("banner")) {
-                    images.add(newsBeanList.get(i).getImgUrl());
-                }
+            for (int i = 0; i < newsBean.getOrgImgSlideList().size(); i++) {
+                images.add(baseUrl+newsBean.getOrgImgSlideList().get(i).getUrl());
             }
 
             setBanner();
+
+            Glide.with(MyApplication.getInstance().getApplicationContext())
+                    .load(baseUrl+newsBean.getLogo())
+                    .into(ivLogo);
+
+            tvTel.setText("TEL:"+newsBean.getService_telephone());
+            tvTec.setText(newsBean.getTechnical_support());
+
         }
+
 
     }
 

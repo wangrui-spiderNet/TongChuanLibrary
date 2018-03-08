@@ -2,9 +2,13 @@ package alpha.cyber.intelmain.business.login;
 
 import android.content.Context;
 
-import alpha.cyber.intelmain.Constant;
-import alpha.cyber.intelmain.http.socket.MyAsyncTask;
-import alpha.cyber.intelmain.util.Log;
+import alpha.cyber.intelmain.base.AppException;
+import alpha.cyber.intelmain.bean.UserInfoBean;
+import alpha.cyber.intelmain.http.DefaultSubscriber;
+import alpha.cyber.intelmain.http.model.Request;
+import alpha.cyber.intelmain.http.utils.RetrofitUtils;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by wangrui on 2018/2/7.
@@ -13,98 +17,38 @@ import alpha.cyber.intelmain.util.Log;
 public class LoginPresenter {
 
     private Context context;
+    private UserInfoModule infoModule;
+    private IUserView userView;
 
-    public LoginPresenter(Context context) {
+    public LoginPresenter(Context context, IUserView view) {
         this.context = context;
+        infoModule = RetrofitUtils.createService(UserInfoModule.class);
+        userView = view;
     }
 
-    public void getUserInfo(final String request) {
+    public void login(String patron_id, String password) {
+        userView.showLoadingDialog();
 
-        new MyAsyncTask(new MyAsyncTask.OnSocketRequestListener() {
-            @Override
-            public void onStart() {
+        infoModule.login(new Request.Builder()
+                .withParam("patron_id", patron_id)
+                .withParam("password", password)
+                .build())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DefaultSubscriber<UserInfoBean>() {
+                    @Override
+                    public void onSuccess(UserInfoBean userInfoBean) {
+                        userView.getUserInfo(userInfoBean);
+                        userView.hideLoadingDialog();
+                    }
 
-            }
-
-            @Override
-            public void onSuccess(String result) {
-
-                parseData(result);
-
-            }
-
-            @Override
-            public void onFail(String errorMessage) {
-
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-        }).execute(request);
-
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+                        AppException.handleException(context, errorCode, errorMessage);
+                        userView.hideLoadingDialog();
+                        userView.showErrorMsg(errorMessage);
+                    }
+                });
     }
-
-    private void parseData(String result) {
-        if (null != result) {
-            String[] results = result.split("\\|");
-
-            for (int i = 0; i < results.length; i++) {
-                Log.e(Constant.TAG, results[i]);
-            }
-        }
-    }
-
-    public void getUserState(String request) {
-        new MyAsyncTask(new MyAsyncTask.OnSocketRequestListener() {
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onSuccess(String result) {
-                parseData(result);
-            }
-
-            @Override
-            public void onFail(String errorMessage) {
-
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-        }).execute(request);
-    }
-
-    public void getBookInfo(String request) {
-        new MyAsyncTask(new MyAsyncTask.OnSocketRequestListener() {
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onSuccess(String result) {
-                parseData(result);
-            }
-
-            @Override
-            public void onFail(String errorMessage) {
-
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-        }).execute(request);
-    }
-
-
-
 
 }

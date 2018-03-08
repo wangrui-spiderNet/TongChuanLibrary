@@ -13,6 +13,8 @@ import alpha.cyber.intelmain.bean.BookInfoBean;
 import alpha.cyber.intelmain.bean.UserInfoBean;
 import alpha.cyber.intelmain.business.operation.OperatorActivity;
 import alpha.cyber.intelmain.business.operation.OperatorPresenter;
+import alpha.cyber.intelmain.db.DatabaseHelper;
+import alpha.cyber.intelmain.db.UserDao;
 import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.IntentUtils;
 import alpha.cyber.intelmain.util.StringUtils;
@@ -27,13 +29,13 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
     private EditText etPWd, etAccount;
     private Button btnLogin;
 
-    private OperatorPresenter presenter;
-
+    private LoginPresenter presenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_pwd);
+        presenter = new LoginPresenter(this, this);
 
     }
 
@@ -47,7 +49,6 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
 
         etAccount.setText(Constant.cardnum);
         etPWd.setText(Constant.pwd);
-        presenter = new OperatorPresenter(this, this);
 
     }
 
@@ -65,41 +66,50 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
                 return;
             }
 
-            finish();
+            presenter.login(etAccount.getText().toString(), etPWd.getText().toString());
+        }
+    }
+
+    @Override
+    public void getUserInfo(UserInfoBean userinfoBean) {
+        try {
+            UserDao userDao = new UserDao();
+            userDao.insertBook(userinfoBean);
+
             AppSharedPreference.getInstance().setLogIn(true);
+
+            AppSharedPreference.getInstance().saveUserInfo(userinfoBean);
+
             Bundle bundle = new Bundle();
             bundle.putString(Constant.ACCOUNT, etAccount.getText().toString());
             bundle.putString(Constant.PASSWORD, etPWd.getText().toString());
             IntentUtils.startAty(this, OperatorActivity.class, bundle);
 
+            finish();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //扫描全书柜，更新到本地数据库中
-
-//        String time = DateUtils.getSystemTime();
-//        String bookcode = "00834470";
-//        String bookcode2 = "00834472";
-//
-//        String request = "17001" + time + "AO|AB" + bookcode + "|AY0AZ";
-//        String request2 = "17001" + time + "AO|AB" + bookcode2 + "|AY0AZ";
-//        presenter.getBookInfo(request);
-//        presenter.getBookInfo(request2);
 
     }
 
     @Override
-    public void getUserInfo(UserInfoBean userinfoBean) {
+    public void showLoadingDialog() {
+
+        showDialog("正在加载");
 
     }
 
     @Override
-    public void getAllBoxBooks(BookInfoBean infoBean) {
+    public void hideLoadingDialog() {
 
+        closeDialog();
+    }
 
+    @Override
+    public void showErrorMsg(String msg) {
+
+        ToastUtil.showToast(msg);
     }
 
     @Override

@@ -14,10 +14,12 @@ import java.util.Map;
 
 import alpha.cyber.intelmain.bean.BookInfoBean;
 import alpha.cyber.intelmain.bean.BorrowBookBean;
+import alpha.cyber.intelmain.bean.CheckoutListBean;
 import alpha.cyber.intelmain.bean.ContactsBean;
 import alpha.cyber.intelmain.bean.ContactsGroups;
 import alpha.cyber.intelmain.bean.ContactsInformation;
 import alpha.cyber.intelmain.bean.InventoryReport;
+import alpha.cyber.intelmain.bean.UserInfoBean;
 
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
@@ -33,13 +35,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase database,
                          ConnectionSource connectionSource) {
         try {
-//            TableUtils.createTable(connectionSource, ContactsBean.class);
-//            TableUtils.createTable(connectionSource, ContactsGroups.class);
-//            TableUtils.createTable(connectionSource, ContactsInformation.class);
-
             TableUtils.createTable(connectionSource, BookInfoBean.class);
             TableUtils.createTable(connectionSource, BorrowBookBean.class);
             TableUtils.createTable(connectionSource, InventoryReport.class);
+            TableUtils.createTable(connectionSource, UserInfoBean.class);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -50,10 +49,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onUpgrade(SQLiteDatabase database,
                           ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
-//            TableUtils.dropTable(connectionSource, ContactsBean.class, true);
             TableUtils.dropTable(connectionSource, BorrowBookBean.class, true);
-            TableUtils.dropTable(connectionSource, BookInfoBean.class, true);
+            TableUtils.dropTable(connectionSource, CheckoutListBean.class, true);
             TableUtils.dropTable(connectionSource, InventoryReport.class, true);
+            TableUtils.dropTable(connectionSource, UserInfoBean.class, true);
 
             onCreate(database, connectionSource);
         } catch (SQLException e) {
@@ -73,7 +72,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         context = context.getApplicationContext();
         if (instance == null) {
             synchronized (DatabaseHelper.class) {
-                if (instance == null){
+                if (instance == null) {
                     instance = new DatabaseHelper(context);
                 }
 

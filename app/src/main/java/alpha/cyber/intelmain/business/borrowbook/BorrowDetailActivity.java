@@ -18,6 +18,7 @@ import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.bean.BookInfoBean;
+import alpha.cyber.intelmain.bean.CheckoutListBean;
 import alpha.cyber.intelmain.bean.InventoryReport;
 import alpha.cyber.intelmain.bean.UserInfoBean;
 import alpha.cyber.intelmain.db.InventoryReportDao;
@@ -41,7 +42,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     private int from;//1、借书  2、还书
 
     private UserInfoBean userInfoBean;
-    private List<BookInfoBean> holdBookList;
+    private List<CheckoutListBean> holdBookList;
     private List<BookInfoBean> borrowBookList;
     private List<BookInfoBean> backBookList;
 
@@ -162,9 +163,9 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         layoutTableBack = findView(R.id.layout_table_back);
         layoutTableWillBorrow = findView(R.id.layout_table_will_borrow);
 
-        tvCardNumber.setText(userInfoBean.getCardnum());
-        tvName.setText(userInfoBean.getName());
-        tvPermission.setText(userInfoBean.getPermission());
+        tvCardNumber.setText(userInfoBean.getPatron_identifier());
+        tvName.setText(userInfoBean.getPersonal_name());
+        tvPermission.setText(userInfoBean.getScreen_message());
 
     }
 
@@ -191,10 +192,9 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         MyTableView tableBorrowed = new MyTableView(this, 4);
         tableBorrowed.AddRow(new String[]{getString(R.string.has_borrowed)}, true);
         for (int i = 0; i < holdBookList.size(); i++) {
-            tableBorrowed.AddRow(new Object[]{holdBookList.get(i).getBookname(), holdBookList.get(i).getBorrowtime(), holdBookList.get(i).getEndtime(), holdBookList.get(i).getLatedays()}, false);
+            tableBorrowed.AddRow(new Object[]{holdBookList.get(i).getItem_identifier(), holdBookList.get(i).getHold_pickup_date(), holdBookList.get(i).getOverdue_days(), holdBookList.get(i).getOverdue_days()}, false);
         }
         layoutTableBorrowed.addView(tableBorrowed);
-
 
     }
 
@@ -315,6 +315,8 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         String back_book_request = getResources().getString(R.string.back_book_request);
         String back_book_format = String.format(back_book_request, time1, time2, bookcode);
         presenter.backBook(back_book_format);
+
+
     }
 
 }

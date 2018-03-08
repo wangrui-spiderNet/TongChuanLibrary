@@ -13,7 +13,7 @@ import alpha.cyber.intelmain.bean.HomeNewsBean;
 public interface IHomeView extends IBaseView{
 
 
-    public void onGetHomePageSuccess(List<HomeNewsBean> newsBeanList);
+    public void onGetHomePageSuccess(HomeNewsBean newsBeanList);
 
     public void checkVersion(AppUpgradeInfo upgradeInfo);
 }

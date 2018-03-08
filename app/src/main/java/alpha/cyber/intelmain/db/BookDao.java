@@ -7,7 +7,9 @@ import com.j256.ormlite.dao.Dao;
 import java.sql.SQLException;
 import java.util.List;
 
-import alpha.cyber.intelmain.bean.BookInfoBean;
+import alpha.cyber.intelmain.bean.CheckoutListBean;
+import alpha.cyber.intelmain.bean.CheckoutListBean;
+import alpha.cyber.intelmain.business.home.CheckBoxPresenter;
 
 /**
  * Created by wangrui on 2018/2/12.
@@ -17,24 +19,24 @@ public class BookDao {
 
     private Context context;
     private DatabaseHelper dbHelper;
-    private static Dao<BookInfoBean, Integer> bookDao;
+    private static Dao<CheckoutListBean, Integer> bookDao;
 
     public BookDao(Context context) {
         this.context = context;
         try {
             dbHelper = DatabaseHelper.getHelper(context);
-            bookDao = dbHelper.getDao(BookInfoBean.class);
+            bookDao = dbHelper.getDao(CheckoutListBean.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
     }
 
-    public boolean insertBook(BookInfoBean bookInfoBean) {
+    public boolean insertBook(CheckoutListBean CheckoutListBean) {
 
         try {
             initDao();
-            Dao.CreateOrUpdateStatus status= bookDao.createOrUpdate(bookInfoBean);
+            Dao.CreateOrUpdateStatus status= bookDao.createOrUpdate(CheckoutListBean);
 
             if(status.isCreated()||status.isUpdated()){
                 return true;
@@ -50,12 +52,12 @@ public class BookDao {
 
     private void initDao() throws SQLException {
         if (null == bookDao) {
-            bookDao = dbHelper.getDao(BookInfoBean.class);
+            bookDao = dbHelper.getDao(CheckoutListBean.class);
         }
     }
 
-    public List<BookInfoBean> queryAllBooks(){
-        List<BookInfoBean> allBooks =null;
+    public List<CheckoutListBean> queryAllBooks(){
+        List<CheckoutListBean> allBooks =null;
 
         try {
             initDao();
@@ -67,10 +69,10 @@ public class BookDao {
         return allBooks;
     }
 
-    public int deleteBookInfo(BookInfoBean bookInfoBean){
+    public int deleteBookInfo(CheckoutListBean CheckoutListBean){
         try {
             initDao();
-            return bookDao.delete(bookInfoBean);
+            return bookDao.delete(CheckoutListBean);
         }catch (SQLException e){
             e.printStackTrace();
         }

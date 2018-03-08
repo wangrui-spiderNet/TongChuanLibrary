@@ -11,6 +11,7 @@ import java.util.List;
 
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.bean.BookInfoBean;
+import alpha.cyber.intelmain.bean.CheckoutListBean;
 
 /**
  * Created by wangrui on 2018/2/11.
@@ -19,9 +20,9 @@ import alpha.cyber.intelmain.bean.BookInfoBean;
 public class BorrowBookAdapter extends BaseAdapter {
 
     private Context context;
-    private List<BookInfoBean> recordBeans;
+    private List<CheckoutListBean> recordBeans;
 
-    public BorrowBookAdapter(Context context, List<BookInfoBean> recordBeans){
+    public BorrowBookAdapter(Context context, List<CheckoutListBean> recordBeans){
         this.context = context;
         this.recordBeans = recordBeans;
 
@@ -54,10 +55,10 @@ public class BorrowBookAdapter extends BaseAdapter {
             holder =(ViewHolder) convertView.getTag();
         }
 
-        holder.tvBookName.setText(""+recordBeans.get(position).getBookname());
-        holder.tvBorrowDate.setText(""+recordBeans.get(position).getBorrowtime());
-        holder.tvEndDate.setText(""+recordBeans.get(position).getEndtime());
-        holder.tvLateBack.setText(""+recordBeans.get(position).getLatedays());
+        holder.tvBookName.setText(recordBeans.get(position).getTitle_identifier());
+        holder.tvBorrowDate.setText(recordBeans.get(position).getHold_pickup_date());
+        holder.tvEndDate.setText(recordBeans.get(position).getDue_date());
+        holder.tvLateBack.setText(recordBeans.get(position).getOverdue_days());
 
         return convertView;
     }

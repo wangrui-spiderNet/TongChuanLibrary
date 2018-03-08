@@ -12,6 +12,7 @@ import java.util.List;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.bean.BookInfoBean;
+import alpha.cyber.intelmain.bean.CheckoutListBean;
 import alpha.cyber.intelmain.business.operation.BorrowBookAdapter;
 import alpha.cyber.intelmain.bean.UserInfoBean;
 import alpha.cyber.intelmain.util.AppSharedPreference;
@@ -27,7 +28,7 @@ public class UserInfoActivity extends BaseActivity {
     private TextView tvPermission;
     private TextView tvOvertime;
     private UserInfoBean userInfoBean;
-    private List<BookInfoBean> bookInfoBeanList;
+    private List<CheckoutListBean> bookInfoBeanList;
     private ListView lvTable;
     private BorrowBookAdapter mAdapter;
 
@@ -35,7 +36,6 @@ public class UserInfoActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_userinfo);
-
     }
 
     @Override
@@ -46,9 +46,9 @@ public class UserInfoActivity extends BaseActivity {
         tvOvertime = findView(R.id.tv_overtime);
         lvTable = findView(R.id.lv_table);
 
-        tvName.setText(userInfoBean.getName());
-        tvCardNumber.setText(userInfoBean.getCardnum());
-        tvPermission.setText(userInfoBean.getPermission());
+        tvName.setText(userInfoBean.getPersonal_name());
+        tvCardNumber.setText(userInfoBean.getPatron_identifier());
+        tvPermission.setText(userInfoBean.getScreen_message());
         View headView= LayoutInflater.from(this).inflate(R.layout.item_table_headview,null);
         lvTable.addHeaderView(headView);
 
@@ -72,10 +72,6 @@ public class UserInfoActivity extends BaseActivity {
 
         userInfoBean = AppSharedPreference.getInstance().getUserInfo();
         bookInfoBeanList = AppSharedPreference.getInstance().getbookInfos();
-
-        if(null==userInfoBean){
-
-        }
 
     }
 }

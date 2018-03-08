@@ -14,6 +14,7 @@ import java.util.List;
 import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.bean.BookInfoBean;
+import alpha.cyber.intelmain.bean.CheckoutListBean;
 import alpha.cyber.intelmain.bean.InventoryReport;
 import alpha.cyber.intelmain.bean.UserInfoBean;
 import alpha.cyber.intelmain.business.borrowbook.CheckBookHelper;
@@ -28,17 +29,15 @@ import alpha.cyber.intelmain.util.Log;
  * Created by wangrui on 2018/2/26.
  */
 
-public class CheckBookService extends Service implements IUserView {
-
+public class CheckBookService extends Service implements CheckCallBack {
 
     public List<InventoryReport> inventoryList;
     private BookDao bookDao;
     private InventoryReportDao reportDao;
-    private OperatorPresenter presenter;
+    private CheckBoxPresenter presenter;
 
     private CheckBookHelper helper;
     private boolean deviceOpen = false;
-
 
     @Nullable
     @Override
@@ -53,7 +52,7 @@ public class CheckBookService extends Service implements IUserView {
         super.onCreate();
         bookDao = new BookDao(this);
         reportDao = new InventoryReportDao(this);
-        presenter = new OperatorPresenter(this, this);
+        presenter = new CheckBoxPresenter(this, this);
         inventoryList = new ArrayList<InventoryReport>();
         helper = new CheckBookHelper(mHandler);
     }
@@ -75,13 +74,8 @@ public class CheckBookService extends Service implements IUserView {
     }
 
     @Override
-    public void getUserInfo(UserInfoBean userinfoBean) {
-
-    }
-
-    @Override
-    public void getAllBoxBooks(BookInfoBean infoBean) {
-        bookDao.insertBook(infoBean);
+    public void getBookInfoByCode(CheckoutListBean checkoutListBean) {
+        bookDao.insertBook(checkoutListBean);
     }
 
     private class MyHandler extends Handler {
@@ -125,7 +119,7 @@ public class CheckBookService extends Service implements IUserView {
                     break;
                 case CheckBookHelper.INVENTORY_FAIL_MSG:
 
-                    Log.e(Constant.TAG, "》》》》》失败》》》》》");
+                    Log.e(Constant.TAG, "》》》》》盘点失败》》》》》");
 
                     break;
                 case CheckBookHelper.THREAD_END:
@@ -142,15 +136,7 @@ public class CheckBookService extends Service implements IUserView {
         for (int i = 0; i < inventoryList.size(); i++) {
 
             String bookCode = helper.getBookCode(i, inventoryList.get(i).getUidStr());
-
-            String time = DateUtils.getSystemTime();
-            String bookinfo_request = getResources().getString(R.string.bookinfo_request);
-
-            bookCode = bookCode.substring(6, 14);
-
-            String bookinfo_format = String.format(bookinfo_request, time, bookCode);
-
-            presenter.getBookInfo(bookinfo_format);
+            presenter.getBookInfoByCode(bookCode);
 
         }
     }

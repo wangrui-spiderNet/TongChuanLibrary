@@ -15,9 +15,13 @@ import rx.Observable;
 
 public interface HomePageModule {
 
-    @POST("/weitu/getIndexImgs?address=address1")
-    Observable<List<HomeNewsBean>> getHomeNews(@Body Request data);
+    @POST("/api")
+    Observable<HomeNewsBean> getHomeNews(@Body Request data);
 
-    @POST("/weitu/getAppVersion?address=address1")
+    @POST("/api/checkUpdate")
     Observable<AppUpgradeInfo> getUpGradeInfo(@Body Request data);
+
+
+    @POST("/api/qrcodeInfo")
+    Observable<AppUpgradeInfo> qrcodeInfo(@Body Request data);
 }

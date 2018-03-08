@@ -11,6 +11,7 @@ import java.util.List;
 
 import alpha.cyber.intelmain.MyApplication;
 import alpha.cyber.intelmain.bean.BookInfoBean;
+import alpha.cyber.intelmain.bean.CheckoutListBean;
 import alpha.cyber.intelmain.bean.UserInfoBean;
 
 /**
@@ -102,7 +103,7 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
      * 保存List
      * @param datalist
      */
-    public void saveBookInfos(List<BookInfoBean> datalist) {
+    public void saveBookInfos(List<CheckoutListBean> datalist) {
         if (null == datalist || datalist.size() <= 0)
             return;
         Gson gson = new Gson();
@@ -115,14 +116,14 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
      * 获取List
      * @return
      */
-    public List<BookInfoBean> getbookInfos() {
-        List<BookInfoBean> datalist=new ArrayList<BookInfoBean>();
+    public List<CheckoutListBean> getbookInfos() {
+        List<CheckoutListBean> datalist=new ArrayList<CheckoutListBean>();
         String strJson = app.getString(AppSharedPreferenceConfig.BORROWED_BOOKS, null);
         if (null == strJson) {
             return null;
         }
         Gson gson = new Gson();
-        datalist = gson.fromJson(strJson, new TypeToken<List<BookInfoBean>>() {
+        datalist = gson.fromJson(strJson, new TypeToken<List<CheckoutListBean>>() {
         }.getType());
 
         return datalist;
