@@ -250,7 +250,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void checkVersion(final AppUpgradeInfo appUpgradeInfo) {
 
-        ToastUtil.showToast("新版本：" + appUpgradeInfo.getNew_version_name());
+        ToastUtil.showToast(HomeActivity.this,"新版本：" + appUpgradeInfo.getNew_version_name());
 
         try {
             AppThreadManager.getInstance().start(new Runnable() {
@@ -306,16 +306,16 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                                 }
                             }
 
-                            if (ShellUtils.checkRootPermission()) {
+//                            if (ShellUtils.checkRootPermission()) {
 
                                 String apkPath = FileUtils.getRootPath(MyApplication.getInstance().getApplicationContext(), true) + "/library";
 
                                 int resultCode = PackageUtils.installSilent(MyApplication.getInstance().getApplicationContext(), apkPath);
                                 if (resultCode != PackageUtils.INSTALL_SUCCEEDED) {
                                     Log.e(Constant.TAG, "升级失败");
-                                    ToastUtil.showToast("升级失败");
+                                    ToastUtil.showToast(HomeActivity.this,"升级失败");
                                 }
-                            }
+//                            }
 
                             isUpgrade = false;
                         }

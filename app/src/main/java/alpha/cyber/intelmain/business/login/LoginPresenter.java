@@ -43,7 +43,7 @@ public class LoginPresenter {
                             userView.getUserInfo(userInfoBean);
                             userView.hideLoadingDialog();
                         }else{
-                            ToastUtil.showToast("请检查账号和密码是否输入正确！");
+                            ToastUtil.showToast(context,"请检查账号和密码是否输入正确！");
                         }
 
                         userView.hideLoadingDialog();

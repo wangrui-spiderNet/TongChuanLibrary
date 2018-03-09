@@ -1,5 +1,6 @@
 package alpha.cyber.intelmain.util;
 
+import android.content.Context;
 import android.widget.Toast;
 
 import alpha.cyber.intelmain.MyApplication;
@@ -14,9 +15,9 @@ public class ToastUtil {
      *
      * @param msg
      */
-    public static void showToast( String msg) {
+    public static void showToast(Context context, String msg) {
         if (toast == null) {
-            toast = Toast.makeText(MyApplication.getInstance(), msg, Toast.LENGTH_SHORT);
+            toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
         } else {
             toast.setText(msg);
         }
@@ -27,9 +28,9 @@ public class ToastUtil {
      * Toast提醒
      *
      */
-    public static void showToast(int resId) {
+    public static void showToast(Context context, int resId) {
         if (toast == null) {
-            toast = Toast.makeText(MyApplication.getInstance(), resId, Toast.LENGTH_SHORT);
+            toast = Toast.makeText(context, resId, Toast.LENGTH_SHORT);
         } else {
             toast.setText(MyApplication.getInstance().getResources().getString(resId));
         }

@@ -38,7 +38,7 @@ public class BorrowBookPresenter {
                     @Override
                     public void onSuccess(EmptyResponse response) {
 
-                        ToastUtil.showToast(response.getMsg());
+                        ToastUtil.showToast(context,response.getMsg());
                     }
 
                     @Override
@@ -60,7 +60,7 @@ public class BorrowBookPresenter {
                     @Override
                     public void onSuccess(EmptyResponse response) {
 
-                        ToastUtil.showToast(response.getMsg());
+                        ToastUtil.showToast(context,response.getMsg());
                     }
 
                     @Override

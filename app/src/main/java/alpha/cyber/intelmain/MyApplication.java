@@ -37,7 +37,7 @@ public class MyApplication extends Application {
         XGPushManager.registerPush(this, new XGIOperateCallback() {
             @Override
             public void onSuccess(Object data, int flag) {
-                ToastUtil.showToast("信鸽注册成功 设备token为：" + data);
+                ToastUtil.showToast(MyApplication.getAppContext(),"信鸽注册成功 设备token为：" + data);
                 Log.e(Constant.TAG, "注册成功，设备token为：" + data);
 
                 AppSharedPreference.getInstance().setClientXgToken(data.toString());
@@ -45,7 +45,7 @@ public class MyApplication extends Application {
             @Override
             public void onFail(Object data, int errCode, String msg) {
                 Log.e(Constant.TAG, "注册失败，错误码：" + errCode + ",错误信息：" + msg);
-                ToastUtil.showToast("信鸽注册失败");
+                ToastUtil.showToast(MyApplication.getAppContext(),"信鸽注册失败");
             }
         });
 

@@ -74,7 +74,7 @@ public class CheckBookService extends Service implements CheckCallBack {
 
         Log.e(Constant.TAG,"盘点书柜中的书："+checkoutListBean.toString());
 
-        ToastUtil.showToast("盘点书柜里面的书："+checkoutListBean.getTitle_identifier());
+//        ToastUtil.showToast(,"盘点书柜里面的书："+checkoutListBean.getTitle_identifier());
     }
 
     private class MyHandler extends Handler {
@@ -119,8 +119,7 @@ public class CheckBookService extends Service implements CheckCallBack {
                 case CheckBookHelper.INVENTORY_FAIL_MSG:
 
                     Log.e(Constant.TAG, "》》》》》盘点失败》》》》》");
-                    ToastUtil.showToast("盘点失败");
-
+//                    ToastUtil.showToast("盘点失败");
                     break;
                 case CheckBookHelper.THREAD_END:
 

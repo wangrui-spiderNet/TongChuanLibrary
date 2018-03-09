@@ -161,7 +161,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
             switch (msg.what) {
                 case CheckBookHelper.INVENTORY_MSG://盘点结束处理
 
-                    ToastUtil.showToast("盘点结束，计算中...");
+                    ToastUtil.showToast(BorrowDetailActivity.this,"盘点结束，计算中...");
 
                     calculateBorrowOrBackBook(msg);
 

@@ -57,12 +57,12 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
         if (v == btnLogin) {
 
             if (StringUtils.isEmpty(etAccount.getText().toString())) {
-                ToastUtil.showToast("账号不能为空");
+                ToastUtil.showToast(InPutPwdActivity.this,"账号不能为空");
                 return;
             }
 
             if (StringUtils.isEmpty(etPWd.getText().toString())) {
-                ToastUtil.showToast("密码不能为空");
+                ToastUtil.showToast(InPutPwdActivity.this,"密码不能为空");
                 return;
             }
 
@@ -109,7 +109,7 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void showErrorMsg(String msg) {
 
-        ToastUtil.showToast(msg);
+        ToastUtil.showToast(InPutPwdActivity.this,msg);
     }
 
     @Override

@@ -154,7 +154,7 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void showErrorMsg(String msg) {
 
-        ToastUtil.showToast(msg);
+        ToastUtil.showToast(this,msg);
     }
 
     @Override
