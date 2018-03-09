@@ -20,6 +20,7 @@ import alpha.cyber.intelmain.bean.BoxBean;
 import alpha.cyber.intelmain.business.mechine_helper.LockHelper;
 import alpha.cyber.intelmain.util.IntentUtils;
 import alpha.cyber.intelmain.util.Log;
+import alpha.cyber.intelmain.util.ToastUtil;
 
 /**
  * Created by wangrui on 2018/2/1.
@@ -36,7 +37,7 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_box);
-        lockHelper = new LockHelper(mHandler);
+        lockHelper = new LockHelper(mHandler,this);
     }
 
     @Override
@@ -69,11 +70,9 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        if (lockHelper.open(this)) {
+        if (lockHelper.open()) {
             lockHelper.openGride(position);
         }
-
-        IntentUtils.startAtyWithSingleParam(this, BorrowDetailActivity.class, Constant.BORROW_BACK, Constant.BORROW_BOOK);
 
     }
 
@@ -93,37 +92,29 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
     @Override
     public void onGetLockState(int id, byte state) {
 
-        if (state == 0) {
-            IntentUtils.startAtyWithSingleParam(this, BorrowDetailActivity.class, Constant.BORROW_BACK, Constant.BORROW_BOOK);
-        } else {
-
-        }
     }
 
     @Override
     public void onGetAllLockState(byte[] state) {
 
-        for (int i = 0; i < state.length; i++) {
-            if (state[i] == 0) {
-                Log.e(Constant.TAG,i+":开");
-            } else {
-                Log.e(Constant.TAG,i+":关");
-            }
+        if (lockHelper.checkBoxOpen(state)) {
+            IntentUtils.startAtyWithSingleParam(this, BorrowDetailActivity.class, Constant.BORROW_BACK, Constant.BORROW_BOOK);
         }
     }
 
-    private Handler mHandler = new  Handler() {
+    private Handler mHandler = new Handler() {
 
         @Override
         public void handleMessage(Message msg) {
 
             switch (msg.what) {
                 case LockHelper.STATE_LISTEN_MSG://查看所有所状态
-
                     lockHelper.getAllDoorState();
-
                     break;
-
+                case LockHelper.BOX_OPEN:
+                    int position=(Integer) msg.obj;
+//                    ToastUtil.showToast(position+"号柜已开");
+                    break;
                 default:
                     break;
             }

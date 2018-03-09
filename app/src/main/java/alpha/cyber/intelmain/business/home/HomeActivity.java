@@ -42,6 +42,7 @@ import alpha.cyber.intelmain.util.FileUtils;
 import alpha.cyber.intelmain.util.IntentUtils;
 import alpha.cyber.intelmain.util.PackageUtils;
 import alpha.cyber.intelmain.util.ShellUtils;
+import alpha.cyber.intelmain.util.ToastUtil;
 
 /**
  * Created by wangrui on 2018/1/29.
@@ -172,25 +173,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         super.onResume();
         tvBack.setVisibility(View.INVISIBLE);
 
+        checkVersion();
 
-
-        if (checkVersion()) {
-            if (ShellUtils.checkRootPermission()) {
-
-                //TODO 下载APK的成功
-
-                String apkPath = FileUtils.getRootPath(MyApplication.getInstance().getApplicationContext(), true) + "/library";
-
-                int resultCode = PackageUtils.installSilent(MyApplication.getInstance().getApplicationContext(), apkPath);
-                if (resultCode != PackageUtils.INSTALL_SUCCEEDED) {
-                    Log.e(Constant.TAG, "升级失败");
-                }
-            }
-        }
 
     }
 
     private boolean checkVersion() {
+
+        homePresenter.checkVersion();
 
         return false;
     }
@@ -239,11 +229,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                     .load(newsBean.getLogo())
                     .into(ivLogo);
 
-            tvTel.setText("TEL:"+newsBean.getService_telephone());
+            tvTel.setText("TEL:" + newsBean.getService_telephone());
             tvTec.setText(newsBean.getTechnical_support());
 
         }
-
 
     }
 
@@ -260,18 +249,21 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
      */
     @Override
     public void checkVersion(final AppUpgradeInfo appUpgradeInfo) {
+
+        ToastUtil.showToast("新版本：" + appUpgradeInfo.getNew_version_name());
+
         try {
             AppThreadManager.getInstance().start(new Runnable() {
 
                 @Override
                 public void run() {
-                    if (appUpgradeInfo != null && appUpgradeInfo.getUpdateType() != 0 && !isUpgrade) {
+                    if (appUpgradeInfo != null && appUpgradeInfo.getIs_update() != 0 && !isUpgrade) {
                         Log.d(Constant.TAG,
                                 "当前版本信息===" + DeviceUtils.getVersionCode(MyApplication.getAppContext()) + "  name=" + DeviceUtils.getVersionName(mContext));
-                        Log.d(Constant.TAG, "server版本信息===" + appUpgradeInfo.getVersionCode() + "  name=" + appUpgradeInfo.getVersion());
-                        if (DeviceUtils.getVersionCode(MyApplication.getAppContext()) < appUpgradeInfo.getVersionCode()) {
+                        Log.d(Constant.TAG, "server版本信息===" + appUpgradeInfo.getNew_version_code() + "  name=" + appUpgradeInfo.getNew_version_name());
+                        if (DeviceUtils.getVersionCode(MyApplication.getAppContext()) < appUpgradeInfo.getNew_version_code()) {
                             FileUtils.deleteDir(FileUtils.getUpgradeApkPath());
-                            downloadUpdate(appUpgradeInfo.getVersion(), appUpgradeInfo.getDownLoadUrl());
+                            downloadUpdate(appUpgradeInfo.getNew_version_name(), appUpgradeInfo.getDownurl());
                         }
                     }
                 }
@@ -314,10 +306,17 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                                 }
                             }
 
-                            int resultCode = PackageUtils.installSilent(MyApplication.getAppContext(), update_localpath);
-                            if (resultCode != PackageUtils.INSTALL_SUCCEEDED) {
-                                Log.e(Constant.TAG, "升级失败");
+                            if (ShellUtils.checkRootPermission()) {
+
+                                String apkPath = FileUtils.getRootPath(MyApplication.getInstance().getApplicationContext(), true) + "/library";
+
+                                int resultCode = PackageUtils.installSilent(MyApplication.getInstance().getApplicationContext(), apkPath);
+                                if (resultCode != PackageUtils.INSTALL_SUCCEEDED) {
+                                    Log.e(Constant.TAG, "升级失败");
+                                    ToastUtil.showToast("升级失败");
+                                }
                             }
+
                             isUpgrade = false;
                         }
                     }

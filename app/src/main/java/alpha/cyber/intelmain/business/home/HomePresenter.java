@@ -11,6 +11,7 @@ import alpha.cyber.intelmain.bean.HomeNewsBean;
 import alpha.cyber.intelmain.http.DefaultSubscriber;
 import alpha.cyber.intelmain.http.model.Request;
 import alpha.cyber.intelmain.http.utils.RetrofitUtils;
+import alpha.cyber.intelmain.util.DeviceUtils;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -52,7 +53,10 @@ public class HomePresenter {
     }
 
     public void checkVersion(){
-        module.getUpGradeInfo(new Request.Builder().withParam("","").build())
+        module.getUpGradeInfo(new Request.Builder()
+                .withParam("version_code", DeviceUtils.getVersionCode(context))
+                .withParam("version_name",DeviceUtils.getVersionName(context))
+                .build())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DefaultSubscriber<AppUpgradeInfo>() {

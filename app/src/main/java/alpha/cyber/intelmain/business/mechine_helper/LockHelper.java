@@ -2,16 +2,10 @@ package alpha.cyber.intelmain.business.mechine_helper;
 
 import android.os.Handler;
 import android.os.Message;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import alpha.cyber.intellib.lock.LockCallback;
 import alpha.cyber.intellib.lock.LockController;
 import alpha.cyber.intellib.utils.ToastUtils;
 import alpha.cyber.intelmain.Constant;
-import alpha.cyber.intelmain.business.borrowbook.OpenBoxActivity;
-import alpha.cyber.intelmain.business.borrowbook.StateReport;
 import alpha.cyber.intelmain.util.Log;
 
 /**
@@ -27,17 +21,20 @@ public class LockHelper {
     private Handler mHandler;
     public static final int STATE_LISTEN_MSG = 101;
     public static final byte BOARD_ADDRESS = 0x01;
+    public static final int BOX_OPEN = 102;
+    private LockCallback callback;
 
-    private List<StateReport> stateList = new ArrayList<StateReport>();
-    private byte[] grimState = new byte[24];
-    private boolean firstInit = true;
-
-    public LockHelper(Handler mHandler){
+    public LockHelper(Handler mHandler,LockCallback callback){
         this.mHandler = mHandler;
+        this.callback = callback;
+        initController();
     }
 
-    public LockController initController(LockCallback callback) {
-        mLockController = new LockController(9600);
+    private LockController initController() {
+
+        if(null==mLockController){
+            mLockController = new LockController(9600);
+        }
 
         if (mLockController.mSerialPort == null) {
             ToastUtils.showShortToast("打开设备失败");
@@ -47,6 +44,7 @@ public class LockHelper {
             lc = true;
             ToastUtils.showShortToast("打开设备成功");
         }
+
         mLockController.setCallBack(callback);
 
         return mLockController;
@@ -56,17 +54,21 @@ public class LockHelper {
         mLockController.getAllDoorState(LockHelper.BOARD_ADDRESS);
     }
 
-    public boolean open(LockCallback back) {
+    public boolean open() {
 
         if (lc) {
             startOpen();
             return true;
         } else {
-            initController(back);
+            initController();
             startOpen();
         }
 
         return false;
+    }
+
+    public boolean isDoorOpen(){
+        return lc;
     }
 
     private void startOpen() {
@@ -85,6 +87,27 @@ public class LockHelper {
         if(null!=mStateThrd){
             mStateThrd.interrupt();
         }
+    }
+
+    public boolean checkBoxOpen(byte[] state){
+        for (int i = 0; i < state.length; i++) {
+            if (state[i] == 0) {
+                Log.e(Constant.TAG,i+":开");
+//                ToastUtil.showToast(i+"号柜：已开");
+
+                Message msg=mHandler.obtainMessage();
+                msg.what = BOX_OPEN;
+                msg.obj = i;
+                mHandler.sendMessage(msg);
+
+                return true;
+            } else {
+//                Log.e(Constant.TAG,i+":关");
+                return false;
+            }
+        }
+
+        return false;
     }
 
     private class StateThrd implements Runnable {

@@ -1,6 +1,6 @@
 package alpha.cyber.intelmain.bean;
 
-import com.alibaba.fastjson.JSON;
+import com.google.gson.Gson;
 
 import java.io.Serializable;
 
@@ -17,109 +17,73 @@ public class AppUpgradeInfo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 升级状态： 0 表示已是最新 1 检测到新版本升级 2 检测到强制升级版本
-	 */
-	private int updateType;
 
 	/**
-	 * 升级版本
+	 * new_version_code : 1
+	 * old_version_code : 1
+	 * downurl : /123
+	 * new_version_name : 1.0
+	 * is_update : 0
+	 * old_version_name : null
 	 */
-	private String version;
 
-	/**
-	 * 升级编号
-	 */
-	private long versionCode;
+	private int new_version_code;
+	private int old_version_code;
+	private String downurl;
+	private String new_version_name;
+	private int is_update;
+	private String old_version_name;
 
-	/**
-	 * 升级介绍
-	 */
-	private String versionIntro;
-	/**
-	 * 升级版本下载地址
-	 */
-	private String downLoadUrl;
-	/**
-	 * 升级包发布时间
-	 */
-	private long createDate;
-	/**
-	 * 升级包大小
-	 */
-	private String versionSize;
+	public static AppUpgradeInfo objectFromData(String str) {
 
-	/**
-	 * 升级状态：0 表示已是最新 1 检测到新版本升级 2 检测到强制升级版本
-	 */
-	public int getUpdateType() {
-		return updateType;
+		return new Gson().fromJson(str, AppUpgradeInfo.class);
 	}
 
-	public void setUpdateType(int updateType) {
-		this.updateType = updateType;
+	public int getNew_version_code() {
+		return new_version_code;
 	}
 
-	public String getVersion() {
-		return version;
+	public void setNew_version_code(int new_version_code) {
+		this.new_version_code = new_version_code;
 	}
 
-	public void setVersion(String version) {
-		this.version = version;
+	public int getOld_version_code() {
+		return old_version_code;
 	}
 
-	public long getVersionCode() {
-		return versionCode;
+	public void setOld_version_code(int old_version_code) {
+		this.old_version_code = old_version_code;
 	}
 
-	public void setVersionCode(long versionCode) {
-		this.versionCode = versionCode;
+	public String getDownurl() {
+		return downurl;
 	}
 
-	public String getVersionIntro() {
-		return versionIntro;
+	public void setDownurl(String downurl) {
+		this.downurl = downurl;
 	}
 
-	public void setVersionIntro(String versionIntro) {
-		this.versionIntro = versionIntro;
+	public String getNew_version_name() {
+		return new_version_name;
 	}
 
-	public String getDownLoadUrl() {
-		return downLoadUrl;
+	public void setNew_version_name(String new_version_name) {
+		this.new_version_name = new_version_name;
 	}
 
-	public void setDownLoadUrl(String downLoadUrl) {
-		this.downLoadUrl = downLoadUrl;
+	public int getIs_update() {
+		return is_update;
 	}
 
-	public long getCreateDate() {
-		return createDate;
+	public void setIs_update(int is_update) {
+		this.is_update = is_update;
 	}
 
-	public void setCreateDate(long createDate) {
-		this.createDate = createDate;
+	public String getOld_version_name() {
+		return old_version_name;
 	}
 
-	public String getVersionSize() {
-		return versionSize;
-	}
-
-	public void setVersionSize(String versionSize) {
-		this.versionSize = versionSize;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	/**
-	 * TODO 简单描述该方法的实现功能（可选）.
-	 * 
-	 * @see Object#toString()
-	 */
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return JSON.toJSONString(this);
+	public void setOld_version_name(String old_version_name) {
+		this.old_version_name = old_version_name;
 	}
 }
