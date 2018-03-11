@@ -1,4 +1,4 @@
-package alpha.cyber.intelmain.business.home;
+package alpha.cyber.intelmain.business.mechine_helper;
 
 import android.content.Context;
 
@@ -7,7 +7,6 @@ import alpha.cyber.intelmain.base.AppException;
 import alpha.cyber.intelmain.bean.CheckoutListBean;
 import alpha.cyber.intelmain.business.borrowbook.BorrowBookModule;
 import alpha.cyber.intelmain.http.DefaultSubscriber;
-import alpha.cyber.intelmain.http.model.EmptyResponse;
 import alpha.cyber.intelmain.http.model.Request;
 import alpha.cyber.intelmain.http.utils.RetrofitUtils;
 import alpha.cyber.intelmain.util.Log;
@@ -24,28 +23,33 @@ public class CheckBoxPresenter {
     private BorrowBookModule bookModule;
     private CheckCallBack callBack;
     private Context context;
-    public CheckBoxPresenter (CheckCallBack callBack,Context context){
+
+    public CheckBoxPresenter(CheckCallBack callBack, Context context) {
         bookModule = RetrofitUtils.createService(BorrowBookModule.class);
         this.callBack = callBack;
-        this.context =context;
+        this.context = context;
     }
 
-    public void getBookInfoByCode(String item_id){
+    public void getBookInfoByCode(String item_id) {
         bookModule.getBookInfoByCode(new Request.Builder()
-                .withParam("item_id",item_id)
+                .withParam("item_id", item_id)
                 .build())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DefaultSubscriber<CheckoutListBean>() {
                     @Override
                     public void onSuccess(CheckoutListBean response) {
-                        callBack.getBookInfoByCode(response);
+                        if (null != response) {
+                            callBack.getBookInfoByCode(response);
+                        } else {
+                            ToastUtil.showToast(context, "未查到此书！");
+                        }
                     }
 
                     @Override
                     public void onFailure(String errorCode, String errorMessage) {
                         AppException.handleException(context, errorCode, errorMessage);
-                        Log.e(Constant.TAG,"错误信息："+errorCode+errorMessage);
+                        Log.e(Constant.TAG, "错误信息：" + errorCode + errorMessage);
                     }
                 });
     }

@@ -1,4 +1,4 @@
-package alpha.cyber.intelmain.business.home;
+package alpha.cyber.intelmain.business.mechine_helper;
 
 import android.app.Service;
 import android.content.Intent;
@@ -14,7 +14,6 @@ import java.util.List;
 import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.bean.CheckoutListBean;
 import alpha.cyber.intelmain.bean.InventoryReport;
-import alpha.cyber.intelmain.business.mechine_helper.CheckBookHelper;
 import alpha.cyber.intelmain.db.InventoryReportDao;
 import alpha.cyber.intelmain.db.BookDao;
 import alpha.cyber.intelmain.util.Log;
@@ -70,11 +69,15 @@ public class CheckBookService extends Service implements CheckCallBack {
 
     @Override
     public void getBookInfoByCode(CheckoutListBean checkoutListBean) {
-        bookDao.insertBook(checkoutListBean);
 
-        Log.e(Constant.TAG,"盘点书柜中的书："+checkoutListBean.toString());
 
-//        ToastUtil.showToast(,"盘点书柜里面的书："+checkoutListBean.getTitle_identifier());
+        if(null!=checkoutListBean){
+            bookDao.insertBook(checkoutListBean);
+            Log.e(Constant.TAG,"盘点书柜中的书："+checkoutListBean.toString());
+        }else{
+            ToastUtil.showToast(this,"没有找到书");
+        }
+//
     }
 
     private class MyHandler extends Handler {
@@ -95,6 +98,8 @@ public class CheckBookService extends Service implements CheckCallBack {
                 case CheckBookHelper.INVENTORY_MSG:
 
                     pt.inventoryList = helper.getInventoryList(msg);
+
+                    Log.e(Constant.TAG,"盘点到的书"+pt.inventoryList.toString());
 
                     Log.e(Constant.TAG, pt.inventoryList.toString());
 
@@ -134,7 +139,12 @@ public class CheckBookService extends Service implements CheckCallBack {
 
         for (int i = 0; i < inventoryList.size(); i++) {
 
+            Log.e(Constant.TAG,"UID:"+inventoryList.get(i).getUidStr());
             String bookCode = helper.getBookCode(i, inventoryList.get(i).getUidStr());
+
+            Log.e(Constant.TAG,"盘点出来的书码："+bookCode);
+            bookCode = bookCode.substring(6,14);
+            Log.e(Constant.TAG,"盘点转换后的书码："+bookCode);
             presenter.getBookInfoByCode(bookCode);
 
         }

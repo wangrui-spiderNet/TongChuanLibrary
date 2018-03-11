@@ -7,10 +7,14 @@ import java.io.OutputStream;
 
 import alpha.cyber.intellib.utils.HexTools;
 import alpha.cyber.intellib.utils.Logger;
+import alpha.cyber.intelmain.Constant;
+import alpha.cyber.intelmain.util.Log;
 
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+
+import com.qq.taf.jce.HexUtil;
 
 public abstract class SerialPortController {
 
@@ -225,7 +229,7 @@ public abstract class SerialPortController {
             int dataPos = 0;
             if (cmd.getDataLenghtType() == Command.DataLengthType.FIXED) {
                 data = new byte[getFixedDataLength(cmd)];
-                Logger.i("dateLenghType is fixed 8");
+                Logger.i("dateLenghType >>>> is fixed 8");
             }
             int recvLen = 0;
             int dataLen = 0;
@@ -246,13 +250,20 @@ public abstract class SerialPortController {
 
                     data = new byte[getUnfixedDataLength(cmd, buffer) + 11];
                     //System.arraycopy(buffer, 0, head, 0, 8);
-                    //Logger.i(" tu onReceiverData  data = " + HexTools.bytesToHexString(head));
+                    Logger.i(" tu onReceiverData >>>> data = " + HexTools.bytesToHexString(data));
                     //break;
                 }
 
                 dataLen += recvLen;
+
+                Log.e(Constant.TAG,"cmd_id:"+ Integer.toHexString(cmd.getCmdId()));
+                Log.e(Constant.TAG,"buffer:"+buffer.length);
+                Log.e(Constant.TAG,"data:"+data.length);
+                Log.e(Constant.TAG,"dataPos:"+dataPos);
+                Log.e(Constant.TAG,"recvLen:"+recvLen);
+
                 System.arraycopy(buffer, 0, data, dataPos, recvLen);
-                dataPos += recvLen;
+                //dataPos += recvLen;
 
                 //			Logger.iLine("recvLen = " + recvLen + " " + HexTools.bytesToHexString(buffer));
 

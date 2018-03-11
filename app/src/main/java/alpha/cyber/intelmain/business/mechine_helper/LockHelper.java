@@ -2,6 +2,7 @@ package alpha.cyber.intelmain.business.mechine_helper;
 
 import android.os.Handler;
 import android.os.Message;
+
 import alpha.cyber.intellib.lock.LockCallback;
 import alpha.cyber.intellib.lock.LockController;
 import alpha.cyber.intellib.utils.ToastUtils;
@@ -19,12 +20,14 @@ public class LockHelper {
     private Thread mStateThrd = null;
     private boolean b_stateThreadRun = false;
     private Handler mHandler;
-    public static final int STATE_LISTEN_MSG = 101;
+    public static final int STATE_LISTEN_MSG = 1;
     public static final byte BOARD_ADDRESS = 0x01;
     public static final int BOX_OPEN = 102;
+    public static final int HAS_DOOR_NOT_CLOSED = 103;
+    public static final int CHECKING_BOOKS = 104;
     private LockCallback callback;
 
-    public LockHelper(Handler mHandler,LockCallback callback){
+    public LockHelper(Handler mHandler, LockCallback callback) {
         this.mHandler = mHandler;
         this.callback = callback;
         initController();
@@ -32,7 +35,7 @@ public class LockHelper {
 
     private LockController initController() {
 
-        if(null==mLockController){
+        if (null == mLockController) {
             mLockController = new LockController(9600);
         }
 
@@ -40,7 +43,7 @@ public class LockHelper {
             ToastUtils.showShortToast("打开设备失败");
             lc = false;
             return mLockController;
-        }else{
+        } else {
             lc = true;
             ToastUtils.showShortToast("打开设备成功");
         }
@@ -50,24 +53,16 @@ public class LockHelper {
         return mLockController;
     }
 
-    public void getAllDoorState(){
+    public void getAllDoorState() {
         mLockController.getAllDoorState(LockHelper.BOARD_ADDRESS);
     }
 
     public boolean open() {
-
-        if (lc) {
-            startOpen();
-            return true;
-        } else {
-            initController();
-            startOpen();
-        }
-
-        return false;
+        startOpen();
+        return true;
     }
 
-    public boolean isDoorOpen(){
+    public boolean isDoorOpen() {
         return lc;
     }
 
@@ -76,26 +71,27 @@ public class LockHelper {
         mLockController.open();
         mStateThrd = new Thread(new StateThrd());
         mStateThrd.start();
+
     }
 
-    public void openGride(int position){
+    public void openGride(int position) {
         mLockController.openGrid((byte) (position + 1), BOARD_ADDRESS);
     }
 
     public void close() {
         b_stateThreadRun = false;
-        if(null!=mStateThrd){
+        if (null != mStateThrd) {
             mStateThrd.interrupt();
         }
     }
 
-    public boolean checkBoxOpen(byte[] state){
+    public boolean checkBoxOpen(byte[] state) {
         for (int i = 0; i < state.length; i++) {
             if (state[i] == 0) {
-                Log.e(Constant.TAG,i+":开");
+                Log.e(Constant.TAG, i + ":开");
 //                ToastUtil.showToast(i+"号柜：已开");
 
-                Message msg=mHandler.obtainMessage();
+                Message msg = mHandler.obtainMessage();
                 msg.what = BOX_OPEN;
                 msg.obj = i;
                 mHandler.sendMessage(msg);
@@ -103,7 +99,7 @@ public class LockHelper {
                 return true;
             } else {
 //                Log.e(Constant.TAG,i+":关");
-                return false;
+//                return false;
             }
         }
 
@@ -119,9 +115,9 @@ public class LockHelper {
             while (b_stateThreadRun) {
                 try {
                     Thread.sleep(200);
-                    Message msg = mHandler.obtainMessage();
-                    msg.what = STATE_LISTEN_MSG;
-                    mHandler.sendMessage(msg);
+//                    Message msg = mHandler.obtainMessage();
+//                    msg.what = STATE_LISTEN_MSG;
+//                    mHandler.sendMessage(msg);
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();

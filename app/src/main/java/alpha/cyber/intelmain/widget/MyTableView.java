@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -97,6 +98,7 @@ public class MyTableView extends TableLayout {//一个用于显示简易表格�
         }
 
         TableRow tableRow = new TableRow(this.getContext());
+        tableRow.removeAllViews();
         View viewCell = null;
         List<View> rowViews = new ArrayList<View>();
 
@@ -127,6 +129,10 @@ public class MyTableView extends TableLayout {//一个用于显示简易表格�
 
                 if (viewCell == null) {
                     viewCell = new View(getContext());
+                }
+
+                if(null!=(viewCell.getParent())){
+                    ((ViewGroup)viewCell.getParent()).removeAllViews();
                 }
 
                 rowViews.add(viewCell);

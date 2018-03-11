@@ -5,6 +5,8 @@ import java.io.File;
 
 import alpha.cyber.intellib.utils.Logger;
 import alpha.cyber.intellib.utils.ToastUtils;
+import alpha.cyber.intelmain.Constant;
+import alpha.cyber.intelmain.util.Log;
 import android_serialport_api.Command;
 import android_serialport_api.SerialPortController;
 
@@ -41,6 +43,11 @@ public class LockController extends SerialPortController implements LockFunction
         //	Logger.i("onReceiverData data = " + HexTools.bytesToHexString(data) + "dataLenth = " + data.length);
         //	Logger.i("onReceiverData data last is " + data[data.length-1]);
         //ToastUtils.showLongToast("receiver: " + HexTools.bytesToHexString(data));
+
+        Log.e(Constant.TAG,"回调：onReceiverData");
+        Log.e(Constant.TAG,cmd.toString());
+        Log.e(Constant.TAG,new String(data));
+
         switch (cmd.getCmdId()) {
             case LockCommand.CMD_GETBOARDADDRESS:
                 break;
@@ -83,8 +90,7 @@ public class LockController extends SerialPortController implements LockFunction
     @Override
     public void onTimeout(Command cmd) {
         // TODO Auto-generated method stub
-        Logger.i("timeout cmd = " + cmd.toString());
-        ToastUtils.showLongToast("onTimeout: " + cmd.getCmdId());
+        Logger.i("timeout cmd = " + cmd.toString());ToastUtils.showLongToast("onTimeout: " + cmd.getCmdId());
     }
 
     @Override
@@ -115,6 +121,13 @@ public class LockController extends SerialPortController implements LockFunction
         LockCommand cmd = LockCommand.openGrid(doorID, boardAddress);
         cmd.setTimeout(100000);
         sendCommand(cmd);
+
+        if(isOpen()){
+            mCallback.onGetLockState(doorID,(byte) 1);
+        }else{
+            mCallback.onGetLockState(doorID,(byte) 0);
+        }
+
     }
 
     @Override
@@ -143,10 +156,11 @@ public class LockController extends SerialPortController implements LockFunction
     @Override
     public int getFixedDataLength(Command cmd) {
         // TODO Auto-generated method stub
+
         if (cmd.getCmdId() == LockCommand.CMD_GETLOCKSTATE) {
             return 7;
         } else {
-            return 5;
+            return 7;
         }
     }
 

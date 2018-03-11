@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tendcloud.tenddata.TCAgent;
+import com.youth.banner.transformer.BackgroundToForegroundTransformer;
 
 import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.MyApplication;
@@ -71,11 +72,12 @@ public abstract class BaseActivity  extends FragmentActivity {
      */
     public TextView tvBack;
     public Button btnRightButton;
+    public Button btnUpdate;
     public ImageView ivLogo;
 
     public TextView tvTel;
     public TextView tvTec;
-
+    public TextView tvVersion;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -160,6 +162,8 @@ public abstract class BaseActivity  extends FragmentActivity {
         this.btnRightButton = findView(R.id.btn_right_bottom);
         this.tvTel = findView(R.id.tv_tel);
         this.tvTec = findView(R.id.tv_tech_service);
+        this.tvVersion = findView(R.id.tv_version);
+        this.btnUpdate = findView(R.id.btn_update);
 
         ivLogo.setOnClickListener(new View.OnClickListener() {
             @Override

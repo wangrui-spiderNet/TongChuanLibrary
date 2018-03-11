@@ -41,7 +41,7 @@ public class FileUtils {
      * @param context
      * @param apkPath
      */
-    public static void ApkInstall(Context context, String apkPath) {
+    public static void ApkInstall(Context context, String apkPath) throws Exception{
         File fileAPK = new File(apkPath);
         if (fileAPK.exists() && fileAPK.getName().toLowerCase(Locale.getDefault()).endsWith(".apk")) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -97,6 +97,29 @@ public class FileUtils {
             }
         }
         return null;
+    }
+
+    /**
+     * 获得当前应用的根文件存放路径
+     */
+    public static String getAppRootDir() {
+        checkAndMakeDir(Environment.getExternalStorageDirectory()
+                .getPath() + "/tlibrary");
+        return Environment.getExternalStorageDirectory().getPath()
+                + "/tlibrary";
+    }
+
+    public static boolean checkAndMakeDir(String fileDir) {
+        File file = new File(fileDir);
+        if (!file.exists()) {
+            if (file.mkdirs()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
     }
 
 
@@ -163,7 +186,4 @@ public class FileUtils {
         return deleteDir(new File(path));
     }
 
-    public static String getUpgradeApkPath(){
-        return getRootPath( MyApplication.getAppContext(),true)+"library";
-    }
 }

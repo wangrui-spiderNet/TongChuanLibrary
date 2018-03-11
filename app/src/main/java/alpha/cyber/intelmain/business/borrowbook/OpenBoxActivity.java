@@ -37,7 +37,7 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_box);
-        lockHelper = new LockHelper(mHandler,this);
+        lockHelper = new LockHelper(mHandler, this);
     }
 
     @Override
@@ -92,6 +92,10 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
     @Override
     public void onGetLockState(int id, byte state) {
 
+        Log.e(Constant.TAG,"id:"+id+"||state:"+state);
+        if (state==1) {
+            IntentUtils.startAtyWithSingleParam(this, BorrowDetailActivity.class, Constant.BORROW_BACK, Constant.BORROW_BOOK);
+        }
     }
 
     @Override
@@ -109,11 +113,11 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
 
             switch (msg.what) {
                 case LockHelper.STATE_LISTEN_MSG://查看所有所状态
-                    lockHelper.getAllDoorState();
+                    getDoorState();
                     break;
                 case LockHelper.BOX_OPEN:
-                    int position=(Integer) msg.obj;
-//                    ToastUtil.showToast(position+"号柜已开");
+                    int position = (Integer) msg.obj;
+                    ToastUtil.showToast(OpenBoxActivity.this,position+"号柜已开");
                     break;
                 default:
                     break;
@@ -131,5 +135,11 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
     @Override
     protected void getIntentData() {
 
+    }
+
+    private void getDoorState() {
+        if (lockHelper.open()) {
+            lockHelper.getAllDoorState();
+        }
     }
 }

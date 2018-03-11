@@ -53,6 +53,7 @@ public class HomePresenter {
     }
 
     public void checkVersion(){
+
         module.getUpGradeInfo(new Request.Builder()
                 .withParam("version_code", DeviceUtils.getVersionCode(context))
                 .withParam("version_name",DeviceUtils.getVersionName(context))

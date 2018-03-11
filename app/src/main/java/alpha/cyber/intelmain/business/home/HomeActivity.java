@@ -34,6 +34,7 @@ import alpha.cyber.intelmain.bean.AppUpgradeInfo;
 import alpha.cyber.intelmain.bean.HomeNewsBean;
 import alpha.cyber.intelmain.business.login.InPutPwdActivity;
 import alpha.cyber.intelmain.business.login.LoginPresenter;
+import alpha.cyber.intelmain.business.mechine_helper.CheckBookService;
 import alpha.cyber.intelmain.db.BookDao;
 import alpha.cyber.intelmain.util.AppThreadManager;
 import alpha.cyber.intelmain.util.DateUtils;
@@ -66,6 +67,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         setContentView(R.layout.activity_home);
         homePresenter = new HomePresenter(this, this);
         homePresenter.getHomeNews();
+
+
         new BookDao(this).deleteAll();
     }
 
@@ -103,6 +106,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         super.initListener();
         btnRightButton.setVisibility(View.VISIBLE);
         btnRightButton.setOnClickListener(this);
+        btnUpdate.setOnClickListener(this);
+
 
         rg_tabs.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -172,24 +177,18 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     protected void onResume() {
         super.onResume();
         tvBack.setVisibility(View.INVISIBLE);
-
-        checkVersion();
-
-
-    }
-
-    private boolean checkVersion() {
+        tvVersion.setText(DeviceUtils.getVersionName(this));
 
         homePresenter.checkVersion();
 
-        return false;
     }
-
 
     @Override
     public void onClick(View v) {
         if (v == btnRightButton) {
             IntentUtils.startAty(this, InPutPwdActivity.class);
+        }else if(v == btnUpdate){
+            homePresenter.checkVersion();
         }
     }
 
@@ -250,7 +249,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void checkVersion(final AppUpgradeInfo appUpgradeInfo) {
 
-        ToastUtil.showToast(HomeActivity.this,"新版本：" + appUpgradeInfo.getNew_version_name());
+        ToastUtil.showToast(HomeActivity.this, "新版本：" + appUpgradeInfo.getNew_version_name());
 
         try {
             AppThreadManager.getInstance().start(new Runnable() {
@@ -262,7 +261,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                                 "当前版本信息===" + DeviceUtils.getVersionCode(MyApplication.getAppContext()) + "  name=" + DeviceUtils.getVersionName(mContext));
                         Log.d(Constant.TAG, "server版本信息===" + appUpgradeInfo.getNew_version_code() + "  name=" + appUpgradeInfo.getNew_version_name());
                         if (DeviceUtils.getVersionCode(MyApplication.getAppContext()) < appUpgradeInfo.getNew_version_code()) {
-                            FileUtils.deleteDir(FileUtils.getUpgradeApkPath());
+                            FileUtils.deleteDir(FileUtils.getAppRootDir());
                             downloadUpdate(appUpgradeInfo.getNew_version_name(), appUpgradeInfo.getDownurl());
                         }
                     }
@@ -278,17 +277,23 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     private boolean isUpgrade = false;
 
     private void downloadUpdate(String versionName, String downloadURL) {
+        isUpgrade = true;
+        final String update_localpath = FileUtils.getAppRootDir() + versionName + ".apk";
 
-        final String update_localpath = FileUtils.getUpgradeApkPath() + versionName + ".apk";
         mHttpUtils = new HttpUtils();
+
+        FileUtils.deleteFile(update_localpath);
+
         mHttpUtils.download(downloadURL, update_localpath, true, // 如果目标文件存在，接着未完成的部分继续下载。服务器不支持RANGE时将从新下载。
                 false, // 如果从请求返回信息中获取到文件名，下载完成后自动重命名。
                 new RequestCallBack<File>() {
 
                     @Override
                     public void onSuccess(ResponseInfo<File> responseInfo) {
+
+                        Log.e(Constant.TAG, "下载成功!");
                         if (!TextUtils.isEmpty(update_localpath)) {
-                            File f = new File(FileUtils.getUpgradeApkPath());
+                            File f = new File(FileUtils.getAppRootDir());
                             File[] files = f.listFiles();
                             if (null != files && files.length > 0) {
                                 for (File file : files) {
@@ -306,24 +311,38 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                                 }
                             }
 
-//                            if (ShellUtils.checkRootPermission()) {
+//                            String apkPath = FileUtils.getRootPath(MyApplication.getInstance().getApplicationContext(), true) + "/library";
 
-                                String apkPath = FileUtils.getRootPath(MyApplication.getInstance().getApplicationContext(), true) + "/library";
+                            Log.e(Constant.TAG,"安装包路劲："+update_localpath);
 
-                                int resultCode = PackageUtils.installSilent(MyApplication.getInstance().getApplicationContext(), apkPath);
-                                if (resultCode != PackageUtils.INSTALL_SUCCEEDED) {
-                                    Log.e(Constant.TAG, "升级失败");
-                                    ToastUtil.showToast(HomeActivity.this,"升级失败");
-                                }
+//                            int resultCode = PackageUtils.installSilent(MyApplication.getInstance().getApplicationContext(), update_localpath);
+
+
+//                            try {
+//                                FileUtils.ApkInstall(mContext, update_localpath);
+//                            }catch (Exception e){
+//                                e.printStackTrace();
+//                                Log.e(Constant.TAG,"APK 安装失败");
 //                            }
 
-                            isUpgrade = false;
+//                            isUpgrade = false;
+//                            if (resultCode != PackageUtils.INSTALL_SUCCEEDED) {
+//                                Log.e(Constant.TAG, "升级失败");
+//                                ToastUtil.showToast(HomeActivity.this, "升级失败");
+//                                isUpgrade = false;
+//                            } else {
+//                                Log.e(Constant.TAG, "升级成功!");
+//                                tvVersion.setText(DeviceUtils.getVersionName(HomeActivity.this));
+//                            }
+
                         }
                     }
 
                     @Override
                     public void onFailure(com.lidroid.xutils.exception.HttpException arg0, String arg1) {
-                        FileUtils.deleteDir(FileUtils.getUpgradeApkPath());
+                        Log.e(Constant.TAG, "下载失败!"+arg1);
+                        arg0.printStackTrace();
+                        FileUtils.deleteDir(FileUtils.getAppRootDir());
                         isUpgrade = false;
                     }
                 });

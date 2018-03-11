@@ -64,6 +64,8 @@
             </intent-filter>
         </receiver>
 
+        <service android:name=".business.mechine_helper.CheckBookService"></service>
+
         <activity android:name="alpha.cyber.intelmain.business.login.LoginActivity"></activity>
         <activity android:name="alpha.cyber.intelmain.business.login.InPutPwdActivity"></activity>
         <activity android:name="alpha.cyber.intelmain.business.operation.OperatorActivity"></activity>

@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import alpha.cyber.intelmain.R;
+import alpha.cyber.intelmain.util.ToastUtil;
 
 
 /**
@@ -17,8 +18,9 @@ public class CustomConfirmDialog extends Dialog{
     private TextView textViewContent;
     private Button buttonConfirm;
     private CustomDialogConfirmListener listener;
+    private boolean hasDoorOpen = true;
 
-    public CustomConfirmDialog(Context context) {
+    public CustomConfirmDialog(final Context context) {
         super(context,mTheme);
         setContentView(R.layout.dialog_confirm_custom);
         textViewContent = (TextView) findViewById(R.id.content_dialog);
@@ -29,9 +31,22 @@ public class CustomConfirmDialog extends Dialog{
                 if(listener!=null) {
                     listener.onButtonClick(v);
                 }
-                dismiss();
+
+                if(!hasDoorOpen){
+                    dismiss();
+                }else {
+//                    ToastUtil.showToast(context,"您还有未关闭的柜门，请检查柜门是否全部关闭！");
+                }
             }
         });
+    }
+
+    public boolean isHasDoorOpen() {
+        return hasDoorOpen;
+    }
+
+    public void setHasDoorOpen(boolean hasDoorOpen) {
+        this.hasDoorOpen = hasDoorOpen;
     }
 
     public interface CustomDialogConfirmListener{
@@ -48,5 +63,9 @@ public class CustomConfirmDialog extends Dialog{
 
     public void setConfirmListener(CustomDialogConfirmListener listener){
         this.listener = listener;
+    }
+
+    public Button getButtonConfirm(){
+        return buttonConfirm;
     }
 }

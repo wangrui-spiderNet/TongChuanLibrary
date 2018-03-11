@@ -62,7 +62,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     private LockHelper lockHelper;
     private CheckBookHelper bookHelper;
     private InventoryReportDao reportDao;
-    private boolean hasDoorOpen =false;
+    private boolean hasDoorOpen = true;
 
 
     @Override
@@ -71,7 +71,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
         setContentView(R.layout.activity_borrow_detail);
 
-        lockHelper = new LockHelper(mHandler,this);
+        lockHelper = new LockHelper(mHandler, this);
 
         customDialog = new CustomConfirmDialog(this);
         customDialog.setConfirmListener(this);
@@ -86,9 +86,9 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         layoutTableBack = findView(R.id.layout_table_back);
         layoutTableWillBorrow = findView(R.id.layout_table_will_borrow);
 
-        tvCardNumber.setText("卡号："+userInfoBean.getPatron_identifier());
-        tvName.setText("姓名："+userInfoBean.getPersonal_name());
-        tvPermission.setText("权限："+userInfoBean.getScreen_message());
+        tvCardNumber.setText("卡号：" + userInfoBean.getPatron_identifier());
+        tvName.setText("姓名：" + userInfoBean.getPersonal_name());
+        tvPermission.setText("权限：" + userInfoBean.getScreen_message());
 
     }
 
@@ -145,6 +145,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         btnRightButton.setVisibility(View.VISIBLE);
         btnRightButton.setText(R.string.sure);
         btnRightButton.setOnClickListener(this);
+        getDoorState();
 
         if (from == Constant.BACK_BOOK) {
             showTipDialog("请将书按照书标向外放置并关闭柜门，谢谢您的配合！");
@@ -161,8 +162,10 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
             switch (msg.what) {
                 case CheckBookHelper.INVENTORY_MSG://盘点结束处理
 
-                    ToastUtil.showToast(BorrowDetailActivity.this,"盘点结束，计算中...");
-
+                    ToastUtil.showToast(BorrowDetailActivity.this, "盘点结束，计算中...");
+                    bookHelper.stopLoop();
+                    borrowList.clear();
+                    borrowBookList.clear();
                     calculateBorrowOrBackBook(msg);
 
                     break;
@@ -178,22 +181,32 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
                     break;
 
                 case CheckBookHelper.BACK_BOOK_INVENTORY_FINISH:
-                    setBorrowBookView();
+                    setBackBookView();
+
                     closeDialog();
                     break;
 
                 case CheckBookHelper.BORROW_BOOK_INVENTORY_FINISH:
-
-                    setBackBookView();
+                    setBorrowBookView();
                     closeDialog();
 
                     break;
 
                 case LockHelper.STATE_LISTEN_MSG://查看所有所状态
 
-                    getDoorState();
+                    lockHelper.getAllDoorState();
 
                     break;
+
+                case LockHelper.HAS_DOOR_NOT_CLOSED:
+                    showTipDialog("您还有未关闭的柜门，请先关闭柜门，再按确认按钮");
+                    break;
+
+                case LockHelper.CHECKING_BOOKS:
+                    showDialog("正在盘点...");
+                    bookHelper.openDevice();
+                    break;
+
                 default:
                     break;
             }
@@ -206,16 +219,19 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         tableBack.AddRow(new String[]{"已还图书"}, true);
         tableBack.AddRow(new String[]{"书名", "还书时间", "到期归还", "逾期天数"}, false);
 
-        for (int i = 0; i < backBookList.size(); i++) {
-            tableBack.AddRow(new String[]{
-                            backBookList.get(i).getTitle_identifier()
-                            , backBookList.get(i).getHold_pickup_date()
-                            , backBookList.get(i).getDue_date()
-                            , backBookList.get(i).getOverdue_days()}
-                    , false);
+        if(null!=backList){
+            for (int i = 0; i < backBookList.size(); i++) {
+                tableBack.AddRow(new String[]{
+                                backBookList.get(i).getTitle_identifier()
+                                , backBookList.get(i).getHold_pickup_date()
+                                , backBookList.get(i).getDue_date()
+                                , backBookList.get(i).getOverdue_days()}
+                        , false);
+            }
         }
 
         layoutTableBack.addView(tableBack);
+
     }
 
     private void setBorrowBookView() {
@@ -225,16 +241,19 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         tableWillBorrow.AddRow(new String[]{"本次借阅"}, true);
         tableWillBorrow.AddRow(new String[]{"书名", "借阅时间", "到期归还", "逾期天数"}, false);
 
-        for (int i = 0; i < borrowBookList.size(); i++) {
-            tableWillBorrow.AddRow(new String[]{
-                            borrowBookList.get(i).getTitle_identifier()
-                            , borrowBookList.get(i).getHold_pickup_date()
-                            , borrowBookList.get(i).getDue_date()
-                            , borrowBookList.get(i).getOverdue_days()}
-                    , false);
+        if(null!=borrowList){
+            for (int i = 0; i < borrowBookList.size(); i++) {
+                tableWillBorrow.AddRow(new String[]{
+                                borrowBookList.get(i).getTitle_identifier()
+                                , borrowBookList.get(i).getHold_pickup_date()
+                                , borrowBookList.get(i).getDue_date()
+                                , borrowBookList.get(i).getOverdue_days()}
+                        , false);
+            }
         }
 
         layoutTableWillBorrow.addView(tableWillBorrow);
+
     }
 
     private void calculateBorrowOrBackBook(Message msg) {
@@ -262,7 +281,6 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
             bookHelper.requestBookInfos(borrowList, CheckBookHelper.ACTION_TYPE_BORROW);
             bookHelper.requestBookInfos(backList, CheckBookHelper.ACTION_TYPE_BACK);
 
-            bookHelper.stopLoop();
             closeDialog();
         }
     }
@@ -275,22 +293,37 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onGetLockState(int id, byte state) {
 
-        Log.e(Constant.TAG,"id:"+id+"--->"+state);
+        Log.e(Constant.TAG, "id:" + id + "--->" + state);
+
+//        if (state == 0) {
+//            showTipDialog("您还有未关闭的柜门，请先关闭柜门，再按确认按钮");
+//        }
     }
 
     /**
      * 查看锁关闭的回调
+     *
      * @param state
      */
     @Override
     public void onGetAllLockState(byte[] state) {
 
-        if (hasDoorOpen(state)) {//没关提示
-            showTipDialog("您还有未关闭的柜门，请先关闭柜门，再按确认按钮");
+        hasDoorOpen = hasDoorOpen(state);
+//        customDialog.setHasDoorOpen(hasDoorOpen);
+
+        if (hasDoorOpen) {//没关提示
+
+            Message msg = mHandler.obtainMessage();
+            msg.what = LockHelper.HAS_DOOR_NOT_CLOSED;
+            mHandler.sendMessage(msg);
+
         } else {//关了，盘点书籍
             closeTipDialog();
-            showDialog("正在盘点...");
-            bookHelper.openDevice();
+
+            Message msg = mHandler.obtainMessage();
+            msg.what = LockHelper.CHECKING_BOOKS;
+            mHandler.sendMessage(msg);
+
         }
     }
 
@@ -304,22 +337,22 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         customDialog.setContent(content);
         customDialog.setConfirmButtonText("确认");
         customDialog.setCancelable(false);
+        customDialog.setHasDoorOpen(hasDoorOpen);
 
-        if(!isFinishing()&&!customDialog.isShowing()){
+        if (!isFinishing() && !customDialog.isShowing()) {
             customDialog.show();
         }
 
     }
 
     private boolean hasDoorOpen(byte[] state) {
-        for (int i = 0; i < state.length; i++) {
+        for (int i = 0; i < 10; i++) {
             if (state[i] == 0) {
                 hasDoorOpen = true;
                 return true;
 
             } else {
                 hasDoorOpen = false;
-                return false;
             }
         }
 
@@ -329,8 +362,11 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if (v == btnRightButton) {
-            getDoorState();
+//            getDoorState();
+
+            finish();
         }
+
     }
 
     @Override

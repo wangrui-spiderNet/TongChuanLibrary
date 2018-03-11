@@ -37,6 +37,28 @@
         android:layout_marginLeft="@dimen/dimen_5"
         />
 
+    <TextView
+        android:id="@+id/tv_version"
+        android:layout_toRightOf="@+id/iv_qr"
+        android:layout_below="@+id/tv_tel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1.0版本"
+        android:textSize="@dimen/font_size_16"
+        android:textColor="@color/black"
+        android:layout_marginLeft="@dimen/dimen_5"
+        />
+
+    <Button
+        android:id="@+id/btn_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/btn_right_bottom"
+        android:text="更新"
+        android:layout_centerVertical="true"
+        android:layout_margin="@dimen/dimen_5"
+        />
+
     <Button
         android:id="@+id/btn_right_bottom"
         android:layout_width="@dimen/sure_btn_size"

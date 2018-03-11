@@ -19,16 +19,9 @@ import java.util.Vector;
 import alpha.cyber.intellib.utils.ToastUtils;
 import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.MyApplication;
-import alpha.cyber.intelmain.R;
-import alpha.cyber.intelmain.bean.BookInfoBean;
 import alpha.cyber.intelmain.bean.CheckoutListBean;
 import alpha.cyber.intelmain.bean.InventoryReport;
-import alpha.cyber.intelmain.business.home.CheckBoxPresenter;
-import alpha.cyber.intelmain.business.home.CheckCallBack;
-import alpha.cyber.intelmain.http.socket.MyAsyncTask;
-import alpha.cyber.intelmain.http.socket.SocketConstants;
 import alpha.cyber.intelmain.util.AppSharedPreference;
-import alpha.cyber.intelmain.util.DateUtils;
 import alpha.cyber.intelmain.util.Log;
 
 /**
@@ -222,7 +215,7 @@ public class CheckBookHelper {
     }
 
     public List<InventoryReport> getInventoryList(Message msg) {
-        List<InventoryReport> inventoryList = new ArrayList<InventoryReport>();
+        List<InventoryReport> reportList = new ArrayList<InventoryReport>();
         @SuppressWarnings("unchecked")
         Vector<Object> tagList = (Vector<Object>) msg.obj;
 
@@ -237,8 +230,8 @@ public class CheckBookHelper {
             if (tagList.get(i) instanceof ISO15693Tag) {
                 ISO15693Tag tagData = (ISO15693Tag) tagList.get(i);
                 String uidStr = GFunction.encodeHexStr(tagData.uid);
-                for (int j = 0; j < inventoryList.size(); j++) {
-                    InventoryReport mReport = inventoryList.get(j);
+                for (int j = 0; j < reportList.size(); j++) {
+                    InventoryReport mReport = reportList.get(j);
                     if (mReport.getUidStr().equals(uidStr)) {
                         mReport.setFindCnt(mReport.getFindCnt() + 1);
                         b_find = true;
@@ -249,15 +242,15 @@ public class CheckBookHelper {
                     long mCnt = bRealShowTag ? 0 : 1;
                     String tagName = ISO15693Interface
                             .GetTagNameById(tagData.tag_id);
-                    inventoryList.add(new InventoryReport(uidStr,
+                    reportList.add(new InventoryReport(uidStr,
                             tagName, mCnt));
 
                 }
             } else if (tagList.get(i) instanceof ISO14443ATag) {
                 ISO14443ATag tagData = (ISO14443ATag) tagList.get(i);
                 String uidStr = GFunction.encodeHexStr(tagData.uid);
-                for (int j = 0; j < inventoryList.size(); j++) {
-                    InventoryReport mReport = inventoryList.get(j);
+                for (int j = 0; j < reportList.size(); j++) {
+                    InventoryReport mReport = reportList.get(j);
                     if (mReport.getUidStr().equals(uidStr)) {
                         mReport.setFindCnt(mReport.getFindCnt() + 1);
                         b_find = true;
@@ -268,14 +261,14 @@ public class CheckBookHelper {
                     long mCnt = bRealShowTag ? 0 : 1;
                     String tagName = ISO14443AInterface
                             .GetTagNameById(tagData.tag_id);
-                    inventoryList.add(new InventoryReport(uidStr,
+                    reportList.add(new InventoryReport(uidStr,
                             tagName, mCnt));
 
                 }
             }
         }
 
-        return inventoryList;
+        return reportList;
     }
 
     public String UiReadBlock(int blkAddr, int numOfBlksToRead, ISO15693Interface mTag) {
@@ -335,11 +328,14 @@ public class CheckBookHelper {
 
     public void requestBookInfos(List<InventoryReport> reportList, int type) {
 
+        inventoryList = reportList;
+
         for (int i = 0; i < reportList.size(); i++) {
 
             String bookCode = getBookCode(i, inventoryList.get(i).getUidStr());
 
             bookCode = bookCode.substring(6, 14);
+            Log.e(Constant.TAG,"借走的书码:"+bookCode);
 
             getBookInfo(bookCode, type, reportList.size());
 

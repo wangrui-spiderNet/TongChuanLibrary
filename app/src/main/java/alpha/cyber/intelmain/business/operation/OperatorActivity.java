@@ -12,16 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import alpha.cyber.intelmain.Constant;
-import alpha.cyber.intelmain.MyApplication;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
-import alpha.cyber.intelmain.bean.BookInfoBean;
 import alpha.cyber.intelmain.bean.CheckoutListBean;
 import alpha.cyber.intelmain.bean.UserBorrowInfo;
 import alpha.cyber.intelmain.bean.UserInfoBean;
 import alpha.cyber.intelmain.business.borrowbook.OpenBoxActivity;
 import alpha.cyber.intelmain.business.borrowbook.BorrowDetailActivity;
-import alpha.cyber.intelmain.business.home.CheckBookService;
+import alpha.cyber.intelmain.business.mechine_helper.CheckBookService;
 import alpha.cyber.intelmain.business.search.SearchActivity;
 import alpha.cyber.intelmain.business.userinfo.UserInfoActivity;
 import alpha.cyber.intelmain.db.BookDao;
