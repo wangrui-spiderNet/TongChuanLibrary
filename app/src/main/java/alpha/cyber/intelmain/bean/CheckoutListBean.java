@@ -22,13 +22,13 @@ public class CheckoutListBean {
      * screen_message :
      * item_identifier : 00834503
      * institution_id : XAPL
-     * Page_num : 17,259椤祙KP
+     * page_num : 17,259椤祙KP
      * media_type : 001
      * reservation : 0
      * publisher : 娴欐睙浜烘皯鍑虹増绀緗SJ鎶�鏈
      * circulation_type : 999_CN01]]涓枃鍥句功
      * current_location : 905
-     * Curlib : XAPL
+     * curlib : XAPL
      */
     @DatabaseField(generatedId = true)
     private long bookid;
@@ -57,7 +57,7 @@ public class CheckoutListBean {
     @DatabaseField
     private String institution_id;
     @DatabaseField
-    private String Page_num;
+    private String page_num;
     @DatabaseField
     private String media_type;
     @DatabaseField
@@ -69,7 +69,7 @@ public class CheckoutListBean {
     @DatabaseField
     private String current_location;
     @DatabaseField
-    private String Curlib;
+    private String curlib;
 
     public long getBookid() {
         return bookid;
@@ -181,11 +181,11 @@ public class CheckoutListBean {
     }
 
     public String getPage_num() {
-        return Page_num;
+        return page_num;
     }
 
     public void setPage_num(String Page_num) {
-        this.Page_num = Page_num;
+        this.page_num = Page_num;
     }
 
     public String getMedia_type() {
@@ -229,11 +229,11 @@ public class CheckoutListBean {
     }
 
     public String getCurlib() {
-        return Curlib;
+        return curlib;
     }
 
     public void setCurlib(String Curlib) {
-        this.Curlib = Curlib;
+        this.curlib = Curlib;
     }
 
     @Override
@@ -252,13 +252,13 @@ public class CheckoutListBean {
                 ", screen_message='" + screen_message + '\'' +
                 ", item_identifier='" + item_identifier + '\'' +
                 ", institution_id='" + institution_id + '\'' +
-                ", Page_num='" + Page_num + '\'' +
+                ", page_num='" + page_num + '\'' +
                 ", media_type='" + media_type + '\'' +
                 ", reservation='" + reservation + '\'' +
                 ", publisher='" + publisher + '\'' +
                 ", circulation_type='" + circulation_type + '\'' +
                 ", current_location='" + current_location + '\'' +
-                ", Curlib='" + Curlib + '\'' +
+                ", curlib='" + curlib + '\'' +
                 '}';
     }
 }

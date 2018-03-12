@@ -15,10 +15,12 @@ import com.rfid.def.RfidDef;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import alpha.cyber.intellib.utils.ToastUtils;
 import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.MyApplication;
+import alpha.cyber.intelmain.VoicePlayer;
 import alpha.cyber.intelmain.bean.CheckoutListBean;
 import alpha.cyber.intelmain.bean.InventoryReport;
 import alpha.cyber.intelmain.util.AppSharedPreference;
@@ -219,10 +221,6 @@ public class CheckBookHelper {
         @SuppressWarnings("unchecked")
         Vector<Object> tagList = (Vector<Object>) msg.obj;
 
-//        if (!tagList.isEmpty() && bBuzzer) {
-//            VoicePlayer.GetInst(pt).Play();
-//        }
-
         boolean b_find;
         for (int i = 0; i < tagList.size(); i++) {
             b_find = false;
@@ -272,6 +270,7 @@ public class CheckBookHelper {
     }
 
     public String UiReadBlock(int blkAddr, int numOfBlksToRead, ISO15693Interface mTag) {
+
         if (blkAddr + numOfBlksToRead > 28) {// 数据块地址溢出
             numOfBlksToRead = 28 - blkAddr;
         }
@@ -282,6 +281,13 @@ public class CheckBookHelper {
                 numOfBlksToRead, numOfBlksRead, bufBlocks, bytesBlkDatRead);
         if (iret != ApiErrDefinition.NO_ERROR) {
             Log.e(Constant.TAG, "错误");
+        }
+
+        for(int i=0;i<bufBlocks.length;i++){
+            Log.e(Constant.TAG,"--》"+bufBlocks[i]+"《--");
+            if(bufBlocks.length==i+1){
+                Log.e(Constant.TAG,"-------------------------------------");
+            }
         }
 
         String strData = GFunction.encodeHexStr(bufBlocks);
@@ -305,14 +311,26 @@ public class CheckBookHelper {
     public String getBookCode(int i, String uid) {
 
         byte[] connectUid = GFunction.decodeHex(uid);
-        byte connectMode = 0;
+        byte connectMode = 1;
 
         if (null != connectUid) {
+
+            int disconnet = mTag.ISO15693_Disconnect();
+            Log.e(Constant.TAG,"UID dis:"+disconnet);
+
             int iret = mTag.ISO15693_Connect(m_reader,
                     RfidDef.RFID_ISO15693_PICC_ICODE_SLI_ID, connectMode,
                     connectUid);
 
-            Log.e(Constant.TAG, "连接：" + iret);
+            Log.e(Constant.TAG, "UID 连接：" + iret);
+            Log.e(Constant.TAG,"connect UID:"+uid);
+
+            try {
+                Thread.sleep(2000);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e(Constant.TAG, "UID阻塞异常");
+            }
 
             String bookCode = UiReadBlock(i, 2, mTag);
 
@@ -357,6 +375,7 @@ public class CheckBookHelper {
                     AppSharedPreference.getInstance().saveBorrowBookInfos(borrowBookList);
                     borrowBookList.clear();
 
+                    Log.e(Constant.TAG,"借书>>>>>>>>");
                     Message msg = mHandler.obtainMessage();
                     msg.what = BORROW_BOOK_INVENTORY_FINISH;
 //                        msg.obj = tagList;
@@ -365,6 +384,7 @@ public class CheckBookHelper {
                 }
             } else if (type == ACTION_TYPE_BACK) {//还书
 
+                Log.e(Constant.TAG,"还书>>>>>>>>");
                 backBookList.add(infoBean);
                 if (backBookList.size() == count) {
                     AppSharedPreference.getInstance().saveBackBookInfos(backBookList);

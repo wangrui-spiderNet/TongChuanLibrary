@@ -6,7 +6,7 @@ import com.j256.ormlite.table.DatabaseTable;
 /**
  * Created by wangrui on 2018/2/11.
  */
-@DatabaseTable(tableName = "box_book_table")
+@DatabaseTable(tableName = "book_table")
 public class BookInfoBean {
 
     @DatabaseField (generatedId = true)

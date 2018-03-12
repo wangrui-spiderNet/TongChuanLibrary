@@ -7,6 +7,7 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import com.lidroid.xutils.db.annotation.Check;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -28,7 +29,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Map<String, Dao> daos = new HashMap<String, Dao>();
 
     private DatabaseHelper(Context context) {
-        super(context, DB_NAME, null, 4);
+        super(context, DB_NAME, null, 1);
     }
 
     @Override
@@ -39,6 +40,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, BorrowBookBean.class);
             TableUtils.createTable(connectionSource, InventoryReport.class);
             TableUtils.createTable(connectionSource, UserInfoBean.class);
+            TableUtils.createTable(connectionSource, CheckoutListBean.class);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -53,6 +55,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, CheckoutListBean.class, true);
             TableUtils.dropTable(connectionSource, InventoryReport.class, true);
             TableUtils.dropTable(connectionSource, UserInfoBean.class, true);
+            TableUtils.dropTable(connectionSource, BookInfoBean.class, true);
 
             onCreate(database, connectionSource);
         } catch (SQLException e) {

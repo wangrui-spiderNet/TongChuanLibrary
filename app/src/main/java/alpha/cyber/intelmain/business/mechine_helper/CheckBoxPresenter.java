@@ -31,6 +31,9 @@ public class CheckBoxPresenter {
     }
 
     public void getBookInfoByCode(String item_id) {
+
+        Log.e(Constant.TAG,"请求书码："+item_id);
+
         bookModule.getBookInfoByCode(new Request.Builder()
                 .withParam("item_id", item_id)
                 .build())

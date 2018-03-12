@@ -27,6 +27,7 @@ import alpha.cyber.intelmain.db.InventoryReportDao;
 import alpha.cyber.intelmain.db.UserDao;
 import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.IntentUtils;
+import alpha.cyber.intelmain.util.Log;
 import alpha.cyber.intelmain.util.ToastUtil;
 import alpha.cyber.intelmain.widget.CustomConfirmDialog;
 
@@ -88,6 +89,14 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         bookInfoBeanList.add(infoBean);
         mAdapter = new BorrowBookAdapter(this,bookInfoBeanList);
         lvTable.setAdapter(mAdapter);
+
+        ivQr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BookDao bookDao= new BookDao(OperatorActivity.this);
+                Log.e(Constant.TAG,"书柜里的所有书："+bookDao.queryAllBooks());
+            }
+        });
     }
 
     @Override

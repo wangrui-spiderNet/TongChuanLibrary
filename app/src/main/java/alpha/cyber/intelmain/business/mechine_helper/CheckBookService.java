@@ -7,6 +7,9 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
 
+import com.rfid.api.GFunction;
+import com.rfid.def.RfidDef;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,11 +56,8 @@ public class CheckBookService extends Service implements CheckCallBack {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
         deviceOpen = helper.openDevice();
-
         Log.e(Constant.TAG,"设备打开:"+deviceOpen);
-
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -70,14 +70,12 @@ public class CheckBookService extends Service implements CheckCallBack {
     @Override
     public void getBookInfoByCode(CheckoutListBean checkoutListBean) {
 
-
         if(null!=checkoutListBean){
-            bookDao.insertBook(checkoutListBean);
+            Log.e(Constant.TAG,"保存到书柜："+bookDao.insertBook(checkoutListBean));
             Log.e(Constant.TAG,"盘点书柜中的书："+checkoutListBean.toString());
         }else{
             ToastUtil.showToast(this,"没有找到书");
         }
-//
     }
 
     private class MyHandler extends Handler {
@@ -97,14 +95,15 @@ public class CheckBookService extends Service implements CheckCallBack {
             switch (msg.what) {
                 case CheckBookHelper.INVENTORY_MSG:
 
+                    if(helper.getmLoopCnt()>0){
+                        helper.stopLoop();
+                    }
+
                     pt.inventoryList = helper.getInventoryList(msg);
 
-                    Log.e(Constant.TAG,"盘点到的书"+pt.inventoryList.toString());
-
-                    Log.e(Constant.TAG, pt.inventoryList.toString());
+                    Log.e(Constant.TAG,"盘点到的书："+pt.inventoryList.toString());
 
                     if(null!=inventoryList&&inventoryList.size()>0){
-
                         reportDao.deleteAll();
 
                         for(int i=0;i<inventoryList.size();i++){
@@ -114,10 +113,6 @@ public class CheckBookService extends Service implements CheckCallBack {
                         clearBookTable();
 
                         requestBookInfo();
-                    }
-
-                    if(helper.getmLoopCnt()>0){
-                        helper.stopLoop();
                     }
 
                     break;
@@ -137,17 +132,16 @@ public class CheckBookService extends Service implements CheckCallBack {
 
     private void requestBookInfo() {
 
+        ArrayList<String > bookcodes=new ArrayList<String>();
+
         for (int i = 0; i < inventoryList.size(); i++) {
-
-            Log.e(Constant.TAG,"UID:"+inventoryList.get(i).getUidStr());
-            String bookCode = helper.getBookCode(i, inventoryList.get(i).getUidStr());
-
-            Log.e(Constant.TAG,"盘点出来的书码："+bookCode);
-            bookCode = bookCode.substring(6,14);
-            Log.e(Constant.TAG,"盘点转换后的书码："+bookCode);
-            presenter.getBookInfoByCode(bookCode);
-
+            String uid=inventoryList.get(i).getUidStr();
+            String bookCode = helper.getBookCode(0, uid);
+            bookcodes.add(bookCode);
+            Log.e(Constant.TAG,"UID:"+uid+"盘点出来的书码："+bookCode);
+            presenter.getBookInfoByCode(bookCode.substring(6,14));
         }
+
     }
 
     private void clearBookTable() {
