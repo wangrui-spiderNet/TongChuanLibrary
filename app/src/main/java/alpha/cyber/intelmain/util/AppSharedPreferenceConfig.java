@@ -22,6 +22,8 @@ public class AppSharedPreferenceConfig {
     public static final String HAS_LOGOUT_IM = "has_logout_im";
 
     public static final String USER_INFO = "user_info";
+    public static final String HOLD_BOOKS = "hold_books";
+    public static final String BACK_BOOKS = "back_books";
     public static final String BORROWED_BOOKS = "borrowed_books";
     public static final String USER_BORROW_BOOK_INFO = "borrow_book_info";
 

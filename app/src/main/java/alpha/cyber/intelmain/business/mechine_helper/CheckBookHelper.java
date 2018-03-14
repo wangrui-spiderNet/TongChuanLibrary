@@ -18,12 +18,7 @@ import java.util.Vector;
 
 import alpha.cyber.intellib.utils.ToastUtils;
 import alpha.cyber.intelmain.Constant;
-import alpha.cyber.intelmain.MyApplication;
-import alpha.cyber.intelmain.bean.CheckoutListBean;
 import alpha.cyber.intelmain.bean.InventoryReport;
-import alpha.cyber.intelmain.business.borrowbook.OpenBoxActivity;
-import alpha.cyber.intelmain.db.InventoryReportDao;
-import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.Log;
 
 /**

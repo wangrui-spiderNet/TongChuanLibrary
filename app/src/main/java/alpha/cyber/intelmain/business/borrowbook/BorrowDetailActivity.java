@@ -123,7 +123,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         from = intent.getIntExtra(Constant.BORROW_BACK, 0);
 
         userInfoBean = AppSharedPreference.getInstance().getUserInfo();
-        holdBookList = AppSharedPreference.getInstance().getbookInfos();
+        holdBookList = AppSharedPreference.getInstance().getHoldBookInfos();
 
         bookHelper = new CheckBookHelper(mHandler);
         presenter = new BorrowBookPresenter(this,bookHelper,this);
@@ -144,36 +144,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
-    @Override
-    public void getBookInfoByCode(int type,int count,CheckoutListBean listBean) {
-        if (type == ACTION_TYPE_BORROW) {//借书
 
-            borrowBookList.add(listBean);
-            if (borrowBookList.size() == count) {
-                AppSharedPreference.getInstance().saveBorrowBookInfos(borrowBookList);
-                borrowBookList.clear();
-
-//                alpha.cyber.intelmain.util.Log.e(Constant.TAG, "借书>>>>>>>>");
-//                Message msg = mHandler.obtainMessage();
-//                msg.what = BORROW_BOOK_INVENTORY_FINISH;
-//                mHandler.sendMessage(msg);
-            }
-        } else if (type == ACTION_TYPE_BACK) {//还书
-
-            alpha.cyber.intelmain.util.Log.e(Constant.TAG, "还书>>>>>>>>");
-            backBookList.add(listBean);
-            if (backBookList.size() == count) {
-                AppSharedPreference.getInstance().saveBackBookInfos(backBookList);
-                backBookList.clear();
-
-                Message msg = mHandler.obtainMessage();
-                msg.what = BACK_BOOK_INVENTORY_FINISH;
-//                        msg.obj = tagList;
-//                        msg.arg1 = failedCnt;
-                mHandler.sendMessage(msg);
-            }
-        }
-    }
 
     @Override
     protected void onResume() {
@@ -233,6 +204,37 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
                 default:
                     break;
+            }
+        }
+    }
+
+    @Override
+    public void getBookInfoByCode(int type,int count,CheckoutListBean listBean) {
+        if (type == ACTION_TYPE_BORROW) {//借书
+
+            borrowBookList.add(listBean);
+            if (borrowBookList.size() == count) {
+                AppSharedPreference.getInstance().saveBorrowBookInfos(borrowBookList);
+                borrowBookList.clear();
+
+//                alpha.cyber.intelmain.util.Log.e(Constant.TAG, "借书>>>>>>>>");
+//                Message msg = mHandler.obtainMessage();
+//                msg.what = BORROW_BOOK_INVENTORY_FINISH;
+//                mHandler.sendMessage(msg);
+            }
+        } else if (type == ACTION_TYPE_BACK) {//还书
+
+            alpha.cyber.intelmain.util.Log.e(Constant.TAG, "还书>>>>>>>>");
+            backBookList.add(listBean);
+            if (backBookList.size() == count) {
+                AppSharedPreference.getInstance().saveBackBookInfos(backBookList);
+                backBookList.clear();
+
+                Message msg = mHandler.obtainMessage();
+                msg.what = BACK_BOOK_INVENTORY_FINISH;
+//                        msg.obj = tagList;
+//                        msg.arg1 = failedCnt;
+                mHandler.sendMessage(msg);
             }
         }
     }

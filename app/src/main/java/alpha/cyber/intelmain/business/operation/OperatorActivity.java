@@ -173,7 +173,7 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
 
         bookInfoBeanList.addAll(infoBean.getCheckoutList());
         mAdapter.notifyDataSetChanged();
-        AppSharedPreference.getInstance().saveBookInfos(bookInfoBeanList);
+        AppSharedPreference.getInstance().saveHoldBookInfos(bookInfoBeanList);
         AppSharedPreference.getInstance().saveBorrowBookUserInfo(infoBean);
 
         Intent intent = new Intent(this, CheckBookService.class);
