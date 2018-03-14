@@ -5,7 +5,9 @@ import android.content.Context;
 import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import alpha.cyber.intelmain.bean.BookInfoBean;
 import alpha.cyber.intelmain.bean.BorrowBookBean;
@@ -61,6 +63,19 @@ public class InventoryReportDao {
         try {
             initDao();
             allBooks = inventoryDao.queryForAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return allBooks;
+    }
+
+    public List<InventoryReport> queryReportsByBoxId(Map<String , Object> params){
+        List<InventoryReport> allBooks = null;
+
+        try {
+            initDao();
+            allBooks = inventoryDao.queryForFieldValues(params);
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -16,17 +16,25 @@ public class InventoryReport {
     @DatabaseField
     private String TagTypeStr;
     @DatabaseField
-    private long findCnt = 0;
+    private int boxid;
 
     public InventoryReport() {
         super();
     }
 
-    public InventoryReport(String uid, String tayType, long cnt) {
+    public InventoryReport(String uid, String tayType, int boxid) {
         super();
         this.setUidStr(uid);
         this.setTagTypeStr(tayType);
-        this.setFindCnt(cnt);
+        this.setBoxid(boxid);
+    }
+
+    public int getBoxid() {
+        return boxid;
+    }
+
+    public void setBoxid(int boxid) {
+        this.boxid = boxid;
     }
 
     public long getUid() {
@@ -53,20 +61,13 @@ public class InventoryReport {
         TagTypeStr = tagTypeStr;
     }
 
-    public long getFindCnt() {
-        return findCnt;
-    }
-
-    public void setFindCnt(long findCnt) {
-        this.findCnt = findCnt;
-    }
-
     @Override
     public String toString() {
         return "InventoryReport{" +
-                "uidStr='" + uidStr + '\'' +
+                "uid=" + uid +
+                ", uidStr='" + uidStr + '\'' +
                 ", TagTypeStr='" + TagTypeStr + '\'' +
-                ", findCnt=" + findCnt +
+                ", boxid=" + boxid +
                 '}';
     }
 }

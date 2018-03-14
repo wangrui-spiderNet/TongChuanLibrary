@@ -24,7 +24,7 @@ public class LockHelper {
     public static final byte BOARD_ADDRESS = 0x01;
     public static final int BOX_OPEN = 102;
     public static final int HAS_DOOR_NOT_CLOSED = 103;
-    public static final int CHECKING_BOOKS = 104;
+    public static final int OPENED_CHECKING_BOOKS = 104;
     private LockCallback callback;
 
     public LockHelper(Handler mHandler, LockCallback callback) {
@@ -57,6 +57,10 @@ public class LockHelper {
         mLockController.getAllDoorState(LockHelper.BOARD_ADDRESS);
     }
 
+    public int getLockState(byte lockID){
+        return mLockController.getDoorState(lockID,BOARD_ADDRESS);
+    }
+
     public boolean open() {
         startOpen();
         return true;
@@ -75,7 +79,8 @@ public class LockHelper {
     }
 
     public void openGride(int position) {
-        mLockController.openGrid((byte) (position + 1), BOARD_ADDRESS);
+        mLockController.openGrid((byte) (position), BOARD_ADDRESS);
+
     }
 
     public void close() {
@@ -115,9 +120,9 @@ public class LockHelper {
             while (b_stateThreadRun) {
                 try {
                     Thread.sleep(200);
-//                    Message msg = mHandler.obtainMessage();
-//                    msg.what = STATE_LISTEN_MSG;
-//                    mHandler.sendMessage(msg);
+                    Message msg = mHandler.obtainMessage();
+                    msg.what = STATE_LISTEN_MSG;
+                    mHandler.sendMessage(msg);
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();

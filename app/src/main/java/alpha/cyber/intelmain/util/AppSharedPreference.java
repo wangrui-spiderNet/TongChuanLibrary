@@ -88,11 +88,6 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
         return app.getLong("server_timestamp", System.currentTimeMillis());
     }
 
-    public int getUserType(){
-        return app.getInt(AppSharedPreferenceConfig.USER_TYPE,0);
-    }
-
-    //1体验包用户，2年费用户，3明星课程用户,
     public void setCustomType(int customType){
         editor.putInt(AppSharedPreferenceConfig.CustomType,customType).commit();
     }
@@ -100,6 +95,15 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
     public int getCustomType(){
         return app.getInt(AppSharedPreferenceConfig.CustomType,0);
     }
+
+    public void saveOpenBoxId(int boxid){
+        editor.putInt(AppSharedPreferenceConfig.OPEN_BOX_ID,boxid).commit();
+    }
+
+    public int getOpenBoxId(){
+        return app.getInt(AppSharedPreferenceConfig.OPEN_BOX_ID,0);
+    }
+
 
     /**
      * 保存List

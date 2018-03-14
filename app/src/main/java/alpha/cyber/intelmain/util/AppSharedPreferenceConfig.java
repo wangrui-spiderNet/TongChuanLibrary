@@ -8,17 +8,8 @@ public class AppSharedPreferenceConfig {
     protected static final String NAME_PREFERENCES = "yishitang";
 
     public static final String LOGIN_TOEN = "login_token";
-    public static final String USER_ID = "userId";
-    public static final String USER_NAME = "login_username";
-    public static final String USER_ICON = "login_usericon";
-    public static final String USER_SCHOOL_NAME = "login_userschoolname";
-    public static final String USER_SCHOOL_ID = "user_school_id";
-    public static final String USER_PHONE = "user_phone";
-
-    public static final String SCHOOL_ADDRESS = "school_address";
 
     public static final String USER_MAC = "login_mac";
-    public static final String IS_BIND_OK = "is_login_ok";
 
     //保存
 
@@ -33,5 +24,7 @@ public class AppSharedPreferenceConfig {
     public static final String USER_INFO = "user_info";
     public static final String BORROWED_BOOKS = "borrowed_books";
     public static final String USER_BORROW_BOOK_INFO = "borrow_book_info";
+
+    public static final String OPEN_BOX_ID="open_box_id";
 
 }

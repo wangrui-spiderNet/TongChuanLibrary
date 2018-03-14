@@ -15,14 +15,14 @@ import com.rfid.def.RfidDef;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import alpha.cyber.intellib.utils.ToastUtils;
 import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.MyApplication;
-import alpha.cyber.intelmain.VoicePlayer;
 import alpha.cyber.intelmain.bean.CheckoutListBean;
 import alpha.cyber.intelmain.bean.InventoryReport;
+import alpha.cyber.intelmain.business.borrowbook.OpenBoxActivity;
+import alpha.cyber.intelmain.db.InventoryReportDao;
 import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.Log;
 
@@ -39,23 +39,18 @@ public class CheckBookHelper {
     public boolean bUseISO15693 = false;
     public boolean bUseISO14443A = false;
 
+    public static final int INVENTORY_SINGLE_BOX = 10;
     public static final int INVENTORY_MSG = 11;
     public static final int GETSCANRECORD = 2;
     public static final int INVENTORY_FAIL_MSG = 4;
     public static final int THREAD_END = 3;
 
-    public static final int BORROW_BOOK_INVENTORY_FINISH = 5;
-    public static final int BACK_BOOK_INVENTORY_FINISH = 6;
-
-    public static final int ACTION_TYPE_BORROW = 1;
-    public static final int ACTION_TYPE_BACK = 2;
 
     private boolean b_inventoryThreadRun = false;
     private boolean bOnlyReadNew = false;
     private long mAntCfg = 0x000000;
     private boolean bMathAFI = false;
     private byte mAFIVal = 0x00;
-    public List<InventoryReport> inventoryList;
     public boolean bRealShowTag = false;
     public boolean bBuzzer = true;
     private int mLoopCnt;
@@ -65,29 +60,82 @@ public class CheckBookHelper {
         this.mHandler = mHandler;
     }
 
-    public boolean openDevice() {
-
+    private boolean openDevice() {
         String conStr = "";
         conStr = String.format("RDType=RD5100;CommType=COM;ComPath=/dev/ttyXRM0;Baund=38400;Frame=8E1;Addr=255");
         if (!m_reader.isReaderOpen()) {
             if (m_reader.RDR_Open(conStr) == ApiErrDefinition.NO_ERROR) {
-                startThread();
                 return true;
             } else {
                 Log.e(Constant.TAG, "打开设备失败");
             }
 
         } else {
-            startThread();
-            return true;
+            return false;
         }
 
         return false;
     }
 
-    private void startThread() {
-        m_inventoryThrd = new Thread(new InventoryThrd());
-        m_inventoryThrd.start();
+    public void startInventoryAllBoxes() {
+        if (openDevice()) {
+            m_inventoryThrd = new Thread(new InventoryThrd());
+            m_inventoryThrd.start();
+        }
+    }
+
+    /**
+     * 盘点某根天线的柜子
+     *
+     * @param address
+     */
+    private int mAntCnt = 1;//天线数量
+
+    public void startInventoryOneBox(byte address) {
+
+        if (openDevice()) {
+            int iret = m_reader.RDR_SetAcessAntenna(address);
+            Vector<Object> tagList = new Vector<Object>();
+            if (iret == ApiErrDefinition.NO_ERROR) {//设置天线成功
+
+                byte[] mAntId = null;
+                mAntCnt = m_reader.RDR_GetAntennaInterfaceCount();
+                if (mAntCnt > 1) {
+                    mAntId = new byte[1];
+                    mAntId[0] = (address);
+                }
+
+                Object hInvenParamSpecList = ADReaderInterface.RDR_CreateInvenParamSpecList();
+                ISO15693Interface.ISO15693_CreateInvenParam(hInvenParamSpecList, (byte) 0, false, (byte) 0,
+                        (byte) 0);
+
+                iret = m_reader.RDR_TagInventory(RfidDef.AI_TYPE_NEW,
+                        mAntId, 0, hInvenParamSpecList);
+                if (iret != ApiErrDefinition.NO_ERROR) {
+                    return;
+                }
+
+                Object tagReport = m_reader.RDR_GetTagDataReport(RfidDef.RFID_SEEK_FIRST);
+                while (tagReport != null) {
+
+                    ISO15693Tag tagData = new ISO15693Tag();
+                    iret = ISO15693Interface.ISO15693_ParseTagDataReport(tagReport, tagData);
+                    if (iret == ApiErrDefinition.NO_ERROR) {
+                        tagList.add(tagData);
+                    }
+
+                    tagReport = m_reader.RDR_GetTagDataReport(RfidDef.RFID_SEEK_NEXT);
+                }
+
+                Message msg = mHandler.obtainMessage();
+                msg.what = INVENTORY_SINGLE_BOX;
+                msg.arg1 = address;
+                msg.obj = tagList;
+                mHandler.sendMessage(msg);
+
+            }
+        }
+
     }
 
     public void destroyService() {
@@ -108,6 +156,8 @@ public class CheckBookHelper {
         }
     }
 
+    private final int BOX_COUNT = 10;
+
     private class InventoryThrd implements Runnable {
         @Override
         public void run() {
@@ -120,7 +170,7 @@ public class CheckBookHelper {
             }
             if (mAntCfg != 0) {
                 Vector<Byte> vAntList = new Vector<Byte>();
-                for (int i = 0; i < 32; i++) {
+                for (int i = 0; i < BOX_COUNT; i++) {
                     if ((mAntCfg & (1 << i)) != 0) {
                         vAntList.add((byte) (i + 1));
                     }
@@ -133,16 +183,13 @@ public class CheckBookHelper {
             }
 
             if (bUseISO14443A || bUseISO15693) {
-                hInvenParamSpecList = ADReaderInterface
-                        .RDR_CreateInvenParamSpecList();
+                hInvenParamSpecList = ADReaderInterface.RDR_CreateInvenParamSpecList();
                 if (bUseISO15693) {
-                    ISO15693Interface.ISO15693_CreateInvenParam(
-                            hInvenParamSpecList, (byte) 0, bMathAFI, mAFIVal,
-                            (byte) 0);
+                    ISO15693Interface.ISO15693_CreateInvenParam(hInvenParamSpecList,
+                            (byte) 0, bMathAFI, mAFIVal, (byte) 0);
                 }
                 if (bUseISO14443A) {
-                    ISO14443AInterface.ISO14443A_CreateInvenParam(
-                            hInvenParamSpecList, (byte) 0);
+                    ISO14443AInterface.ISO14443A_CreateInvenParam(hInvenParamSpecList, (byte) 0);
                 }
             }
 
@@ -152,37 +199,33 @@ public class CheckBookHelper {
                 if (mHandler.hasMessages(INVENTORY_MSG)) {
                     continue;
                 }
-                int iret = m_reader.RDR_TagInventory(newAI, useAnt, 0,
-                        hInvenParamSpecList);
+                int iret = m_reader.RDR_TagInventory(newAI, useAnt, 0, hInvenParamSpecList);
 
-                if (iret == ApiErrDefinition.NO_ERROR
-                        || iret == -ApiErrDefinition.ERR_STOPTRRIGOCUR) {
+                if (iret == ApiErrDefinition.NO_ERROR || iret == -ApiErrDefinition.ERR_STOPTRRIGOCUR) {
                     Vector<Object> tagList = new Vector<Object>();
+
                     newAI = RfidDef.AI_TYPE_NEW;
-                    if (bOnlyReadNew
-                            || iret == -ApiErrDefinition.ERR_STOPTRRIGOCUR) {
+
+                    if (bOnlyReadNew || iret == -ApiErrDefinition.ERR_STOPTRRIGOCUR) {
                         newAI = RfidDef.AI_TYPE_CONTINUE;
                     }
 
-                    Object tagReport = m_reader
-                            .RDR_GetTagDataReport(RfidDef.RFID_SEEK_FIRST);
+                    Object tagReport = m_reader.RDR_GetTagDataReport(RfidDef.RFID_SEEK_FIRST);
 
                     while (tagReport != null) {
                         ISO15693Tag ISO15693TagData = new ISO15693Tag();
-                        iret = ISO15693Interface.ISO15693_ParseTagDataReport(
-                                tagReport, ISO15693TagData);
+
+                        iret = ISO15693Interface.ISO15693_ParseTagDataReport(tagReport, ISO15693TagData);
 
                         if (iret == ApiErrDefinition.NO_ERROR) {
                             // ISO15693 TAG
                             tagList.add(ISO15693TagData);
-                            tagReport = m_reader
-                                    .RDR_GetTagDataReport(RfidDef.RFID_SEEK_NEXT);
+                            tagReport = m_reader.RDR_GetTagDataReport(RfidDef.RFID_SEEK_NEXT);
                             continue;
                         }
 
                         ISO14443ATag ISO14444ATagData = new ISO14443ATag();
-                        iret = ISO14443AInterface.ISO14443A_ParseTagDataReport(
-                                tagReport, ISO14444ATagData);
+                        iret = ISO14443AInterface.ISO14443A_ParseTagDataReport(tagReport, ISO14444ATagData);
                         if (iret == ApiErrDefinition.NO_ERROR) {
                             // ISO14443A TAG
                             tagList.add(ISO14444ATagData);
@@ -205,7 +248,7 @@ public class CheckBookHelper {
                     }
                     Message msg = mHandler.obtainMessage();
                     msg.what = INVENTORY_FAIL_MSG;
-                    msg.arg1 = failedCnt;
+                    msg.arg1 = (mLoopCnt - failedCnt);
                     mHandler.sendMessage(msg);
                 }
             }
@@ -231,7 +274,6 @@ public class CheckBookHelper {
                 for (int j = 0; j < reportList.size(); j++) {
                     InventoryReport mReport = reportList.get(j);
                     if (mReport.getUidStr().equals(uidStr)) {
-                        mReport.setFindCnt(mReport.getFindCnt() + 1);
                         b_find = true;
                         break;
                     }
@@ -241,7 +283,7 @@ public class CheckBookHelper {
                     String tagName = ISO15693Interface
                             .GetTagNameById(tagData.tag_id);
                     reportList.add(new InventoryReport(uidStr,
-                            tagName, mCnt));
+                            tagName, msg.arg1));
 
                 }
             } else if (tagList.get(i) instanceof ISO14443ATag) {
@@ -250,7 +292,6 @@ public class CheckBookHelper {
                 for (int j = 0; j < reportList.size(); j++) {
                     InventoryReport mReport = reportList.get(j);
                     if (mReport.getUidStr().equals(uidStr)) {
-                        mReport.setFindCnt(mReport.getFindCnt() + 1);
                         b_find = true;
                         break;
                     }
@@ -260,7 +301,7 @@ public class CheckBookHelper {
                     String tagName = ISO14443AInterface
                             .GetTagNameById(tagData.tag_id);
                     reportList.add(new InventoryReport(uidStr,
-                            tagName, mCnt));
+                            tagName, msg.arg1));
 
                 }
             }
@@ -283,10 +324,10 @@ public class CheckBookHelper {
             Log.e(Constant.TAG, "错误");
         }
 
-        for(int i=0;i<bufBlocks.length;i++){
-            Log.e(Constant.TAG,"--》"+bufBlocks[i]+"《--");
-            if(bufBlocks.length==i+1){
-                Log.e(Constant.TAG,"-------------------------------------");
+        for (int i = 0; i < bufBlocks.length; i++) {
+            Log.e(Constant.TAG, "--》" + bufBlocks[i] + "《--");
+            if (bufBlocks.length == i + 1) {
+                Log.e(Constant.TAG, "-------------------------------------");
             }
         }
 
@@ -316,14 +357,14 @@ public class CheckBookHelper {
         if (null != connectUid) {
 
             int disconnet = mTag.ISO15693_Disconnect();
-            Log.e(Constant.TAG,"UID dis:"+disconnet);
+            Log.e(Constant.TAG, "UID dis:" + disconnet);
 
             int iret = mTag.ISO15693_Connect(m_reader,
                     RfidDef.RFID_ISO15693_PICC_ICODE_SLI_ID, connectMode,
                     connectUid);
 
             Log.e(Constant.TAG, "UID 连接：" + iret);
-            Log.e(Constant.TAG,"connect UID:"+uid);
+            Log.e(Constant.TAG, "connect UID:" + uid);
 
             try {
                 Thread.sleep(2000);
@@ -343,74 +384,5 @@ public class CheckBookHelper {
     public int getmLoopCnt() {
         return mLoopCnt;
     }
-
-    public void requestBookInfos(List<InventoryReport> reportList, int type) {
-
-        inventoryList = reportList;
-
-        for (int i = 0; i < reportList.size(); i++) {
-
-            String bookCode = getBookCode(i, inventoryList.get(i).getUidStr());
-
-            bookCode = bookCode.substring(6, 14);
-            Log.e(Constant.TAG,"借走的书码:"+bookCode);
-
-            getBookInfo(bookCode, type, reportList.size());
-
-        }
-
-    }
-
-    private List<CheckoutListBean> borrowBookList = new ArrayList<CheckoutListBean>();
-    private List<CheckoutListBean> backBookList = new ArrayList<CheckoutListBean>();
-
-
-    private CheckBoxPresenter presenter = new CheckBoxPresenter(new CheckCallBack() {
-        @Override
-        public void getBookInfoByCode(CheckoutListBean infoBean) {
-            if (type == ACTION_TYPE_BORROW) {//借书
-
-                borrowBookList.add(infoBean);
-                if (borrowBookList.size() == count) {
-                    AppSharedPreference.getInstance().saveBorrowBookInfos(borrowBookList);
-                    borrowBookList.clear();
-
-                    Log.e(Constant.TAG,"借书>>>>>>>>");
-                    Message msg = mHandler.obtainMessage();
-                    msg.what = BORROW_BOOK_INVENTORY_FINISH;
-//                        msg.obj = tagList;
-//                        msg.arg1 = failedCnt;
-                    mHandler.sendMessage(msg);
-                }
-            } else if (type == ACTION_TYPE_BACK) {//还书
-
-                Log.e(Constant.TAG,"还书>>>>>>>>");
-                backBookList.add(infoBean);
-                if (backBookList.size() == count) {
-                    AppSharedPreference.getInstance().saveBackBookInfos(backBookList);
-                    backBookList.clear();
-
-                    Message msg = mHandler.obtainMessage();
-                    msg.what = BACK_BOOK_INVENTORY_FINISH;
-//                        msg.obj = tagList;
-//                        msg.arg1 = failedCnt;
-                    mHandler.sendMessage(msg);
-                }
-            }
-
-        }
-    }, MyApplication.getAppContext());
-
-    private int type;
-    private int count;
-    public void getBookInfo(String bookCode, final int type, final int count) {
-
-        this.type = type;
-        this.count = count;
-
-        presenter.getBookInfoByCode(bookCode);
-
-    }
-
 
 }
