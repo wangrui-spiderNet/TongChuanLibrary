@@ -35,7 +35,7 @@ import alpha.cyber.intelmain.widget.CustomConfirmDialog;
  * Created by wangrui on 2018/1/31.
  */
 
-public class OperatorActivity extends BaseActivity implements View.OnClickListener, CustomConfirmDialog.CustomDialogConfirmListener ,IOperatorView{
+public class OperatorActivity extends BaseActivity implements View.OnClickListener, CustomConfirmDialog.CustomDialogConfirmListener, IOperatorView {
 
     private TextView tvName;
     private TextView tvCardNumber;
@@ -49,7 +49,7 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     private CustomConfirmDialog confirmDialog;
     private OperatorPresenter presenter;
     private UserInfoBean userInfo;
-    private List<CheckoutListBean> bookInfoBeanList=new ArrayList<>();
+    private List<CheckoutListBean> bookInfoBeanList = new ArrayList<>();
     private BorrowBookAdapter mAdapter;
 
     @Override
@@ -77,24 +77,24 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         tvSearchBook.setOnClickListener(this);
         tvReaderInfo.setOnClickListener(this);
 
-        View headView= LayoutInflater.from(this).inflate(R.layout.item_table_headview,null);
+        View headView = LayoutInflater.from(this).inflate(R.layout.item_table_headview, null);
         lvTable.addHeaderView(headView);
 
         confirmDialog = new CustomConfirmDialog(this);
-        CheckoutListBean infoBean =new CheckoutListBean();
+        CheckoutListBean infoBean = new CheckoutListBean();
         infoBean.setTitle_identifier(getString(R.string.book_name));
         infoBean.setHold_pickup_date(getString(R.string.borrow_date));
         infoBean.setDue_date(getString(R.string.end_date));
         infoBean.setOverdue_days(getString(R.string.late_days));
         bookInfoBeanList.add(infoBean);
-        mAdapter = new BorrowBookAdapter(this,bookInfoBeanList);
+        mAdapter = new BorrowBookAdapter(this, bookInfoBeanList);
         lvTable.setAdapter(mAdapter);
 
         ivQr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BookDao bookDao= new BookDao(OperatorActivity.this);
-                Log.e(Constant.TAG,"书柜里的所有书："+bookDao.queryAllBooks());
+                BookDao bookDao = new BookDao(OperatorActivity.this);
+                Log.e(Constant.TAG, "书柜里的所有书：" + bookDao.queryAllBooks());
             }
         });
     }
@@ -126,14 +126,16 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         if (tvBorrowBook == v) {
             IntentUtils.startAty(this, OpenBoxActivity.class);
         } else if (tvBackBook == v) {
-            IntentUtils.startAtyWithSingleParam(this, BorrowDetailActivity.class, Constant.BORROW_BACK, Constant.BACK_BOOK);
+            IntentUtils.startAty(this, OpenBoxActivity.class);
         } else if (tvReaderInfo == v) {
             IntentUtils.startAty(this, UserInfoActivity.class);
         } else if (tvSearchBook == v) {
             IntentUtils.startAty(this, SearchActivity.class);
         } else if (btnRightButton == v) {
-            confirmDialog.setContent(getString(R.string.box_not_closed_exit));
-            confirmDialog.show();
+            if (!confirmDialog.isShowing() && !isFinishing()) {
+                confirmDialog.setContent(getString(R.string.box_not_closed_exit));
+                confirmDialog.show();
+            }
         }
     }
 
@@ -161,15 +163,15 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void showErrorMsg(String msg) {
 
-        ToastUtil.showToast(this,msg);
+        ToastUtil.showToast(this, msg);
     }
 
     @Override
     public void getAllBorrowBookInfo(UserBorrowInfo infoBean) {
 
-        tvName.setText("姓名:"+infoBean.getPersonal_name());
-        tvCardNumber.setText("卡号:"+infoBean.getPatron_identifier());
-        tvPermission.setText("权限:"+infoBean.getScreen_message());
+        tvName.setText("姓名:" + infoBean.getPersonal_name());
+        tvCardNumber.setText("卡号:" + infoBean.getPatron_identifier());
+        tvPermission.setText("权限:" + infoBean.getScreen_message());
 
         bookInfoBeanList.addAll(infoBean.getCheckoutList());
         mAdapter.notifyDataSetChanged();

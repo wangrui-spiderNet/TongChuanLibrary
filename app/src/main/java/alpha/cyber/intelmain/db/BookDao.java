@@ -80,6 +80,19 @@ public class BookDao {
         return 0;
     }
 
+    public  List<CheckoutListBean> queryBooksByUid(String uid){
+        List<CheckoutListBean> allBooks =null;
+
+        try {
+            initDao();
+            allBooks =bookDao.queryBuilder().where().eq("uid", uid).query();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return allBooks;
+    }
+
     public void deleteAll(){
         try {
             initDao();

@@ -16,7 +16,7 @@ public interface BorrowBookModule {
     @POST("/api/user/checkOut")//借书
     Observable<EmptyResponse> checkOutBook(@Body Request data);
 
-    @POST("/api/user/checkInBook")//还书
+    @POST("/api/user/checkIn")//还书
     Observable<EmptyResponse> checkInBook(@Body Request data);
 
     @POST("/api/book/bookInfo")//查看图书信息

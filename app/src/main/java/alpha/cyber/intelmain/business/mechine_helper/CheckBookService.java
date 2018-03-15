@@ -65,9 +65,10 @@ public class CheckBookService extends Service implements CheckCallBack {
     }
 
     @Override
-    public void getBookInfoByCode(CheckoutListBean checkoutListBean) {
+    public void getBookInfoByCode(CheckoutListBean checkoutListBean,String uid) {
 
         if (null != checkoutListBean) {
+            checkoutListBean.setUid(uid);
             Log.e(Constant.TAG, "盘点书柜中的书：" + checkoutListBean.toString());
             Log.e(Constant.TAG, "保存到书柜：" + bookDao.insertBook(checkoutListBean));
 
@@ -120,6 +121,7 @@ public class CheckBookService extends Service implements CheckCallBack {
                     }
 
                     break;
+
                 case CheckBookHelper.INVENTORY_SINGLE_BOX:
 
                     List<InventoryReport> inventoryList = helper.getInventoryList(msg);
@@ -148,7 +150,7 @@ public class CheckBookService extends Service implements CheckCallBack {
             String bookCode = helper.getBookCode(0, uid);
             bookcodes.add(bookCode);
             Log.e(Constant.TAG, "UID:" + uid + "盘点出来的书码：" + bookCode);
-            presenter.getBookInfoByCode(bookCode.substring(6, 14));
+            presenter.getBookInfoByCode(bookCode.substring(6, 14),uid);
         }
 
     }

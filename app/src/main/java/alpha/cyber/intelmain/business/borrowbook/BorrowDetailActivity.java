@@ -24,6 +24,7 @@ import alpha.cyber.intelmain.bean.InventoryReport;
 import alpha.cyber.intelmain.bean.UserInfoBean;
 import alpha.cyber.intelmain.business.mechine_helper.CheckBookHelper;
 import alpha.cyber.intelmain.business.mechine_helper.LockHelper;
+import alpha.cyber.intelmain.db.BookDao;
 import alpha.cyber.intelmain.db.InventoryReportDao;
 import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.ToastUtil;
@@ -72,8 +73,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
     public static final int ACTION_TYPE_BORROW = 1;
     public static final int ACTION_TYPE_BACK = 2;
-    public static final int BORROW_BOOK_INVENTORY_FINISH = 5;
-    public static final int BACK_BOOK_INVENTORY_FINISH = 6;
+    private BookDao bookDao;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,7 +82,9 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         setContentView(R.layout.activity_borrow_detail);
 
         lockHelper = new LockHelper(mHandler, this);
+        lockHelper.open();
 
+        bookDao = new BookDao(this);
         customDialog = new CustomConfirmDialog(this);
         customDialog.setConfirmListener(this);
     }
@@ -144,8 +146,6 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
-
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -178,18 +178,6 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
                     calculateBorrowOrBackBook(msg);
                     break;
 
-                case BACK_BOOK_INVENTORY_FINISH:
-                    //计算之后还书处理
-                    setBackBookView();
-                    closeDialog();
-                    break;
-
-                case BORROW_BOOK_INVENTORY_FINISH:
-                    //计算之后借书处理
-                    setBorrowBookView();
-                    closeDialog();
-                    break;
-
                 case LockHelper.HAS_DOOR_NOT_CLOSED:
                     showTipDialog("您还有未关闭的柜门，请先关闭柜门，再按确认按钮");
                     break;
@@ -214,39 +202,30 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
             borrowBookList.add(listBean);
             if (borrowBookList.size() == count) {
-                AppSharedPreference.getInstance().saveBorrowBookInfos(borrowBookList);
-                borrowBookList.clear();
-
-//                alpha.cyber.intelmain.util.Log.e(Constant.TAG, "借书>>>>>>>>");
-//                Message msg = mHandler.obtainMessage();
-//                msg.what = BORROW_BOOK_INVENTORY_FINISH;
-//                mHandler.sendMessage(msg);
+                closeDialog();
+                setBorrowBookView();
             }
+
         } else if (type == ACTION_TYPE_BACK) {//还书
 
-            alpha.cyber.intelmain.util.Log.e(Constant.TAG, "还书>>>>>>>>");
+            Log.e(Constant.TAG, "还书>>>>>>>>");
             backBookList.add(listBean);
             if (backBookList.size() == count) {
-                AppSharedPreference.getInstance().saveBackBookInfos(backBookList);
-                backBookList.clear();
-
-                Message msg = mHandler.obtainMessage();
-                msg.what = BACK_BOOK_INVENTORY_FINISH;
-//                        msg.obj = tagList;
-//                        msg.arg1 = failedCnt;
-                mHandler.sendMessage(msg);
+                closeDialog();
+                setBackBookView();
             }
         }
     }
 
     private void setBackBookView() {
-        backBookList = AppSharedPreference.getInstance().getBackBookInfos();
         tableBack = new MyTableView(BorrowDetailActivity.this, 4);
         tableBack.AddRow(new String[]{"已还图书"}, true);
         tableBack.AddRow(new String[]{"书名", "还书时间", "到期归还", "逾期天数"}, false);
 
-        if (null != backReportList) {
+        if (null != backBookList) {
             for (int i = 0; i < backBookList.size(); i++) {
+                presenter.checkInBook(backBookList.get(i).getItem_identifier());
+
                 tableBack.AddRow(new String[]{
                                 backBookList.get(i).getTitle_identifier()
                                 , backBookList.get(i).getHold_pickup_date()
@@ -261,14 +240,13 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void setBorrowBookView() {
-        borrowBookList = AppSharedPreference.getInstance().getBorrowBookInfos();
-
         tableWillBorrow = new MyTableView(BorrowDetailActivity.this, 4);
         tableWillBorrow.AddRow(new String[]{"本次借阅"}, true);
         tableWillBorrow.AddRow(new String[]{"书名", "借阅时间", "到期归还", "逾期天数"}, false);
 
-        if (null != borrowReportList) {
+        if (null != borrowBookList) {
             for (int i = 0; i < borrowBookList.size(); i++) {
+                presenter.checkOutBook(borrowBookList.get(i).getItem_identifier(),AppSharedPreference.getInstance().getUserInfo().getPatron_identifier());
                 tableWillBorrow.AddRow(new String[]{
                                 borrowBookList.get(i).getTitle_identifier()
                                 , borrowBookList.get(i).getHold_pickup_date()
@@ -292,10 +270,10 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
         Log.e(Constant.TAG,"目前书架里的书："+currentUidList.toString());
         Log.e(Constant.TAG,"原来书架里的书："+oldReportList.toString());
-        borrowReportList.clear();
         //
-        if (null != oldReportList && oldReportList.size() > 0
-                && null != currentUidList && currentUidList.size() > 0) {//在原来的里面有，在新的里面没有，说明是被借走了
+
+        if (null != oldReportList
+                && null != currentUidList ) {//在原来的里面有，在新的里面没有，说明是被借走了
 
             for (int i = 0; i < oldReportList.size(); i++) {
                 if(!currentUidList.contains(oldReportList.get(i))){
@@ -304,7 +282,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
             }
 
             for (int i = 0; i < currentUidList.size(); i++) {
-                if(!oldReportList.contains(currentReportList.get(i))){
+                if(!oldReportList.contains(currentUidList.get(i))){
                     backReportList.add(currentUidList.get(i));
                 }
             }
@@ -313,7 +291,8 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
             Log.e(Constant.TAG, ">>还回>>>：" + backReportList.toString());
 
             if (borrowReportList.size() > 0) {
-                presenter.requestBookInfos(borrowReportList, ACTION_TYPE_BORROW);
+//                presenter.requestBookInfos(borrowReportList, ACTION_TYPE_BORROW);
+                queryBookByUid(borrowReportList);
             } else if (backReportList.size() > 0) {
                 presenter.requestBookInfos(backReportList, ACTION_TYPE_BACK);
             } else {
@@ -322,6 +301,21 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
             closeDialog();
         }
+    }
+
+    private void queryBookByUid(List<String> borrowReportList){
+        for(int i=0;i<borrowReportList.size();i++){
+
+            List<CheckoutListBean> checkoutListBeans=bookDao.queryBooksByUid(borrowReportList.get(i));
+
+            if(null!=checkoutListBeans){
+                borrowBookList.addAll(checkoutListBeans);
+            }else {
+                ToastUtil.showToast(this,"没有该书籍信息！");
+            }
+
+        }
+        setBorrowBookView();
     }
 
     @Override
@@ -408,19 +402,16 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
      * 查看是否所有的锁都关闭方法
      */
     private void getAllDoorsState() {
-        if (lockHelper.open()) {
+//        if (lockHelper.open()) {
             lockHelper.getAllDoorState();
-        }
+//        }
     }
 
     /**
      * 查看之前打开的锁有没有打开
      */
     private void getDoorState() {
-        if (lockHelper.open()) {
             lockHelper.getLockState(openedId);
-        }
-
     }
 
     private void closeTipDialog() {

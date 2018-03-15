@@ -41,6 +41,7 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_box);
         lockHelper = new LockHelper(mHandler, this);
+        lockHelper.open();
     }
 
     @Override
@@ -73,12 +74,9 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        if (lockHelper.open()) {
-            lockId = (byte) (position + 1);
-            lockHelper.openGride(position + 1);
-            AppSharedPreference.getInstance().saveOpenBoxId(position + 1);
-
-        }
+        lockId = (byte) (position + 1);
+        lockHelper.openGride(position + 1);
+        AppSharedPreference.getInstance().saveOpenBoxId(position + 1);
     }
 
     @Override
@@ -102,13 +100,14 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
         if (id == lockId && state == 1) {
             IntentUtils.startAtyWithSingleParam(this, BorrowDetailActivity.class, Constant.BORROW_BACK, Constant.BORROW_BOOK);
             lockHelper.close();
+            finish();
         }
     }
 
     @Override
     public void onGetAllLockState(byte[] state) {
 
-        if(lockHelper.checkBoxOpen(state)){
+        if (lockHelper.checkBoxOpen(state)) {
             IntentUtils.startAty(this, LoginActivity.class);
         }
 
@@ -148,8 +147,7 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
 //    }
 
 
-
-    private void getAllDoorState(){
+    private void getAllDoorState() {
         lockHelper.getAllDoorState();
     }
 }

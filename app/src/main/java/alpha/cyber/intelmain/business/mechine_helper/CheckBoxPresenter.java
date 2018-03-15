@@ -30,7 +30,7 @@ public class CheckBoxPresenter {
         this.context = context;
     }
 
-    public void getBookInfoByCode(String item_id) {
+    public void getBookInfoByCode(String item_id,final String uid) {
 
         Log.e(Constant.TAG,"请求书码："+item_id);
 
@@ -43,7 +43,7 @@ public class CheckBoxPresenter {
                     @Override
                     public void onSuccess(CheckoutListBean response) {
                         if (null != response) {
-                            callBack.getBookInfoByCode(response);
+                            callBack.getBookInfoByCode(response,uid);
                         } else {
                             ToastUtil.showToast(context, "未查到此书！");
                         }

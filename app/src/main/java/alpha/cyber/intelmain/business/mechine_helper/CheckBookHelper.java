@@ -315,15 +315,11 @@ public class CheckBookHelper {
         byte bufBlocks[] = new byte[4 * numOfBlksToRead];
         int iret = mTag.ISO15693_ReadMultiBlocks(false, blkAddr,
                 numOfBlksToRead, numOfBlksRead, bufBlocks, bytesBlkDatRead);
-        if (iret != ApiErrDefinition.NO_ERROR) {
-            Log.e(Constant.TAG, "错误");
-        }
 
-        for (int i = 0; i < bufBlocks.length; i++) {
-            Log.e(Constant.TAG, "--》" + bufBlocks[i] + "《--");
-            if (bufBlocks.length == i + 1) {
-                Log.e(Constant.TAG, "-------------------------------------");
-            }
+
+        if (iret != ApiErrDefinition.NO_ERROR) {
+            Log.e(Constant.TAG,"转码："+iret);
+            Log.e(Constant.TAG, "错误");
         }
 
         String strData = GFunction.encodeHexStr(bufBlocks);
@@ -345,7 +341,6 @@ public class CheckBookHelper {
     }
 
     public String getBookCode(int i, String uid) {
-
         byte[] connectUid = GFunction.decodeHex(uid);
         byte connectMode = 1;
 
@@ -360,13 +355,6 @@ public class CheckBookHelper {
 
             Log.e(Constant.TAG, "UID 连接：" + iret);
             Log.e(Constant.TAG, "connect UID:" + uid);
-
-            try {
-                Thread.sleep(2000);
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.e(Constant.TAG, "UID阻塞异常");
-            }
 
             String bookCode = UiReadBlock(i, 2, mTag);
 

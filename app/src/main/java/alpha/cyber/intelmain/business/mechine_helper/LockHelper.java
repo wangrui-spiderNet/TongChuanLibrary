@@ -73,8 +73,8 @@ public class LockHelper {
     private void startOpen() {
         mLockController.start();
         mLockController.open();
-        mStateThrd = new Thread(new StateThrd());
-        mStateThrd.start();
+//        mStateThrd = new Thread(new StateThrd());
+//        mStateThrd.start();
 
     }
 
@@ -111,25 +111,25 @@ public class LockHelper {
         return false;
     }
 
-    private class StateThrd implements Runnable {
-
-        @Override
-        public void run() {
-            b_stateThreadRun = true;
-
-            while (b_stateThreadRun) {
-                try {
-                    Thread.sleep(200);
-                    Message msg = mHandler.obtainMessage();
-                    msg.what = STATE_LISTEN_MSG;
-                    mHandler.sendMessage(msg);
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
+//    private class StateThrd implements Runnable {
+//
+//        @Override
+//        public void run() {
+//            b_stateThreadRun = true;
+//
+//            while (b_stateThreadRun) {
+//                try {
+////                    Thread.sleep(200);
+////                    Message msg = mHandler.obtainMessage();
+////                    msg.what = STATE_LISTEN_MSG;
+////                    mHandler.sendMessage(msg);
+//
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//    }
 
 
 }

@@ -40,9 +40,14 @@ public class BorrowBookPresenter {
         this.bookView = bookView;
     }
 
-    public void checkOutBook(String item_ids){
+    /**
+     * 借书
+     * @param item_ids
+     */
+    public void checkOutBook(String item_ids,String patron_id){
         borrowBookModule.checkOutBook(new Request.Builder()
                 .withParam("item_ids",item_ids)
+                .withParam("patron_id",patron_id)
                 .build())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -61,10 +66,13 @@ public class BorrowBookPresenter {
                 });
     }
 
-    public void checkInBook(String item_ids,String patron_id){
+    /**
+     * 还书
+     * @param item_ids
+     */
+    public void checkInBook(String item_ids){
         borrowBookModule.checkInBook(new Request.Builder()
                 .withParam("item_ids",item_ids)
-                .withParam("patron_id",patron_id)
                 .build())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -86,7 +94,7 @@ public class BorrowBookPresenter {
 
         for (int i = 0; i < reportList.size(); i++) {
 
-            String bookCode =  bookHelper.getBookCode(i, reportList.get(i));
+            String bookCode =  bookHelper.getBookCode(0, reportList.get(i));
 
             bookCode = bookCode.substring(6, 14);
 

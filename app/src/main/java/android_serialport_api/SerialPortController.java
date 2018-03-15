@@ -256,11 +256,11 @@ public abstract class SerialPortController {
 
                 dataLen += recvLen;
 
-                Log.e(Constant.TAG,"cmd_id:"+ Integer.toHexString(cmd.getCmdId()));
-                Log.e(Constant.TAG,"buffer:"+buffer.length);
-                Log.e(Constant.TAG,"data:"+data.length);
-                Log.e(Constant.TAG,"dataPos:"+dataPos);
-                Log.e(Constant.TAG,"recvLen:"+recvLen);
+//                Log.e(Constant.TAG,"cmd_id:"+ Integer.toHexString(cmd.getCmdId()));
+//                Log.e(Constant.TAG,"buffer:"+buffer.length);
+//                Log.e(Constant.TAG,"data:"+data.length);
+//                Log.e(Constant.TAG,"dataPos:"+dataPos);
+//                Log.e(Constant.TAG,"recvLen:"+recvLen);
 
                 System.arraycopy(buffer, 0, data, dataPos, recvLen);
                 //dataPos += recvLen;

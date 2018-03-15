@@ -70,6 +70,16 @@ public class CheckoutListBean {
     private String current_location;
     @DatabaseField
     private String curlib;
+    @DatabaseField
+    private String uid;
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
     public long getBookid() {
         return bookid;
