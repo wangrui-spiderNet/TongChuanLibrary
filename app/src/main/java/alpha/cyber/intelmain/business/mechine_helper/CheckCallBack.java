@@ -8,5 +8,5 @@ import alpha.cyber.intelmain.bean.CheckoutListBean;
 
 public interface CheckCallBack {
 
-    void getBookInfoByCode(CheckoutListBean checkoutListBean,String uid);
+    void getBookInfoByCode(CheckoutListBean checkoutListBean,String uid,int boxid);
 }

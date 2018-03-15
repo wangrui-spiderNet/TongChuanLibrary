@@ -35,7 +35,7 @@ public class CheckBookHelper {
     public boolean bUseISO14443A = false;
 
     public static final int INVENTORY_SINGLE_BOX = 10;
-    public static final int INVENTORY_MSG = 11;
+    public static final int INVENTORY_ALL_BOX = 11;
     public static final int GETSCANRECORD = 2;
     public static final int INVENTORY_FAIL_MSG = 4;
     public static final int THREAD_END = 3;
@@ -199,7 +199,7 @@ public class CheckBookHelper {
             mLoopCnt = 0;
             b_inventoryThreadRun = true;
             while (b_inventoryThreadRun) {
-                if (mHandler.hasMessages(INVENTORY_MSG)) {
+                if (mHandler.hasMessages(INVENTORY_ALL_BOX)) {
                     continue;
                 }
                 int iret = m_reader.RDR_TagInventory(newAI, useAnt, 0, hInvenParamSpecList);
@@ -239,7 +239,7 @@ public class CheckBookHelper {
                     }
                     mLoopCnt++;
                     Message msg = mHandler.obtainMessage();
-                    msg.what = INVENTORY_MSG;
+                    msg.what = INVENTORY_ALL_BOX;
                     msg.obj = tagList;
                     msg.arg1 = failedCnt;
                     mHandler.sendMessage(msg);

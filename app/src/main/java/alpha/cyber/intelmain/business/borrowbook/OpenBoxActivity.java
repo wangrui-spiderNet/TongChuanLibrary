@@ -83,7 +83,7 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
     protected void onDestroy() {
         super.onDestroy();
 
-        lockHelper.close();
+//        lockHelper.close();
     }
 
     @Override

@@ -50,8 +50,6 @@ public class LockHelper {
 
         mLockController.setCallBack(callback);
 
-        open();
-
         return mLockController;
     }
 

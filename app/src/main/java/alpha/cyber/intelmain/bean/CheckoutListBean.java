@@ -33,6 +33,10 @@ public class CheckoutListBean {
     @DatabaseField(generatedId = true)
     private long bookid;
     @DatabaseField
+    private String uid;
+    @DatabaseField
+    private int boxid;
+    @DatabaseField
     private String item_properties;
     @DatabaseField
     private String permanent_location;
@@ -70,8 +74,15 @@ public class CheckoutListBean {
     private String current_location;
     @DatabaseField
     private String curlib;
-    @DatabaseField
-    private String uid;
+
+
+    public int getBoxid() {
+        return boxid;
+    }
+
+    public void setBoxid(int boxid) {
+        this.boxid = boxid;
+    }
 
     public String getUid() {
         return uid;
@@ -250,6 +261,8 @@ public class CheckoutListBean {
     public String toString() {
         return "CheckoutListBean{" +
                 "bookid=" + bookid +
+                ", uid='" + uid + '\'' +
+                ", boxid=" + boxid +
                 ", item_properties='" + item_properties + '\'' +
                 ", permanent_location='" + permanent_location + '\'' +
                 ", overdue_days='" + overdue_days + '\'' +

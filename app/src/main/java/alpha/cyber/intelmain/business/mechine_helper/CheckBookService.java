@@ -54,7 +54,10 @@ public class CheckBookService extends Service implements CheckCallBack {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        helper.startInventoryAllBoxes();
+        for(int i=0;i<1;i++){
+            helper.startInventoryOneBox((byte)(i+1));
+        }
+//        helper.startInventoryAllBoxes();
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -66,10 +69,11 @@ public class CheckBookService extends Service implements CheckCallBack {
     }
 
     @Override
-    public void getBookInfoByCode(CheckoutListBean checkoutListBean,String uid) {
+    public void getBookInfoByCode(CheckoutListBean checkoutListBean,String uid,int boxid) {
 
         if (null != checkoutListBean) {
             checkoutListBean.setUid(uid);
+            checkoutListBean.setBoxid(boxid);
             Log.e(Constant.TAG, "盘点书柜中的书：" + checkoutListBean.toString());
             Log.e(Constant.TAG, "保存到书柜：" + bookDao.insertBook(checkoutListBean));
 
@@ -93,13 +97,13 @@ public class CheckBookService extends Service implements CheckCallBack {
             }
 
             switch (msg.what) {
-                case CheckBookHelper.INVENTORY_MSG:
+                case CheckBookHelper.INVENTORY_ALL_BOX:
 
                     if (helper.getmLoopCnt() > 0) {
                         helper.stopLoop();
                     }
                     pt.allBoxInventoryList = helper.getInventoryList(msg);
-                    Log.e(Constant.TAG, "盘点到的书：" + pt.allBoxInventoryList.toString());
+                    Log.e(Constant.TAG, "全柜盘点到的书：" + pt.allBoxInventoryList.toString());
 
                     break;
                 case CheckBookHelper.INVENTORY_FAIL_MSG:
@@ -107,7 +111,7 @@ public class CheckBookService extends Service implements CheckCallBack {
 
                     break;
                 case CheckBookHelper.THREAD_END:
-                    Log.e(Constant.TAG, "盘点结束");
+                    Log.e(Constant.TAG, "全柜盘点结束");
 
                     if (null != allBoxInventoryList && allBoxInventoryList.size() > 0) {
                         reportDao.deleteAll();
@@ -118,7 +122,7 @@ public class CheckBookService extends Service implements CheckCallBack {
 
                         clearBookTable();
 
-                        requestBookInfo();
+                        requestAllBookInfo();
                     }
 
                     break;
@@ -132,6 +136,8 @@ public class CheckBookService extends Service implements CheckCallBack {
                         reportDao.insertBook(inventoryList.get(i));
                     }
 
+                    requestSingleBoxBookInfo(address,inventoryList);
+
 //                    boxInventoryList.add(address,inventoryList);
                     Log.e(Constant.TAG, "第" + address + "个箱子里有：" + inventoryList.size() + "本书");
 
@@ -142,7 +148,7 @@ public class CheckBookService extends Service implements CheckCallBack {
         }
     }
 
-    private void requestBookInfo() {
+    private void requestAllBookInfo() {
 
         ArrayList<String> bookcodes = new ArrayList<String>();
 
@@ -151,7 +157,21 @@ public class CheckBookService extends Service implements CheckCallBack {
             String bookCode = helper.getBookCode(0, uid);
             bookcodes.add(bookCode);
             Log.e(Constant.TAG, "UID:" + uid + "盘点出来的书码：" + bookCode);
-            presenter.getBookInfoByCode(bookCode.substring(6, 14),uid);
+            presenter.getBookInfoByCode(bookCode.substring(6, 14),uid,-1);
+        }
+
+    }
+
+    private void requestSingleBoxBookInfo(int boxid, List<InventoryReport> reportList) {
+
+        ArrayList<String> bookcodes = new ArrayList<String>();
+
+        for (int i = 0; i < reportList.size(); i++) {
+            String uid = reportList.get(i).getUidStr();
+            String bookCode = helper.getBookCode(0, uid);
+            bookcodes.add(bookCode);
+            Log.e(Constant.TAG, "UID:" + uid + "盘点出来的书码：" + bookCode);
+            presenter.getBookInfoByCode(bookCode.substring(6, 14),uid,boxid);
         }
 
     }

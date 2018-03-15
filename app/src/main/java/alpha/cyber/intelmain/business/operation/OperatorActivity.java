@@ -57,6 +57,8 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_operator);
+        Intent intent = new Intent(this, CheckBookService.class);
+        startService(intent);
 
     }
 
@@ -143,7 +145,6 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     public void onButtonClick(View view) {
 
         logout();
-
         finish();
     }
 
@@ -189,8 +190,7 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         AppSharedPreference.getInstance().saveHoldBookInfos(bookInfoBeanList);
         AppSharedPreference.getInstance().saveBorrowBookUserInfo(infoBean);
 
-        Intent intent = new Intent(this, CheckBookService.class);
-        startService(intent);
+
     }
 
     @Override

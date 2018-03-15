@@ -13,7 +13,9 @@ import alpha.cyber.intelmain.bean.BookInfoBean;
 import alpha.cyber.intelmain.bean.UserInfoBean;
 import alpha.cyber.intelmain.business.operation.OperatorActivity;
 import alpha.cyber.intelmain.business.operation.OperatorPresenter;
+import alpha.cyber.intelmain.db.BookDao;
 import alpha.cyber.intelmain.db.DatabaseHelper;
+import alpha.cyber.intelmain.db.InventoryReportDao;
 import alpha.cyber.intelmain.db.UserDao;
 import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.IntentUtils;
@@ -37,6 +39,22 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
         setContentView(R.layout.activity_input_pwd);
         presenter = new LoginPresenter(this, this);
 
+        clearDao();
+
+    }
+
+    private void clearDao(){
+        String clientXgTocken = AppSharedPreference.getInstance().getClientXgToken();
+        AppSharedPreference.getInstance().clear();
+        AppSharedPreference.getInstance().setClientXgToken(clientXgTocken);
+        AppSharedPreference.getInstance().saveHoldBookInfos(null);
+        AppSharedPreference.getInstance().saveBorrowBookUserInfo(null);
+        AppSharedPreference.getInstance().saveBackBookInfos(null);
+        AppSharedPreference.getInstance().saveBorrowBookInfos(null);
+
+        new BookDao(this).deleteAll();
+        new InventoryReportDao(this).deleteAll();
+        new UserDao().deleteAll();
     }
 
     @Override

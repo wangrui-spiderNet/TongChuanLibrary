@@ -82,6 +82,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         setContentView(R.layout.activity_borrow_detail);
 
         lockHelper = new LockHelper(mHandler, this);
+        lockHelper.open();
 
         bookDao = new BookDao(this);
         customDialog = new CustomConfirmDialog(this);
@@ -138,8 +139,11 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
         //数据库查询已经打开柜子里面的书籍
         List<InventoryReport> inventoryReports = reportDao.queryReportsByBoxId(openedId);
-        for (int i = 0; i < inventoryReports.size(); i++) {
-            oldReportList.add(inventoryReports.get(i).getUidStr());
+
+        if (null != inventoryReports) {
+            for (int i = 0; i < inventoryReports.size(); i++) {
+                oldReportList.add(inventoryReports.get(i).getUidStr());
+            }
         }
     }
 
