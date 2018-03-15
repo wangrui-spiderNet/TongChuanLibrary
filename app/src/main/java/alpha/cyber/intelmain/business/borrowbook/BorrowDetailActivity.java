@@ -131,16 +131,14 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         presenter = new BorrowBookPresenter(this,bookHelper,this);
         reportDao = new InventoryReportDao(this);
 
-        openedId = (byte) AppSharedPreference.getInstance().getOpenBoxId();
-
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("boxid", openedId);
-        reportDao.queryReportsByBoxId(params);
         oldReportList = new ArrayList<String>();
         borrowReportList = new ArrayList<String>();
         backReportList = new ArrayList<String >();
 
-        List<InventoryReport> inventoryReports = reportDao.queryAllReports();
+        openedId = (byte) AppSharedPreference.getInstance().getOpenBoxId();
+
+        //数据库查询已经打开柜子里面的书籍
+        List<InventoryReport> inventoryReports = reportDao.queryReportsByBoxId(openedId);
         for(int i=0;i<inventoryReports.size();i++){
             oldReportList.add(inventoryReports.get(i).getUidStr());
         }
@@ -393,7 +391,6 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     public void onButtonClick(View view) {
         //关闭Dialog提醒，检查打开的柜门是否已经关闭
 
-//        getDoorState();
         getAllDoorsState();
 
     }

@@ -40,7 +40,6 @@ public class CheckBookHelper {
     public static final int INVENTORY_FAIL_MSG = 4;
     public static final int THREAD_END = 3;
 
-
     private boolean b_inventoryThreadRun = false;
     private boolean bOnlyReadNew = false;
     private long mAntCfg = 0x000000;
@@ -50,33 +49,41 @@ public class CheckBookHelper {
     public boolean bBuzzer = true;
     private int mLoopCnt;
     private Handler mHandler;
+    private boolean isOpen = false;
 
     public CheckBookHelper(Handler mHandler) {
         this.mHandler = mHandler;
     }
 
-    private boolean openDevice() {
+    public boolean openDevice() {
         String conStr = "";
         conStr = String.format("RDType=RD5100;CommType=COM;ComPath=/dev/ttyXRM0;Baund=38400;Frame=8E1;Addr=255");
         if (!m_reader.isReaderOpen()) {
             if (m_reader.RDR_Open(conStr) == ApiErrDefinition.NO_ERROR) {
+                isOpen = true;
                 return true;
             } else {
                 Log.e(Constant.TAG, "打开设备失败");
             }
 
         } else {
+            isOpen = false;
             return false;
         }
 
-        return false;
+        isOpen = false;
+
+        return isOpen;
     }
 
     public void startInventoryAllBoxes() {
-        if (openDevice()) {
-            m_inventoryThrd = new Thread(new InventoryThrd());
-            m_inventoryThrd.start();
+        if (!isOpen) {
+            openDevice();
         }
+
+        m_inventoryThrd = new Thread(new InventoryThrd());
+        m_inventoryThrd.start();
+
     }
 
     /**
@@ -88,49 +95,50 @@ public class CheckBookHelper {
 
     public void startInventoryOneBox(byte address) {
 
-        if (openDevice()) {
-            int iret = m_reader.RDR_SetAcessAntenna(address);
-            Vector<Object> tagList = new Vector<Object>();
-            if (iret == ApiErrDefinition.NO_ERROR) {//设置天线成功
-
-                byte[] mAntId = null;
-                mAntCnt = m_reader.RDR_GetAntennaInterfaceCount();
-                if (mAntCnt > 1) {
-                    mAntId = new byte[1];
-                    mAntId[0] = (address);
-                }
-
-                Object hInvenParamSpecList = ADReaderInterface.RDR_CreateInvenParamSpecList();
-                ISO15693Interface.ISO15693_CreateInvenParam(hInvenParamSpecList, (byte) 0, false, (byte) 0,
-                        (byte) 0);
-
-                iret = m_reader.RDR_TagInventory(RfidDef.AI_TYPE_NEW,
-                        mAntId, 0, hInvenParamSpecList);
-                if (iret != ApiErrDefinition.NO_ERROR) {
-                    return;
-                }
-
-                Object tagReport = m_reader.RDR_GetTagDataReport(RfidDef.RFID_SEEK_FIRST);
-                while (tagReport != null) {
-
-                    ISO15693Tag tagData = new ISO15693Tag();
-                    iret = ISO15693Interface.ISO15693_ParseTagDataReport(tagReport, tagData);
-                    if (iret == ApiErrDefinition.NO_ERROR) {
-                        tagList.add(tagData);
-                    }
-
-                    tagReport = m_reader.RDR_GetTagDataReport(RfidDef.RFID_SEEK_NEXT);
-                }
-
-                Message msg = mHandler.obtainMessage();
-                msg.what = INVENTORY_SINGLE_BOX;
-                msg.arg1 = address;
-                msg.obj = tagList;
-                mHandler.sendMessage(msg);
-
-            }
+        if (!isOpen) {
+            openDevice();
         }
 
+        int iret = m_reader.RDR_SetAcessAntenna(address);
+        Vector<Object> tagList = new Vector<Object>();
+        if (iret == ApiErrDefinition.NO_ERROR) {//设置天线成功
+
+            byte[] mAntId = null;
+            mAntCnt = m_reader.RDR_GetAntennaInterfaceCount();
+            if (mAntCnt > 1) {
+                mAntId = new byte[1];
+                mAntId[0] = (address);
+            }
+
+            Object hInvenParamSpecList = ADReaderInterface.RDR_CreateInvenParamSpecList();
+            ISO15693Interface.ISO15693_CreateInvenParam(hInvenParamSpecList, (byte) 0, false, (byte) 0,
+                    (byte) 0);
+
+            iret = m_reader.RDR_TagInventory(RfidDef.AI_TYPE_NEW,
+                    mAntId, 0, hInvenParamSpecList);
+            if (iret != ApiErrDefinition.NO_ERROR) {
+                return;
+            }
+
+            Object tagReport = m_reader.RDR_GetTagDataReport(RfidDef.RFID_SEEK_FIRST);
+            while (tagReport != null) {
+
+                ISO15693Tag tagData = new ISO15693Tag();
+                iret = ISO15693Interface.ISO15693_ParseTagDataReport(tagReport, tagData);
+                if (iret == ApiErrDefinition.NO_ERROR) {
+                    tagList.add(tagData);
+                }
+
+                tagReport = m_reader.RDR_GetTagDataReport(RfidDef.RFID_SEEK_NEXT);
+            }
+
+            Message msg = mHandler.obtainMessage();
+            msg.what = INVENTORY_SINGLE_BOX;
+            msg.arg1 = address;
+            msg.obj = tagList;
+            mHandler.sendMessage(msg);
+
+        }
     }
 
     public void destroyService() {
@@ -318,7 +326,7 @@ public class CheckBookHelper {
 
 
         if (iret != ApiErrDefinition.NO_ERROR) {
-            Log.e(Constant.TAG,"转码："+iret);
+            Log.e(Constant.TAG, "转码：" + iret);
             Log.e(Constant.TAG, "错误");
         }
 
@@ -333,6 +341,7 @@ public class CheckBookHelper {
             return;
         }
         m_reader.RDR_Close();
+        isOpen = false;
     }
 
     public void stopLoop() {

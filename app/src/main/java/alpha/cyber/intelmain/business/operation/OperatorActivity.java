@@ -142,12 +142,23 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onButtonClick(View view) {
 
-        AppSharedPreference.getInstance().setLogIn(false);
+        logout();
+
+        finish();
+    }
+
+    private void logout(){
+        String clientXgTocken = AppSharedPreference.getInstance().getClientXgToken();
+        AppSharedPreference.getInstance().clear();
+        AppSharedPreference.getInstance().setClientXgToken(clientXgTocken);
+        AppSharedPreference.getInstance().saveHoldBookInfos(null);
+        AppSharedPreference.getInstance().saveBorrowBookUserInfo(null);
+        AppSharedPreference.getInstance().saveBackBookInfos(null);
+        AppSharedPreference.getInstance().saveBorrowBookInfos(null);
+
         new BookDao(this).deleteAll();
         new InventoryReportDao(this).deleteAll();
         new UserDao().deleteAll();
-
-        finish();
     }
 
     @Override

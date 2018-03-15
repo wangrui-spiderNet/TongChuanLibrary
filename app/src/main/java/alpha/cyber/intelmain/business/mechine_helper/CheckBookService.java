@@ -48,6 +48,7 @@ public class CheckBookService extends Service implements CheckCallBack {
         presenter = new CheckBoxPresenter(this, this);
         allBoxInventoryList = new ArrayList<InventoryReport>();
         helper = new CheckBookHelper(mHandler);
+        helper.openDevice();
     }
 
     @Override

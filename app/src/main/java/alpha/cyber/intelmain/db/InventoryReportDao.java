@@ -3,6 +3,9 @@ package alpha.cyber.intelmain.db;
 import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
+import com.j256.ormlite.stmt.query.In;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -70,12 +73,17 @@ public class InventoryReportDao {
         return allBooks;
     }
 
-    public List<InventoryReport> queryReportsByBoxId(Map<String , Object> params){
+    public List<InventoryReport> queryReportsByBoxId(int openid) {
         List<InventoryReport> allBooks = null;
 
         try {
             initDao();
-            allBooks = inventoryDao.queryForFieldValues(params);
+
+            QueryBuilder<InventoryReport, Integer> builder = inventoryDao.queryBuilder();
+            Where<InventoryReport,Integer> where = builder.where();
+            where.eq("boxid",openid);
+            allBooks = builder.query();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
