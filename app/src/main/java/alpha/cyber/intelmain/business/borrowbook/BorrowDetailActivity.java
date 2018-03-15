@@ -36,7 +36,7 @@ import alpha.cyber.intelmain.widget.MyTableView;
  */
 
 public class BorrowDetailActivity extends BaseActivity implements View.OnClickListener
-        , CustomConfirmDialog.CustomDialogConfirmListener, LockCallback ,IBorrowBookView{
+        , CustomConfirmDialog.CustomDialogConfirmListener, LockCallback, IBorrowBookView {
 
     private TextView tvName;
     private TextView tvCardNumber;
@@ -82,7 +82,6 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         setContentView(R.layout.activity_borrow_detail);
 
         lockHelper = new LockHelper(mHandler, this);
-        lockHelper.open();
 
         bookDao = new BookDao(this);
         customDialog = new CustomConfirmDialog(this);
@@ -128,18 +127,18 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         holdBookList = AppSharedPreference.getInstance().getHoldBookInfos();
 
         bookHelper = new CheckBookHelper(mHandler);
-        presenter = new BorrowBookPresenter(this,bookHelper,this);
+        presenter = new BorrowBookPresenter(this, bookHelper, this);
         reportDao = new InventoryReportDao(this);
 
         oldReportList = new ArrayList<String>();
         borrowReportList = new ArrayList<String>();
-        backReportList = new ArrayList<String >();
+        backReportList = new ArrayList<String>();
 
         openedId = (byte) AppSharedPreference.getInstance().getOpenBoxId();
 
         //数据库查询已经打开柜子里面的书籍
         List<InventoryReport> inventoryReports = reportDao.queryReportsByBoxId(openedId);
-        for(int i=0;i<inventoryReports.size();i++){
+        for (int i = 0; i < inventoryReports.size(); i++) {
             oldReportList.add(inventoryReports.get(i).getUidStr());
         }
     }
@@ -195,7 +194,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     }
 
     @Override
-    public void getBookInfoByCode(int type,int count,CheckoutListBean listBean) {
+    public void getBookInfoByCode(int type, int count, CheckoutListBean listBean) {
         if (type == ACTION_TYPE_BORROW) {//借书
 
             borrowBookList.add(listBean);
@@ -244,7 +243,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
         if (null != borrowBookList) {
             for (int i = 0; i < borrowBookList.size(); i++) {
-                presenter.checkOutBook(borrowBookList.get(i).getItem_identifier(),AppSharedPreference.getInstance().getUserInfo().getPatron_identifier());
+                presenter.checkOutBook(borrowBookList.get(i).getItem_identifier(), AppSharedPreference.getInstance().getUserInfo().getPatron_identifier());
                 tableWillBorrow.AddRow(new String[]{
                                 borrowBookList.get(i).getTitle_identifier()
                                 , borrowBookList.get(i).getHold_pickup_date()
@@ -262,25 +261,25 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
         List<InventoryReport> currentReportList = bookHelper.getInventoryList(msg);
         List<String> currentUidList = new ArrayList<>();
-        for(InventoryReport report:currentReportList){
+        for (InventoryReport report : currentReportList) {
             currentUidList.add(report.getUidStr());
         }
 
-        Log.e(Constant.TAG,"目前书架里的书："+currentUidList.toString());
-        Log.e(Constant.TAG,"原来书架里的书："+oldReportList.toString());
+        Log.e(Constant.TAG, "目前书架里的书：" + currentUidList.toString());
+        Log.e(Constant.TAG, "原来书架里的书：" + oldReportList.toString());
         //
 
         if (null != oldReportList
-                && null != currentUidList ) {//在原来的里面有，在新的里面没有，说明是被借走了
+                && null != currentUidList) {//在原来的里面有，在新的里面没有，说明是被借走了
 
             for (int i = 0; i < oldReportList.size(); i++) {
-                if(!currentUidList.contains(oldReportList.get(i))){
+                if (!currentUidList.contains(oldReportList.get(i))) {
                     borrowReportList.add(oldReportList.get(i));
                 }
             }
 
             for (int i = 0; i < currentUidList.size(); i++) {
-                if(!oldReportList.contains(currentUidList.get(i))){
+                if (!oldReportList.contains(currentUidList.get(i))) {
                     backReportList.add(currentUidList.get(i));
                 }
             }
@@ -301,15 +300,15 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
-    private void queryBookByUid(List<String> borrowReportList){
-        for(int i=0;i<borrowReportList.size();i++){
+    private void queryBookByUid(List<String> borrowReportList) {
+        for (int i = 0; i < borrowReportList.size(); i++) {
 
-            List<CheckoutListBean> checkoutListBeans=bookDao.queryBooksByUid(borrowReportList.get(i));
+            List<CheckoutListBean> checkoutListBeans = bookDao.queryBooksByUid(borrowReportList.get(i));
 
-            if(null!=checkoutListBeans){
+            if (null != checkoutListBeans) {
                 borrowBookList.addAll(checkoutListBeans);
-            }else {
-                ToastUtil.showToast(this,"没有该书籍信息！");
+            } else {
+                ToastUtil.showToast(this, "没有该书籍信息！");
             }
 
         }
@@ -356,9 +355,9 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         } else {
             closeTipDialog();
 //
-            if(hasBorrowBook){
+            if (hasBorrowBook) {
                 finish();
-            }else{
+            } else {
                 mHandler.sendEmptyMessage(LockHelper.OPENED_CHECKING_BOOKS);
             }
 
@@ -399,16 +398,14 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
      * 查看是否所有的锁都关闭方法
      */
     private void getAllDoorsState() {
-//        if (lockHelper.open()) {
-            lockHelper.getAllDoorState();
-//        }
+        lockHelper.getAllDoorState();
     }
 
     /**
      * 查看之前打开的锁有没有打开
      */
     private void getDoorState() {
-            lockHelper.getLockState(openedId);
+        lockHelper.getLockState(openedId);
     }
 
     private void closeTipDialog() {

@@ -50,14 +50,22 @@ public class LockHelper {
 
         mLockController.setCallBack(callback);
 
+        open();
+
         return mLockController;
     }
 
     public void getAllDoorState() {
+        if(!lc){
+            initController();
+        }
         mLockController.getAllDoorState(LockHelper.BOARD_ADDRESS);
     }
 
     public int getLockState(byte lockID){
+        if(!lc){
+            initController();
+        }
         return mLockController.getDoorState(lockID,BOARD_ADDRESS);
     }
 
@@ -66,16 +74,11 @@ public class LockHelper {
         return true;
     }
 
-    public boolean isDoorOpen() {
-        return lc;
-    }
-
     private void startOpen() {
         mLockController.start();
         mLockController.open();
 //        mStateThrd = new Thread(new StateThrd());
 //        mStateThrd.start();
-
     }
 
     public void openGride(int position) {
