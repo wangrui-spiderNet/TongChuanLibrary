@@ -9,16 +9,14 @@ import android.widget.EditText;
 import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
-import alpha.cyber.intelmain.bean.BookInfoBean;
 import alpha.cyber.intelmain.bean.UserInfoBean;
 import alpha.cyber.intelmain.business.operation.OperatorActivity;
-import alpha.cyber.intelmain.business.operation.OperatorPresenter;
 import alpha.cyber.intelmain.db.BookDao;
-import alpha.cyber.intelmain.db.DatabaseHelper;
 import alpha.cyber.intelmain.db.InventoryReportDao;
 import alpha.cyber.intelmain.db.UserDao;
 import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.IntentUtils;
+import alpha.cyber.intelmain.util.LogSaveUtils;
 import alpha.cyber.intelmain.util.StringUtils;
 import alpha.cyber.intelmain.util.ToastUtil;
 
@@ -39,11 +37,11 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
         setContentView(R.layout.activity_input_pwd);
         presenter = new LoginPresenter(this, this);
 
-        clearDao();
+        clearCacheData();
 
     }
 
-    private void clearDao(){
+    private void clearCacheData(){
         String clientXgTocken = AppSharedPreference.getInstance().getClientXgToken();
         AppSharedPreference.getInstance().clear();
         AppSharedPreference.getInstance().setClientXgToken(clientXgTocken);
@@ -51,6 +49,8 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
         AppSharedPreference.getInstance().saveBorrowBookUserInfo(null);
         AppSharedPreference.getInstance().saveBackBookInfos(null);
         AppSharedPreference.getInstance().saveBorrowBookInfos(null);
+
+        LogSaveUtils.deleteLogFiles();
 
         new BookDao(this).deleteAll();
         new InventoryReportDao(this).deleteAll();
@@ -98,10 +98,9 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
 
             AppSharedPreference.getInstance().saveUserInfo(userinfoBean);
 
-            Bundle bundle = new Bundle();
-            bundle.putString(Constant.ACCOUNT, etAccount.getText().toString());
-            bundle.putString(Constant.PASSWORD, etPWd.getText().toString());
-            IntentUtils.startAty(this, OperatorActivity.class, bundle);
+            AppSharedPreference.getInstance().saveAccount(userinfoBean.getPatron_identifier());
+
+            IntentUtils.startAty(this, OperatorActivity.class);
 
             finish();
 

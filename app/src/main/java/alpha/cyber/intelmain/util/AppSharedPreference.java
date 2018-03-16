@@ -88,12 +88,12 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
         return app.getLong("server_timestamp", System.currentTimeMillis());
     }
 
-    public void setCustomType(int customType){
-        editor.putInt(AppSharedPreferenceConfig.CustomType,customType).commit();
+    public void saveAccount(String account_id){
+        editor.putString(AppSharedPreferenceConfig.ACCOUNT_ID,account_id).commit();
     }
 
-    public int getCustomType(){
-        return app.getInt(AppSharedPreferenceConfig.CustomType,0);
+    public String getAccount(){
+        return app.getString(AppSharedPreferenceConfig.ACCOUNT_ID,"");
     }
 
     public void saveOpenBoxId(int boxid){

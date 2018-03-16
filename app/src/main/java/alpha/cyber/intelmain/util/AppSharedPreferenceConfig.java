@@ -19,6 +19,8 @@ public class AppSharedPreferenceConfig {
     public static final String USER_TYPE = "user_type";
     public static final String CustomType = "custom_type";
 
+    public static final String ACCOUNT_ID= "account_id";
+
     public static final String HAS_LOGOUT_IM = "has_logout_im";
 
     public static final String USER_INFO = "user_info";

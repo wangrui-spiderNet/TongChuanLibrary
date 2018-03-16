@@ -54,9 +54,9 @@ public class LockHelper {
     }
 
     public void getAllDoorState() {
-        if(!lc){
-            initController();
-        }
+//        if(!lc){
+//            initController();
+//        }
         mLockController.getAllDoorState(LockHelper.BOARD_ADDRESS);
     }
 
@@ -75,8 +75,6 @@ public class LockHelper {
     private void startOpen() {
         mLockController.start();
         mLockController.open();
-//        mStateThrd = new Thread(new StateThrd());
-//        mStateThrd.start();
     }
 
     public void openGride(int position) {
@@ -94,8 +92,8 @@ public class LockHelper {
     public boolean checkBoxOpen(byte[] state) {
         for (int i = 0; i < state.length; i++) {
             if (state[i] == 0) {
+
                 Log.e(Constant.TAG, i + ":开");
-//                ToastUtil.showToast(i+"号柜：已开");
 
                 Message msg = mHandler.obtainMessage();
                 msg.what = BOX_OPEN;
@@ -104,33 +102,10 @@ public class LockHelper {
 
                 return true;
             } else {
-//                Log.e(Constant.TAG,i+":关");
-//                return false;
             }
         }
 
         return false;
     }
-
-//    private class StateThrd implements Runnable {
-//
-//        @Override
-//        public void run() {
-//            b_stateThreadRun = true;
-//
-//            while (b_stateThreadRun) {
-//                try {
-////                    Thread.sleep(200);
-////                    Message msg = mHandler.obtainMessage();
-////                    msg.what = STATE_LISTEN_MSG;
-////                    mHandler.sendMessage(msg);
-//
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-//    }
-
 
 }

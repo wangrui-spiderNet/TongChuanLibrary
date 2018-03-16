@@ -20,6 +20,8 @@ public class MyApplication extends Application {
 
     private static Context appContext;
     public static MyApplication instance;
+    public static final boolean isDebug = true;
+    private StringBuffer sb;
 
     @Override
     public void onCreate() {
@@ -27,6 +29,7 @@ public class MyApplication extends Application {
         appContext = this;
         instance = this;
 
+        sb = new StringBuffer();
         TCAgent.init(this);
         TCAgent.setReportUncaughtExceptions(true);
         TCAgent.LOG_ON = true;
@@ -67,6 +70,10 @@ public class MyApplication extends Application {
 
     public String getRunningActivityName() {
         return ActivityManager.getAppManager().currentActivity().getLocalClassName();
+    }
+
+    public StringBuffer getStringBuffer() {
+        return sb;
     }
 
 }

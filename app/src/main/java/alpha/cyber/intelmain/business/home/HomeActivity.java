@@ -1,13 +1,11 @@
 package alpha.cyber.intelmain.business.home;
 
-import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -36,13 +34,16 @@ import alpha.cyber.intelmain.business.login.InPutPwdActivity;
 import alpha.cyber.intelmain.business.login.LoginPresenter;
 import alpha.cyber.intelmain.business.mechine_helper.CheckBookService;
 import alpha.cyber.intelmain.db.BookDao;
+import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.AppThreadManager;
 import alpha.cyber.intelmain.util.DateUtils;
 import alpha.cyber.intelmain.util.DeviceUtils;
 import alpha.cyber.intelmain.util.FileUtils;
 import alpha.cyber.intelmain.util.IntentUtils;
+import alpha.cyber.intelmain.util.LogSaveUtils;
 import alpha.cyber.intelmain.util.PackageUtils;
 import alpha.cyber.intelmain.util.ShellUtils;
+import alpha.cyber.intelmain.util.StringUtils;
 import alpha.cyber.intelmain.util.ToastUtil;
 
 /**
@@ -187,7 +188,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     public void onClick(View v) {
         if (v == btnRightButton) {
             IntentUtils.startAty(this, InPutPwdActivity.class);
-        }else if(v == btnUpdate){
+        } else if (v == btnUpdate) {
             homePresenter.checkVersion();
         }
     }
@@ -257,9 +258,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 @Override
                 public void run() {
                     if (appUpgradeInfo != null && appUpgradeInfo.getIs_update() != 0 && !isUpgrade) {
-                        Log.d(Constant.TAG,
+                        LogSaveUtils.d(Constant.TAG,
                                 "当前版本信息===" + DeviceUtils.getVersionCode(MyApplication.getAppContext()) + "  name=" + DeviceUtils.getVersionName(mContext));
-                        Log.d(Constant.TAG, "server版本信息===" + appUpgradeInfo.getNew_version_code() + "  name=" + appUpgradeInfo.getNew_version_name());
+                        LogSaveUtils.d(Constant.TAG, "server版本信息===" + appUpgradeInfo.getNew_version_code() + "  name=" + appUpgradeInfo.getNew_version_name());
                         if (DeviceUtils.getVersionCode(MyApplication.getAppContext()) < appUpgradeInfo.getNew_version_code()) {
                             FileUtils.deleteDir(FileUtils.getAppRootDir());
                             downloadUpdate(appUpgradeInfo.getNew_version_name(), appUpgradeInfo.getDownurl());
@@ -291,7 +292,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                     @Override
                     public void onSuccess(ResponseInfo<File> responseInfo) {
 
-                        Log.e(Constant.TAG, "下载成功!");
+                        LogSaveUtils.e(Constant.TAG, "安装包下载成功!");
+
+
                         if (!TextUtils.isEmpty(update_localpath)) {
                             File f = new File(FileUtils.getAppRootDir());
                             File[] files = f.listFiles();
@@ -313,7 +316,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
 //                            String apkPath = FileUtils.getRootPath(MyApplication.getInstance().getApplicationContext(), true) + "/library";
 
-                            Log.e(Constant.TAG,"安装包路劲："+update_localpath);
+                            LogSaveUtils.e(Constant.TAG, "安装包路劲：" + update_localpath);
 
 //                            int resultCode = PackageUtils.installSilent(MyApplication.getInstance().getApplicationContext(), update_localpath);
 
@@ -322,16 +325,16 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 //                                FileUtils.ApkInstall(mContext, update_localpath);
 //                            }catch (Exception e){
 //                                e.printStackTrace();
-//                                Log.e(Constant.TAG,"APK 安装失败");
+//                                LogSaveUtils.e(Constant.TAG,"APK 安装失败");
 //                            }
 
 //                            isUpgrade = false;
 //                            if (resultCode != PackageUtils.INSTALL_SUCCEEDED) {
-//                                Log.e(Constant.TAG, "升级失败");
+//                                LogSaveUtils.e(Constant.TAG, "升级失败");
 //                                ToastUtil.showToast(HomeActivity.this, "升级失败");
 //                                isUpgrade = false;
 //                            } else {
-//                                Log.e(Constant.TAG, "升级成功!");
+//                                LogSaveUtils.e(Constant.TAG, "升级成功!");
 //                                tvVersion.setText(DeviceUtils.getVersionName(HomeActivity.this));
 //                            }
 
@@ -340,7 +343,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
                     @Override
                     public void onFailure(com.lidroid.xutils.exception.HttpException arg0, String arg1) {
-                        Log.e(Constant.TAG, "下载失败!"+arg1);
+                        LogSaveUtils.e(Constant.TAG, "下载失败!" + arg1);
                         arg0.printStackTrace();
                         FileUtils.deleteDir(FileUtils.getAppRootDir());
                         isUpgrade = false;

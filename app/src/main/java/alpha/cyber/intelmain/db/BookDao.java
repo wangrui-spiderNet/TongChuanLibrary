@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import alpha.cyber.intelmain.bean.CheckoutListBean;
-import alpha.cyber.intelmain.bean.ContactsInformation;
 
 /**
  * Created by wangrui on 2018/2/12.

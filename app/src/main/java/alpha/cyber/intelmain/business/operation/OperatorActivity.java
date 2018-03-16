@@ -28,6 +28,7 @@ import alpha.cyber.intelmain.db.UserDao;
 import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.IntentUtils;
 import alpha.cyber.intelmain.util.Log;
+import alpha.cyber.intelmain.util.LogSaveUtils;
 import alpha.cyber.intelmain.util.ToastUtil;
 import alpha.cyber.intelmain.widget.CustomConfirmDialog;
 
@@ -113,6 +114,7 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         btnRightButton.setVisibility(View.VISIBLE);
         btnRightButton.setOnClickListener(this);
         confirmDialog.setConfirmListener(this);
+        presenter.getBorrowBookInfo(AppSharedPreference.getInstance().getAccount());
     }
 
     @Override
@@ -157,6 +159,8 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         AppSharedPreference.getInstance().saveBackBookInfos(null);
         AppSharedPreference.getInstance().saveBorrowBookInfos(null);
 
+        LogSaveUtils.deleteLogFiles();
+
         new BookDao(this).deleteAll();
         new InventoryReportDao(this).deleteAll();
         new UserDao().deleteAll();
@@ -180,7 +184,7 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void getAllBorrowBookInfo(UserBorrowInfo infoBean) {
-
+        bookInfoBeanList.clear();
         tvName.setText("姓名:" + infoBean.getPersonal_name());
         tvCardNumber.setText("卡号:" + infoBean.getPatron_identifier());
         tvPermission.setText("权限:" + infoBean.getScreen_message());
@@ -197,11 +201,7 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     protected void getIntentData() {
 
         presenter = new OperatorPresenter(this, this);
-        Intent intent = getIntent();
 
-        String cardnum = intent.getStringExtra(Constant.ACCOUNT);
-
-        presenter.getBorrowBookInfo(cardnum);
     }
 
 }

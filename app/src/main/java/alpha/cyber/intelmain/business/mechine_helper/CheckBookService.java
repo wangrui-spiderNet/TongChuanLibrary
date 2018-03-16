@@ -82,6 +82,8 @@ public class CheckBookService extends Service implements CheckCallBack {
         }
     }
 
+
+
     private class MyHandler extends Handler {
         private final WeakReference<CheckBookService> mService;
 
@@ -112,7 +114,7 @@ public class CheckBookService extends Service implements CheckCallBack {
                     break;
                 case CheckBookHelper.THREAD_END:
                     Log.e(Constant.TAG, "全柜盘点结束");
-
+                    helper.destroyService();
                     if (null != allBoxInventoryList && allBoxInventoryList.size() > 0) {
                         reportDao.deleteAll();
 

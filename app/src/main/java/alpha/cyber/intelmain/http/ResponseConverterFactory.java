@@ -79,7 +79,7 @@ class GsonResponseBodyConverter<T> implements Converter<ResponseBody, T> {
             throw e;
         } catch (Exception e) {
             TAG = this.getClass().getSimpleName();
-            //LogUtils.d(TAG,e.getMessage());
+            //LogSaveUtils.d(TAG,e.getMessage());
             throw new BusinessException(BaseURL.APP_EXCEPTION_HTTP_OTHER,
                     "数据解析异常");
         }

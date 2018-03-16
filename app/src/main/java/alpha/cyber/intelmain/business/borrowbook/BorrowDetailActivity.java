@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.stetho.common.LogUtil;
+import com.lidroid.xutils.util.LogUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +30,7 @@ import alpha.cyber.intelmain.business.mechine_helper.LockHelper;
 import alpha.cyber.intelmain.db.BookDao;
 import alpha.cyber.intelmain.db.InventoryReportDao;
 import alpha.cyber.intelmain.util.AppSharedPreference;
+import alpha.cyber.intelmain.util.LogSaveUtils;
 import alpha.cyber.intelmain.util.ToastUtil;
 import alpha.cyber.intelmain.widget.CustomConfirmDialog;
 import alpha.cyber.intelmain.widget.MyTableView;
@@ -201,8 +205,12 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     public void getBookInfoByCode(int type, int count, CheckoutListBean listBean) {
         if (type == ACTION_TYPE_BORROW) {//借书
 
+            Log.e(Constant.TAG, "借书>>>>>>>>");
+            LogUtils.e(borrowBookList.toString());
             borrowBookList.add(listBean);
             if (borrowBookList.size() == count) {
+
+                LogSaveUtils.d(Constant.TAG,"要借的书籍："+borrowBookList.toString());
                 closeDialog();
                 setBorrowBookView();
             }
@@ -212,6 +220,8 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
             Log.e(Constant.TAG, "还书>>>>>>>>");
             backBookList.add(listBean);
             if (backBookList.size() == count) {
+
+                LogSaveUtils.d(Constant.TAG,"要还的书籍："+backBookList.toString());
                 closeDialog();
                 setBackBookView();
             }
@@ -248,6 +258,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         if (null != borrowBookList) {
             for (int i = 0; i < borrowBookList.size(); i++) {
                 presenter.checkOutBook(borrowBookList.get(i).getItem_identifier(), AppSharedPreference.getInstance().getUserInfo().getPatron_identifier());
+
                 tableWillBorrow.AddRow(new String[]{
                                 borrowBookList.get(i).getTitle_identifier()
                                 , borrowBookList.get(i).getHold_pickup_date()
@@ -350,6 +361,8 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onGetAllLockState(byte[] state) {
 
+        new Thread(stateThread).stop();
+
         hasDoorOpen = hasDoorOpen(state);
 
         if (hasDoorOpen) {//没关柜门提示
@@ -358,13 +371,11 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
             hasBorrowBook = false;
         } else {
             closeTipDialog();
-//
             if (hasBorrowBook) {
                 finish();
             } else {
                 mHandler.sendEmptyMessage(LockHelper.OPENED_CHECKING_BOOKS);
             }
-
         }
     }
 
@@ -390,12 +401,26 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
+    private StateThread stateThread;
+
     @Override
     public void onButtonClick(View view) {
         //关闭Dialog提醒，检查打开的柜门是否已经关闭
+        stateThread =new StateThread();
+        new Thread(stateThread).start();
 
-        getAllDoorsState();
+    }
 
+    private class StateThread implements Runnable{
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(200);
+                getAllDoorsState();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 
     /**

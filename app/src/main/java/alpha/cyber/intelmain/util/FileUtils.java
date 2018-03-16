@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Locale;
 
@@ -175,6 +176,61 @@ public class FileUtils {
         }
         dir.delete();
         return true;
+    }
+
+    /**
+     * 根据给定的文件的完整路径，判断 并创建文件夹 及文件
+     *
+     * @author hwp
+     * @param filePath
+     * @return
+     * @since v0.0.1
+     */
+    public static boolean createDirAndFile(String filePath) {
+        boolean isSuccess = false;
+        File file = new File(filePath);
+        try {
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            isSuccess = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            isSuccess = false;
+        }
+        return isSuccess;
+    }
+
+    /**
+     * 将字符串写入文件
+     *
+     * @param path
+     * @param data
+     * @return
+     */
+    public static boolean writeFileFromString(String path, String data) {
+        boolean result = false;
+        FileWriter fw = null;
+        try {
+            File file = new File(path);
+            fw = new FileWriter(file);
+            fw.write(data);
+            fw.close();
+            result = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fw.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return result;
     }
 
     /**
