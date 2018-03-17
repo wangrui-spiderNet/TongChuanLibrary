@@ -40,12 +40,10 @@ public class LockHelper {
         }
 
         if (mLockController.mSerialPort == null) {
-            ToastUtils.showShortToast("打开设备失败");
             lc = false;
             return mLockController;
         } else {
             lc = true;
-            ToastUtils.showShortToast("打开设备成功");
         }
 
         mLockController.setCallBack(callback);
@@ -54,14 +52,11 @@ public class LockHelper {
     }
 
     public void getAllDoorState() {
-//        if(!lc){
-//            initController();
-//        }
         mLockController.getAllDoorState(LockHelper.BOARD_ADDRESS);
     }
 
     public int getLockState(byte lockID){
-        if(!lc){
+        if(open()){
             initController();
         }
         return mLockController.getDoorState(lockID,BOARD_ADDRESS);

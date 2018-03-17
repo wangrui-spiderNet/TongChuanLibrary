@@ -66,4 +66,14 @@ public class Result<T> implements Serializable {
             return false;
         }
     }
+
+    @Override
+    public String toString() {
+        return "Result{" +
+                "data=" + data +
+                ", servertime=" + servertime +
+                ", errcode='" + errcode + '\'' +
+                ", errmsg='" + errmsg + '\'' +
+                '}';
+    }
 }

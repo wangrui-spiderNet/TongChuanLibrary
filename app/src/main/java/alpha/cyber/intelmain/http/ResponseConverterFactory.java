@@ -13,8 +13,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 
+import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.http.model.Result;
 import alpha.cyber.intelmain.util.AppSharedPreference;
+import alpha.cyber.intelmain.util.Log;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -69,12 +71,13 @@ class GsonResponseBodyConverter<T> implements Converter<ResponseBody, T> {
         String response = value.string();
         try {
             Result result = mGson.fromJson(response, Result.class);
-//            AppSharedPreference.getInstance().setServerTimeStamp(result.getTs());
-//            if (result.isSuccess()) {
+            Log.e(Constant.TAG,result.toString());
+            AppSharedPreference.getInstance().setServerTimeStamp(result.getServertime());
+            if (result.isSuccess()) {
                 return mGson.fromJson(mGson.toJson(result.getData()), mType);
-//            } else {
-//                throw new BusinessException(result.getRtnCode(), result.getMsg());
-//            }
+            } else {
+                throw new BusinessException(result.getErrcode(), result.getErrmsg());
+            }
         } catch (BusinessException e) {
             throw e;
         } catch (Exception e) {

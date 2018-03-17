@@ -114,12 +114,17 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         borrowBookList = new ArrayList<CheckoutListBean>();
         backBookList = new ArrayList<CheckoutListBean>();
 
-        MyTableView tableBorrowed = new MyTableView(this, 4);
-        tableBorrowed.AddRow(new String[]{getString(R.string.has_borrowed)}, true);
-        for (int i = 0; i < holdBookList.size(); i++) {
-            tableBorrowed.AddRow(new Object[]{holdBookList.get(i).getTitle_identifier(), holdBookList.get(i).getHold_pickup_date(), holdBookList.get(i).getDue_date(), holdBookList.get(i).getOverdue_days()}, false);
+        if(null!=holdBookList){
+            MyTableView tableBorrowed = new MyTableView(this, 4);
+            tableBorrowed.AddRow(new String[]{getString(R.string.has_borrowed)}, true);
+            for (int i = 0; i < holdBookList.size(); i++) {
+                tableBorrowed.AddRow(new Object[]{holdBookList.get(i).getTitle_identifier(), holdBookList.get(i).getHold_pickup_date(), holdBookList.get(i).getDue_date(), holdBookList.get(i).getOverdue_days()}, false);
+            }
+            layoutTableBorrowed.addView(tableBorrowed);
+        }else{
+            ToastUtil.showToast(this,"您还没有借书！");
         }
-        layoutTableBorrowed.addView(tableBorrowed);
+
     }
 
     @Override
@@ -360,8 +365,6 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
      */
     @Override
     public void onGetAllLockState(byte[] state) {
-
-        new Thread(stateThread).stop();
 
         hasDoorOpen = hasDoorOpen(state);
 
