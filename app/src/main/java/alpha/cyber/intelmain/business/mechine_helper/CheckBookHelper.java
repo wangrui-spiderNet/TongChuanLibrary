@@ -356,14 +356,14 @@ public class CheckBookHelper {
         if (null != connectUid) {
 
             int disconnet = mTag.ISO15693_Disconnect();
-            Log.e(Constant.TAG, "UID dis:" + disconnet);
+//            Log.e(Constant.TAG, "UID dis:" + disconnet);
 
             int iret = mTag.ISO15693_Connect(m_reader,
                     RfidDef.RFID_ISO15693_PICC_ICODE_SLI_ID, connectMode,
                     connectUid);
 
-            Log.e(Constant.TAG, "UID 连接：" + iret);
-            Log.e(Constant.TAG, "connect UID:" + uid);
+//            Log.e(Constant.TAG, "UID 连接：" + iret);
+//            Log.e(Constant.TAG, "connect UID:" + uid);
 
             String bookCode = UiReadBlock(i, 2, mTag);
 
@@ -371,10 +371,6 @@ public class CheckBookHelper {
         }
 
         return null;
-    }
-
-    public int getmLoopCnt() {
-        return mLoopCnt;
     }
 
 }

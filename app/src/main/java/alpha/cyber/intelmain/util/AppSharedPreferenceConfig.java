@@ -29,6 +29,8 @@ public class AppSharedPreferenceConfig {
     public static final String BORROWED_BOOKS = "borrowed_books";
     public static final String USER_BORROW_BOOK_INFO = "borrow_book_info";
 
+    public static final String REPORT_BOOK_CODES = "report_book_codes";
+
     public static final String OPEN_BOX_ID="open_box_id";
 
 }

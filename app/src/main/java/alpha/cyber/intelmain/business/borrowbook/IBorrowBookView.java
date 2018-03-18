@@ -1,5 +1,7 @@
 package alpha.cyber.intelmain.business.borrowbook;
 
+import java.util.List;
+
 import alpha.cyber.intelmain.bean.CheckoutListBean;
 
 /**
@@ -8,5 +10,9 @@ import alpha.cyber.intelmain.bean.CheckoutListBean;
 
 public interface IBorrowBookView  {
 
-    void getBookInfoByCode(  int type,  int count,CheckoutListBean listBean);
+//    void getBookInfoByCode(  int type,  int count,CheckoutListBean listBean);
+
+    void checkInBookSuccess(List<CheckoutListBean> checkoutListBeans);
+
+    void checkOutBookSuccess(List<CheckoutListBean> checkoutListBeans);
 }

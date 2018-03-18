@@ -46,9 +46,6 @@ public class InPutPwdActivity extends BaseActivity implements View.OnClickListen
         AppSharedPreference.getInstance().clear();
         AppSharedPreference.getInstance().setClientXgToken(clientXgTocken);
         AppSharedPreference.getInstance().saveHoldBookInfos(null);
-        AppSharedPreference.getInstance().saveBorrowBookUserInfo(null);
-        AppSharedPreference.getInstance().saveBackBookInfos(null);
-        AppSharedPreference.getInstance().saveBorrowBookInfos(null);
 
         LogSaveUtils.deleteLogFiles();
 

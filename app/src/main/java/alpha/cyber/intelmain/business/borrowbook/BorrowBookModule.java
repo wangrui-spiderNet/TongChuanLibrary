@@ -1,5 +1,7 @@
 package alpha.cyber.intelmain.business.borrowbook;
 
+import java.util.List;
+
 import alpha.cyber.intelmain.bean.CheckoutListBean;
 import alpha.cyber.intelmain.http.model.EmptyResponse;
 import alpha.cyber.intelmain.http.model.Request;
@@ -14,10 +16,10 @@ import rx.Observable;
 public interface BorrowBookModule {
 
     @POST("/api/user/checkOut")//借书
-    Observable<EmptyResponse> checkOutBook(@Body Request data);
+    Observable<List<CheckoutListBean>> checkOutBook(@Body Request data);
 
     @POST("/api/user/checkIn")//还书
-    Observable<EmptyResponse> checkInBook(@Body Request data);
+    Observable<List<CheckoutListBean>> checkInBook(@Body Request data);
 
     @POST("/api/book/bookInfo")//查看图书信息
     Observable<CheckoutListBean> getBookInfoByCode(@Body Request data);

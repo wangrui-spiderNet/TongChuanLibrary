@@ -8,6 +8,7 @@ import com.j256.ormlite.stmt.Where;
 import com.j256.ormlite.stmt.query.In;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class InventoryReportDao {
 
     private Context context;
     private DatabaseHelper dbHelper;
-    private static Dao<InventoryReport, Integer> inventoryDao;
+    private static Dao<InventoryReport, String> inventoryDao;
 
     public InventoryReportDao(Context context) {
         this.context = context;
@@ -73,22 +74,44 @@ public class InventoryReportDao {
         return allBooks;
     }
 
-    public List<InventoryReport> queryReportsByBoxId(int openid) {
-        List<InventoryReport> allBooks = null;
-
+    public List<String> queryBookCodesByUid(String uidr) {
+        List<InventoryReport> reports = new ArrayList<InventoryReport>();
+        List<String> bookcodes = new ArrayList<String>();
         try {
             initDao();
+            QueryBuilder<InventoryReport, String> builder = inventoryDao.queryBuilder();
+            Where<InventoryReport, String> where = builder.where();
+            where.eq("uidStr", uidr);
+            List<InventoryReport> reportList = builder.query();
+            reports.addAll(reportList);
 
-            QueryBuilder<InventoryReport, Integer> builder = inventoryDao.queryBuilder();
-            Where<InventoryReport,Integer> where = builder.where();
-            where.eq("boxid",openid);
-            allBooks = builder.query();
+            for (InventoryReport report : reports) {
+                bookcodes.add(report.getBookcode());
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return allBooks;
+        return bookcodes;
+    }
+
+    public List<InventoryReport> queryReportsByBoxId(int openid) {
+        List<InventoryReport> reports = null;
+
+        try {
+            initDao();
+
+            QueryBuilder<InventoryReport, String> builder = inventoryDao.queryBuilder();
+            Where<InventoryReport, String> where = builder.where();
+            where.eq("boxid", openid);
+            reports = builder.query();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return reports;
     }
 
     public int deleteBookInfo(InventoryReport bookInfoBean) {

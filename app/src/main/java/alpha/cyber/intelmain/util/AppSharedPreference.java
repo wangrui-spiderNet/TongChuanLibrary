@@ -13,6 +13,7 @@ import alpha.cyber.intelmain.MyApplication;
 import alpha.cyber.intelmain.bean.CheckoutListBean;
 import alpha.cyber.intelmain.bean.BorrowBookBean;
 import alpha.cyber.intelmain.bean.CheckoutListBean;
+import alpha.cyber.intelmain.bean.InventoryReport;
 import alpha.cyber.intelmain.bean.UserBorrowInfo;
 import alpha.cyber.intelmain.bean.UserInfoBean;
 
@@ -125,66 +126,6 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
     public List<CheckoutListBean> getHoldBookInfos() {
         List<CheckoutListBean> datalist=new ArrayList<CheckoutListBean>();
         String strJson = app.getString(AppSharedPreferenceConfig.HOLD_BOOKS, null);
-        if (null == strJson) {
-            return null;
-        }
-        Gson gson = new Gson();
-        datalist = gson.fromJson(strJson, new TypeToken<List<CheckoutListBean>>() {
-        }.getType());
-
-        return datalist;
-    }
-
-    /**
-     * 保存List
-     * @param datalist
-     */
-    public void saveBorrowBookInfos(List<CheckoutListBean> datalist) {
-        if (null == datalist || datalist.size() <= 0)
-            return;
-        Gson gson = new Gson();
-        //转换成json数据，再保存
-        String strJson = gson.toJson(datalist);
-        editor.putString(AppSharedPreferenceConfig.BORROWED_BOOKS, strJson).commit();
-    }
-
-    /**
-     * 获取List
-     * @return
-     */
-    public List<CheckoutListBean> getBorrowBookInfos() {
-        List<CheckoutListBean> datalist=new ArrayList<CheckoutListBean>();
-        String strJson = app.getString(AppSharedPreferenceConfig.BORROWED_BOOKS, null);
-        if (null == strJson) {
-            return null;
-        }
-        Gson gson = new Gson();
-        datalist = gson.fromJson(strJson, new TypeToken<List<CheckoutListBean>>() {
-        }.getType());
-
-        return datalist;
-    }
-
-    /**
-     * 保存List
-     * @param datalist
-     */
-    public void saveBackBookInfos(List<CheckoutListBean> datalist) {
-        if (null == datalist || datalist.size() <= 0)
-            return;
-        Gson gson = new Gson();
-        //转换成json数据，再保存
-        String strJson = gson.toJson(datalist);
-        editor.putString(AppSharedPreferenceConfig.BACK_BOOKS, strJson).commit();
-    }
-
-    /**
-     * 获取List
-     * @return
-     */
-    public List<CheckoutListBean> getBackBookInfos() {
-        List<CheckoutListBean> datalist=new ArrayList<CheckoutListBean>();
-        String strJson = app.getString(AppSharedPreferenceConfig.BACK_BOOKS, null);
         if (null == strJson) {
             return null;
         }

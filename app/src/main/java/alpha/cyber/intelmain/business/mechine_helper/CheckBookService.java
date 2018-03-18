@@ -12,24 +12,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import alpha.cyber.intelmain.Constant;
-import alpha.cyber.intelmain.bean.CheckoutListBean;
 import alpha.cyber.intelmain.bean.InventoryReport;
 import alpha.cyber.intelmain.db.InventoryReportDao;
 import alpha.cyber.intelmain.db.BookDao;
+import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.Log;
-import alpha.cyber.intelmain.util.ToastUtil;
 
 /**
  * Created by wangrui on 2018/2/26.
  */
 
-public class CheckBookService extends Service implements CheckCallBack {
+public class CheckBookService extends Service {
 
     public List<InventoryReport> allBoxInventoryList;
     private BookDao bookDao;
     private InventoryReportDao reportDao;
-    private CheckBoxPresenter presenter;
-
     private CheckBookHelper helper;
 
     @Nullable
@@ -45,7 +42,6 @@ public class CheckBookService extends Service implements CheckCallBack {
         super.onCreate();
         bookDao = new BookDao(this);
         reportDao = new InventoryReportDao(this);
-        presenter = new CheckBoxPresenter(this, this);
         allBoxInventoryList = new ArrayList<InventoryReport>();
         helper = new CheckBookHelper(mHandler);
         helper.openDevice();
@@ -54,7 +50,7 @@ public class CheckBookService extends Service implements CheckCallBack {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        for(int i=0;i<1;i++){
+        for(int i=0;i<1;i++){//一个柜子一个柜子的盘点并存储
             helper.startInventoryOneBox((byte)(i+1));
         }
 //        helper.startInventoryAllBoxes();
@@ -67,22 +63,6 @@ public class CheckBookService extends Service implements CheckCallBack {
         super.onDestroy();
         helper.destroyService();
     }
-
-    @Override
-    public void getBookInfoByCode(CheckoutListBean checkoutListBean,String uid,int boxid) {
-
-        if (null != checkoutListBean) {
-            checkoutListBean.setUid(uid);
-            checkoutListBean.setBoxid(boxid);
-            Log.e(Constant.TAG, "盘点书柜中的书：" + checkoutListBean.toString());
-            Log.e(Constant.TAG, "保存到书柜：" + bookDao.insertBook(checkoutListBean));
-
-        } else {
-            ToastUtil.showToast(this, "没有找到书");
-        }
-    }
-
-
 
     private class MyHandler extends Handler {
         private final WeakReference<CheckBookService> mService;
@@ -99,48 +79,42 @@ public class CheckBookService extends Service implements CheckCallBack {
             }
 
             switch (msg.what) {
-                case CheckBookHelper.INVENTORY_ALL_BOX:
-
-                    if (helper.getmLoopCnt() > 0) {
-                        helper.stopLoop();
-                    }
-                    pt.allBoxInventoryList = helper.getInventoryList(msg);
-                    Log.e(Constant.TAG, "全柜盘点到的书：" + pt.allBoxInventoryList.toString());
-
-                    break;
-                case CheckBookHelper.INVENTORY_FAIL_MSG:
-                    Log.e(Constant.TAG, "》》》》》盘点失败》》》》》");
-
-                    break;
-                case CheckBookHelper.THREAD_END:
-                    Log.e(Constant.TAG, "全柜盘点结束");
-                    helper.destroyService();
-                    if (null != allBoxInventoryList && allBoxInventoryList.size() > 0) {
-                        reportDao.deleteAll();
-
-                        for (int i = 0; i < allBoxInventoryList.size(); i++) {
-                            reportDao.insertBook(allBoxInventoryList.get(i));
-                        }
-
-                        clearBookTable();
-
-                        requestAllBookInfo();
-                    }
-
-                    break;
+//                case CheckBookHelper.INVENTORY_ALL_BOX:
+//
+//                    if (helper.getmLoopCnt() > 0) {
+//                        helper.stopLoop();
+//                    }
+//                    pt.allBoxInventoryList = helper.getInventoryList(msg);
+//                    Log.e(Constant.TAG, "全柜盘点到的书：" + pt.allBoxInventoryList.toString());
+//
+//                    break;
+//                case CheckBookHelper.INVENTORY_FAIL_MSG:
+//                    Log.e(Constant.TAG, "》》》》》盘点失败》》》》》");
+//
+//                    break;
+//                case CheckBookHelper.THREAD_END:
+//                    Log.e(Constant.TAG, "全柜盘点结束");
+//                    helper.destroyService();
+//                    if (null != allBoxInventoryList && allBoxInventoryList.size() > 0) {
+//                        reportDao.deleteAll();
+//
+//                        for (int i = 0; i < allBoxInventoryList.size(); i++) {
+//                            reportDao.insertBook(allBoxInventoryList.get(i));
+//                        }
+//
+//                        clearBookTable();
+//
+//                        requestAllBookInfo();
+//                    }
+//
+//                    break;
 
                 case CheckBookHelper.INVENTORY_SINGLE_BOX:
 
                     List<InventoryReport> inventoryList = helper.getInventoryList(msg);
                     int address = msg.arg1;
-                    for (int i = 0; i < inventoryList.size(); i++) {
-                        inventoryList.get(i).setBoxid(address);
-                        reportDao.insertBook(inventoryList.get(i));
-                    }
+                    saveSingleBoxBookInfo(address,inventoryList);
 
-                    requestSingleBoxBookInfo(address,inventoryList);
-
-//                    boxInventoryList.add(address,inventoryList);
                     Log.e(Constant.TAG, "第" + address + "个箱子里有：" + inventoryList.size() + "本书");
 
                     break;
@@ -150,30 +124,29 @@ public class CheckBookService extends Service implements CheckCallBack {
         }
     }
 
-    private void requestAllBookInfo() {
+//    private void requestAllBookInfo() {
+//
+//        ArrayList<String> bookcodes = new ArrayList<String>();
+//
+//        for (int i = 0; i < allBoxInventoryList.size(); i++) {
+//            String uid = allBoxInventoryList.get(i).getUidStr();
+//            String bookCode = helper.getBookCode(0, uid);
+//            bookcodes.add(bookCode);
+//            Log.e(Constant.TAG, "UID:" + uid + "盘点出来的书码：" + bookCode);
+//        }
+//
+//    }
 
-        ArrayList<String> bookcodes = new ArrayList<String>();
-
-        for (int i = 0; i < allBoxInventoryList.size(); i++) {
-            String uid = allBoxInventoryList.get(i).getUidStr();
-            String bookCode = helper.getBookCode(0, uid);
-            bookcodes.add(bookCode);
-            Log.e(Constant.TAG, "UID:" + uid + "盘点出来的书码：" + bookCode);
-            presenter.getBookInfoByCode(bookCode.substring(6, 14),uid,-1);
-        }
-
-    }
-
-    private void requestSingleBoxBookInfo(int boxid, List<InventoryReport> reportList) {
-
-        ArrayList<String> bookcodes = new ArrayList<String>();
+    private void saveSingleBoxBookInfo(int boxid, List<InventoryReport> reportList) {
 
         for (int i = 0; i < reportList.size(); i++) {
+
             String uid = reportList.get(i).getUidStr();
             String bookCode = helper.getBookCode(0, uid);
-            bookcodes.add(bookCode);
             Log.e(Constant.TAG, "UID:" + uid + "盘点出来的书码：" + bookCode);
-            presenter.getBookInfoByCode(bookCode.substring(6, 14),uid,boxid);
+            reportList.get(i).setBoxid(boxid);
+            reportList.get(i).setBookcode(bookCode.substring(6,14));
+            reportDao.insertBook(reportList.get(i));
         }
 
     }

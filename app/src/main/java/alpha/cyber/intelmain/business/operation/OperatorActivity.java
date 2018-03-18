@@ -84,12 +84,7 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         lvTable.addHeaderView(headView);
 
         confirmDialog = new CustomConfirmDialog(this);
-        CheckoutListBean infoBean = new CheckoutListBean();
-        infoBean.setTitle_identifier(getString(R.string.book_name));
-        infoBean.setHold_pickup_date(getString(R.string.borrow_date));
-        infoBean.setDue_date(getString(R.string.end_date));
-        infoBean.setOverdue_days(getString(R.string.late_days));
-        bookInfoBeanList.add(infoBean);
+        initFirstLine();
         mAdapter = new BorrowBookAdapter(this, bookInfoBeanList);
         lvTable.setAdapter(mAdapter);
 
@@ -100,6 +95,15 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
                 Log.e(Constant.TAG, "书柜里的所有书：" + bookDao.queryAllBooks());
             }
         });
+    }
+
+    private void initFirstLine() {
+        CheckoutListBean infoBean = new CheckoutListBean();
+        infoBean.setTitle_identifier(getString(R.string.book_name));
+        infoBean.setHold_pickup_date(getString(R.string.borrow_date));
+        infoBean.setDue_date(getString(R.string.end_date));
+        infoBean.setOverdue_days(getString(R.string.late_days));
+        bookInfoBeanList.add(infoBean);
     }
 
     @Override
@@ -136,10 +140,14 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         } else if (tvSearchBook == v) {
             IntentUtils.startAty(this, SearchActivity.class);
         } else if (btnRightButton == v) {
-            if (!confirmDialog.isShowing() && !isFinishing()) {
-                confirmDialog.setContent(getString(R.string.box_not_closed_exit));
-                confirmDialog.show();
-            }
+
+            logout();
+            finish();
+
+//            if (!confirmDialog.isShowing() && !isFinishing()) {
+//                confirmDialog.setContent(getString(R.string.box_not_closed_exit));
+//                confirmDialog.show();
+//            }
         }
     }
 
@@ -156,8 +164,6 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         AppSharedPreference.getInstance().setClientXgToken(clientXgTocken);
         AppSharedPreference.getInstance().saveHoldBookInfos(null);
         AppSharedPreference.getInstance().saveBorrowBookUserInfo(null);
-        AppSharedPreference.getInstance().saveBackBookInfos(null);
-        AppSharedPreference.getInstance().saveBorrowBookInfos(null);
 
         LogSaveUtils.deleteLogFiles();
 
@@ -185,6 +191,7 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void getAllBorrowBookInfo(UserBorrowInfo infoBean) {
         bookInfoBeanList.clear();
+        initFirstLine();
         tvName.setText("姓名:" + infoBean.getPersonal_name());
         tvCardNumber.setText("卡号:" + infoBean.getPatron_identifier());
         tvPermission.setText("权限:" + infoBean.getScreen_message());

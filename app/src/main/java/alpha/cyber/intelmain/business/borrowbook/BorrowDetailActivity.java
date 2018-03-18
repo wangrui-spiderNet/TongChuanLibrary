@@ -10,13 +10,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.facebook.stetho.common.LogUtil;
-import com.lidroid.xutils.util.LogUtils;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import alpha.cyber.intellib.lock.LockCallback;
 import alpha.cyber.intelmain.Constant;
@@ -30,7 +29,6 @@ import alpha.cyber.intelmain.business.mechine_helper.LockHelper;
 import alpha.cyber.intelmain.db.BookDao;
 import alpha.cyber.intelmain.db.InventoryReportDao;
 import alpha.cyber.intelmain.util.AppSharedPreference;
-import alpha.cyber.intelmain.util.LogSaveUtils;
 import alpha.cyber.intelmain.util.ToastUtil;
 import alpha.cyber.intelmain.widget.CustomConfirmDialog;
 import alpha.cyber.intelmain.widget.MyTableView;
@@ -55,7 +53,10 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     private List<CheckoutListBean> borrowBookList;
     private List<CheckoutListBean> backBookList;
 
-    private List<String> oldReportList;
+    private List<String> borrowBookCodes;
+    private List<String> backBookCodes;
+
+    private List<String> boxReportList;
     private List<String> borrowReportList;
     private List<String> backReportList;
 
@@ -75,10 +76,6 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     //============
     private boolean hasBorrowBook;
 
-    public static final int ACTION_TYPE_BORROW = 1;
-    public static final int ACTION_TYPE_BACK = 2;
-    private BookDao bookDao;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,9 +85,10 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         lockHelper = new LockHelper(mHandler, this);
         lockHelper.open();
 
-        bookDao = new BookDao(this);
         customDialog = new CustomConfirmDialog(this);
         customDialog.setConfirmListener(this);
+
+
     }
 
     @Override
@@ -111,18 +109,15 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void initComponent() {
 
-        borrowBookList = new ArrayList<CheckoutListBean>();
-        backBookList = new ArrayList<CheckoutListBean>();
-
-        if(null!=holdBookList){
+        if (null != holdBookList) {
             MyTableView tableBorrowed = new MyTableView(this, 4);
             tableBorrowed.AddRow(new String[]{getString(R.string.has_borrowed)}, true);
             for (int i = 0; i < holdBookList.size(); i++) {
                 tableBorrowed.AddRow(new Object[]{holdBookList.get(i).getTitle_identifier(), holdBookList.get(i).getHold_pickup_date(), holdBookList.get(i).getDue_date(), holdBookList.get(i).getOverdue_days()}, false);
             }
             layoutTableBorrowed.addView(tableBorrowed);
-        }else{
-            ToastUtil.showToast(this,"您还没有借书！");
+        } else {
+            ToastUtil.showToast(this, "您还没有借书！");
         }
 
     }
@@ -140,9 +135,12 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         presenter = new BorrowBookPresenter(this, bookHelper, this);
         reportDao = new InventoryReportDao(this);
 
-        oldReportList = new ArrayList<String>();
+        boxReportList = new ArrayList<String>();
         borrowReportList = new ArrayList<String>();
         backReportList = new ArrayList<String>();
+
+        borrowBookList = new ArrayList<CheckoutListBean>();
+        backBookList = new ArrayList<CheckoutListBean>();
 
         openedId = (byte) AppSharedPreference.getInstance().getOpenBoxId();
 
@@ -151,7 +149,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
         if (null != inventoryReports) {
             for (int i = 0; i < inventoryReports.size(); i++) {
-                oldReportList.add(inventoryReports.get(i).getUidStr());
+                boxReportList.add(inventoryReports.get(i).getUidStr());
             }
         }
     }
@@ -207,30 +205,16 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     }
 
     @Override
-    public void getBookInfoByCode(int type, int count, CheckoutListBean listBean) {
-        if (type == ACTION_TYPE_BORROW) {//借书
+    public void checkInBookSuccess(List<CheckoutListBean> checkoutListBeans) {
+        backBookList = checkoutListBeans;
+        setBackBookView();
+    }
 
-            Log.e(Constant.TAG, "借书>>>>>>>>");
-            LogUtils.e(borrowBookList.toString());
-            borrowBookList.add(listBean);
-            if (borrowBookList.size() == count) {
+    @Override
+    public void checkOutBookSuccess(List<CheckoutListBean> checkoutListBeans) {
+        borrowBookList = checkoutListBeans;
+        setBorrowBookView();
 
-                LogSaveUtils.d(Constant.TAG,"要借的书籍："+borrowBookList.toString());
-                closeDialog();
-                setBorrowBookView();
-            }
-
-        } else if (type == ACTION_TYPE_BACK) {//还书
-
-            Log.e(Constant.TAG, "还书>>>>>>>>");
-            backBookList.add(listBean);
-            if (backBookList.size() == count) {
-
-                LogSaveUtils.d(Constant.TAG,"要还的书籍："+backBookList.toString());
-                closeDialog();
-                setBackBookView();
-            }
-        }
     }
 
     private void setBackBookView() {
@@ -240,14 +224,12 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
         if (null != backBookList) {
             for (int i = 0; i < backBookList.size(); i++) {
-                presenter.checkInBook(backBookList.get(i).getItem_identifier());
+                String book_name = backBookList.get(i).getTitle_identifier();
+                String pick_up_date = backBookList.get(i).getHold_pickup_date();
+                String due_date = backBookList.get(i).getDue_date();
+                String over_days = backBookList.get(i).getOverdue_days();
 
-                tableBack.AddRow(new String[]{
-                                backBookList.get(i).getTitle_identifier()
-                                , backBookList.get(i).getHold_pickup_date()
-                                , backBookList.get(i).getDue_date()
-                                , backBookList.get(i).getOverdue_days()}
-                        , false);
+                tableBack.AddRow(new String[]{book_name, pick_up_date, due_date, over_days}, false);
             }
         }
 
@@ -262,14 +244,11 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
         if (null != borrowBookList) {
             for (int i = 0; i < borrowBookList.size(); i++) {
-                presenter.checkOutBook(borrowBookList.get(i).getItem_identifier(), AppSharedPreference.getInstance().getUserInfo().getPatron_identifier());
+                String book_name = borrowBookList.get(i).getTitle_identifier();
+                String pick_up_date = borrowBookList.get(i).getHold_pickup_date();
+                String due_date = borrowBookList.get(i).getDue_date();
 
-                tableWillBorrow.AddRow(new String[]{
-                                borrowBookList.get(i).getTitle_identifier()
-                                , borrowBookList.get(i).getHold_pickup_date()
-                                , borrowBookList.get(i).getDue_date()
-                                , borrowBookList.get(i).getOverdue_days()}
-                        , false);
+                tableWillBorrow.AddRow(new String[]{book_name, pick_up_date, due_date, "0"}, false);
             }
         }
 
@@ -286,20 +265,20 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         }
 
         Log.e(Constant.TAG, "目前书架里的书：" + currentUidList.toString());
-        Log.e(Constant.TAG, "原来书架里的书：" + oldReportList.toString());
+        Log.e(Constant.TAG, "原来书架里的书：" + boxReportList.toString());
         //
 
-        if (null != oldReportList
+        if (null != boxReportList
                 && null != currentUidList) {//在原来的里面有，在新的里面没有，说明是被借走了
 
-            for (int i = 0; i < oldReportList.size(); i++) {
-                if (!currentUidList.contains(oldReportList.get(i))) {
-                    borrowReportList.add(oldReportList.get(i));
+            for (int i = 0; i < boxReportList.size(); i++) {
+                if (!currentUidList.contains(boxReportList.get(i))) {
+                    borrowReportList.add(boxReportList.get(i));
                 }
             }
 
             for (int i = 0; i < currentUidList.size(); i++) {
-                if (!oldReportList.contains(currentUidList.get(i))) {
+                if (!boxReportList.contains(currentUidList.get(i))) {
                     backReportList.add(currentUidList.get(i));
                 }
             }
@@ -307,36 +286,55 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
             Log.e(Constant.TAG, ">>借走>>>：" + borrowReportList.toString());
             Log.e(Constant.TAG, ">>还回>>>：" + backReportList.toString());
 
-            if (borrowReportList.size() > 0) {
-//                presenter.requestBookInfos(borrowReportList, ACTION_TYPE_BORROW);
-                queryBookByUid(borrowReportList);
+            if (borrowReportList.size() > 0) {//借走的书从本地查
+                borrowBookCodes = new ArrayList<>();
+                for (int i = 0; i < borrowReportList.size(); i++) {
+                    borrowBookCodes.addAll(reportDao.queryBookCodesByUid(borrowReportList.get(i)));
+                }
             } else if (backReportList.size() > 0) {
-                presenter.requestBookInfos(backReportList, ACTION_TYPE_BACK);
+                backBookCodes = presenter.requestBookCodes(backReportList);
+                Log.e(Constant.TAG, "要借的书码：" + backBookCodes.toString());
             } else {
                 ToastUtil.showToast(this, "没有借还书");
+            }
+
+            if (null != borrowBookCodes && borrowBookCodes.size() > 0) {
+                StringBuilder builder = new StringBuilder();
+
+                for (int i = 0; i < borrowBookCodes.size(); i++) {
+                    builder.append(borrowBookCodes.get(i));
+                    builder.append("]]");
+                }
+                Log.e(Constant.TAG, "借书码拼接：" + builder.toString());
+                presenter.checkOutBook(builder.toString());
+            }
+
+            if (null != backBookCodes && backBookCodes.size() > 0) {
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < backBookCodes.size(); i++) {
+                    builder.append(backBookCodes.get(i));
+                    builder.append("]]");
+
+                }
+
+                presenter.checkInBook(builder.toString());
             }
 
             closeDialog();
         }
     }
 
-    private void queryBookByUid(List<String> borrowReportList) {
-        for (int i = 0; i < borrowReportList.size(); i++) {
+    @Override
+    public void onGetProtocalVerison(int version) {
 
-            List<CheckoutListBean> checkoutListBeans = bookDao.queryBooksByUid(borrowReportList.get(i));
-
-            if (null != checkoutListBeans) {
-                borrowBookList.addAll(checkoutListBeans);
-            } else {
-                ToastUtil.showToast(this, "没有该书籍信息！");
-            }
-
-        }
-        setBorrowBookView();
     }
 
     @Override
-    public void onGetProtocalVerison(int version) {
+    protected void onDestroy() {
+        super.onDestroy();
+
+        lockHelper.close();
+        scheduledExecutorService.shutdown();
 
     }
 
@@ -366,19 +364,17 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onGetAllLockState(byte[] state) {
 
+        scheduledExecutorService.shutdownNow();
+        lockHelper.stop();
+
         hasDoorOpen = hasDoorOpen(state);
 
         if (hasDoorOpen) {//没关柜门提示
-
             mHandler.sendEmptyMessage(LockHelper.HAS_DOOR_NOT_CLOSED);
             hasBorrowBook = false;
         } else {
             closeTipDialog();
-            if (hasBorrowBook) {
-                finish();
-            } else {
-                mHandler.sendEmptyMessage(LockHelper.OPENED_CHECKING_BOOKS);
-            }
+            mHandler.sendEmptyMessage(LockHelper.OPENED_CHECKING_BOOKS);
         }
     }
 
@@ -400,37 +396,44 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View v) {
         //点击右下角，检查是否关闭所有柜门
         if (v == btnRightButton) {
-            getAllDoorsState();
+            if(hasDoorOpen){
+                mHandler.sendEmptyMessage(LockHelper.HAS_DOOR_NOT_CLOSED);
+                hasBorrowBook = false;
+            }else{
+                finish();
+            }
         }
     }
 
-    private StateThread stateThread;
+    private ScheduledExecutorService scheduledExecutorService;
+    int loopcount;
 
     @Override
     public void onButtonClick(View view) {
         //关闭Dialog提醒，检查打开的柜门是否已经关闭
-        stateThread =new StateThread();
-        new Thread(stateThread).start();
+        getAllDoorsState();
 
-    }
-
-    private class StateThread implements Runnable{
-        @Override
-        public void run() {
-            try {
-                Thread.sleep(200);
-                getAllDoorsState();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
     }
 
     /**
      * 查看是否所有的锁都关闭方法
      */
     private void getAllDoorsState() {
-        lockHelper.getAllDoorState();
+
+        scheduledExecutorService = Executors.newScheduledThreadPool(2);
+
+        TimerTask refreshTask = new TimerTask() {
+            @Override
+            public void run() {
+                loopcount = loopcount + 1;
+                lockHelper.getAllDoorState();
+                if (loopcount % 5 == 0) {
+                    lockHelper.open();
+                }
+            }
+        };
+
+        scheduledExecutorService.scheduleAtFixedRate(refreshTask, 0, 200, TimeUnit.MILLISECONDS);
     }
 
     /**

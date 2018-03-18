@@ -181,7 +181,9 @@ public class MyTableView extends TableLayout {//一个用于显示简易表格�
                         tvCell.append(getContext().getResources().getString(R.string.chinese_space));
                     }
 
-                }else {
+                }else if(bookName.length()>10){
+                    tvCell.setText(bookName.substring(0,10));
+                }else{
                     tvCell.setText(bookName);
                 }
 

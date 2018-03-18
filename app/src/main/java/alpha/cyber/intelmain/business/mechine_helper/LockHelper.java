@@ -17,8 +17,6 @@ public class LockHelper {
 
     private LockController mLockController;
     private boolean lc;
-    private Thread mStateThrd = null;
-    private boolean b_stateThreadRun = false;
     private Handler mHandler;
     public static final int STATE_LISTEN_MSG = 1;
     public static final byte BOARD_ADDRESS = 0x01;
@@ -56,8 +54,8 @@ public class LockHelper {
     }
 
     public int getLockState(byte lockID){
-        if(open()){
-            initController();
+        if(null==mLockController){
+            return -1;
         }
         return mLockController.getDoorState(lockID,BOARD_ADDRESS);
     }
@@ -73,15 +71,29 @@ public class LockHelper {
     }
 
     public void openGride(int position) {
+        if(mLockController==null){
+            return;
+        }
+
         mLockController.openGrid((byte) (position), BOARD_ADDRESS);
 
     }
 
     public void close() {
-        b_stateThreadRun = false;
-        if (null != mStateThrd) {
-            mStateThrd.interrupt();
+
+        if(mLockController==null){
+            return;
         }
+
+        mLockController.stop();
+        mLockController.close();
+    }
+
+    public void stop(){
+        if(mLockController==null){
+            return;
+        }
+        mLockController.stop();
     }
 
     public boolean checkBoxOpen(byte[] state) {

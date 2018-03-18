@@ -17,6 +17,8 @@ public class InventoryReport {
     private String TagTypeStr;
     @DatabaseField
     private int boxid;
+    @DatabaseField
+    private String bookcode;
 
     public InventoryReport() {
         super();
@@ -27,6 +29,14 @@ public class InventoryReport {
         this.setUidStr(uid);
         this.setTagTypeStr(tayType);
         this.setBoxid(boxid);
+    }
+
+    public String getBookcode() {
+        return bookcode;
+    }
+
+    public void setBookcode(String bookcode) {
+        this.bookcode = bookcode;
     }
 
     public int getBoxid() {
