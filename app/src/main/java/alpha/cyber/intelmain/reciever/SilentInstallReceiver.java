@@ -15,7 +15,7 @@ public class SilentInstallReceiver extends BroadcastReceiver {
     public static final String UPDATE_ACTION = "android.intent.action.PACKAGE_REPLACED";
 
     // APP包名ID
-    public static final String PACKAGE_NAME = "APP包名ID";
+    public static final String PACKAGE_NAME = "alpha.cyber.intelmain";
 
     @Override
     public void onReceive(Context context, Intent intent) {

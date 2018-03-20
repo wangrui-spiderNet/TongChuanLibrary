@@ -12,7 +12,7 @@ import alpha.cyber.intelmain.util.NetworkUtils;
 
 
 /**
- * Created by huxin on 16/7/11.
+ * Created by wangrui
  */
 public class AppException extends Exception implements Thread.UncaughtExceptionHandler {
 
@@ -46,16 +46,13 @@ public class AppException extends Exception implements Thread.UncaughtExceptionH
 
         if (BaseURL.APP_EXCEPTION_DEVICE_ERROR.equalsIgnoreCase(errorCode)
                 || BaseURL.APP_EXCEPTION_PARAMS_ERROR.equalsIgnoreCase(errorCode)
-                || BaseURL.APP_EXCEPTION_NO_DEVICE_ERROR.equalsIgnoreCase(errorCode)) {
+                || BaseURL.APP_EXCEPTION_NO_DEVICE_ERROR.equalsIgnoreCase(errorCode)
+                || BaseURL.APP_EXCEPTION_LIB_ERROR.equalsIgnoreCase(errorCode)) {
 
             handlePrintException(context, errorCode, errorMessage);
         }
 
-        if (errorCode.length() != 7) {
-            handleExceptionServer(context, errorCode, errorMessage);
-        } else {
-            handleExceptionBusiness(context, errorCode, errorMessage);
-        }
+        handleExceptionBusiness(context, errorCode, errorMessage);
         return false;
     }
 
