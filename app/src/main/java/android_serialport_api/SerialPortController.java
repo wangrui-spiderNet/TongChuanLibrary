@@ -201,7 +201,6 @@ public abstract class SerialPortController {
 
     }
 
-
     private void doSendCommand(Command cmd) {
         try {
 
@@ -236,7 +235,7 @@ public abstract class SerialPortController {
             long timeout = cmd.getTimeout();
 
             do {
-                sleep(5);
+//                sleep(5);
                 recvLen = 0;
                 if (null!=mInputStream&&mInputStream.available() > 0) {
                     recvLen = mInputStream.read(buffer);
@@ -250,30 +249,28 @@ public abstract class SerialPortController {
 
                     data = new byte[getUnfixedDataLength(cmd, buffer) + 11];
                     //System.arraycopy(buffer, 0, head, 0, 8);
-                    Logger.i(" tu onReceiverData >>>> data = " + HexTools.bytesToHexString(data));
+                    Log.e(" tu onReceiverData >>>> data = " + HexTools.bytesToHexString(data));
                     //break;
                 }
 
                 dataLen += recvLen;
+                for(int i=0;i<data.length;i++){
+                    Log.e(Constant.TAG,"data:"+Integer.toHexString(data[i]));
+                }
+                Log.e(Constant.TAG,"recvLen:"+recvLen);
+                Log.e(Constant.TAG,"dataPos:"+dataPos);
 
-//                Log.e(Constant.TAG,"cmd_id:"+ Integer.toHexString(cmd.getCmdId()));
-//                Log.e(Constant.TAG,"buffer:"+buffer.length);
-//                Log.e(Constant.TAG,"data:"+data.length);
-//                Log.e(Constant.TAG,"dataPos:"+dataPos);
-//                Log.e(Constant.TAG,"recvLen:"+recvLen);
-
+                Log.e(Constant.TAG,"recvLen = " + recvLen + " buffer:" + HexTools.bytesToHexString(buffer));
                 System.arraycopy(buffer, 0, data, dataPos, recvLen);
                 //dataPos += recvLen;
 
-                //			Logger.iLine("recvLen = " + recvLen + " " + HexTools.bytesToHexString(buffer));
+                Log.e(Constant.TAG,"recvLen = " + recvLen + " buffer:" + HexTools.bytesToHexString(buffer));
 
                 if (data.length == dataLen) {
                     Logger.i("DataLength Get is :" + dataLen);
                     break;
                 }
-            }
-            while ((System.currentTimeMillis() - start_time) < timeout);
-
+            }while ((System.currentTimeMillis() - start_time) < timeout);
 
             if ((System.currentTimeMillis() - start_time) < timeout) {
                 if (dataLen > 0 && data.length == dataLen) {

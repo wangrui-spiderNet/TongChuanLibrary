@@ -204,9 +204,78 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
+    private void calculateBorrowOrBackBook(Message msg) {
+
+        List<InventoryReport> currentReportList = bookHelper.getInventoryList(msg);
+        List<String> currentUidList = new ArrayList<>();
+        for (InventoryReport report : currentReportList) {
+            currentUidList.add(report.getUidStr());
+        }
+
+        Log.e(Constant.TAG, "目前书架里的书：" + currentUidList.toString());
+        Log.e(Constant.TAG, "原来书架里的书：" + boxReportList.toString());
+        //
+
+        if (null != boxReportList
+                && null != currentUidList) {//在原来的里面有，在新的里面没有，说明是被借走了
+
+            for (int i = 0; i < boxReportList.size(); i++) {
+                if (!currentUidList.contains(boxReportList.get(i))) {
+                    borrowReportList.add(boxReportList.get(i));
+                }
+            }
+
+            for (int i = 0; i < currentUidList.size(); i++) {
+                if (!boxReportList.contains(currentUidList.get(i))) {
+                    backReportList.add(currentUidList.get(i));
+                }
+            }
+
+            Log.e(Constant.TAG, ">>借走>>>：" + borrowReportList.toString());
+            Log.e(Constant.TAG, ">>还回>>>：" + backReportList.toString());
+
+            if (borrowReportList.size() > 0) {//借走的书从本地查
+                borrowBookCodes = new ArrayList<>();
+                for (int i = 0; i < borrowReportList.size(); i++) {
+                    borrowBookCodes.addAll(reportDao.queryBookCodesByUid(borrowReportList.get(i)));
+                }
+
+                if (null != borrowBookCodes && borrowBookCodes.size() > 0) {
+                    StringBuilder builder = new StringBuilder();
+
+                    for (int i = 0; i < borrowBookCodes.size(); i++) {
+                        builder.append(borrowBookCodes.get(i));
+                        builder.append("]]");
+                    }
+                    Log.e(Constant.TAG, "借书码拼接：" + builder.toString());
+                    presenter.checkOutBook(builder.toString());
+                }
+
+            } else if (backReportList.size() > 0) {
+                backBookCodes = presenter.requestBookCodes(backReportList);
+                Log.e(Constant.TAG, "要还的书码：" + backBookCodes.toString());
+
+                if (null != backBookCodes && backBookCodes.size() > 0) {
+                    StringBuilder builder = new StringBuilder();
+                    for (int i = 0; i < backBookCodes.size(); i++) {
+                        builder.append(backBookCodes.get(i));
+                        builder.append("]]");
+
+                    }
+                    Log.e(Constant.TAG, "还书码拼接：" + builder.toString());
+                    presenter.checkInBook(builder.toString());
+                }
+            } else {
+                ToastUtil.showToast(this, "没有借还书");
+            }
+            closeDialog();
+        }
+    }
+
     @Override
     public void checkInBookSuccess(List<CheckoutListBean> checkoutListBeans) {
         backBookList = checkoutListBeans;
+        Log.e(Constant.TAG,"还书列表："+checkoutListBeans.toString());
         setBackBookView();
     }
 
@@ -256,74 +325,6 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
     }
 
-    private void calculateBorrowOrBackBook(Message msg) {
-
-        List<InventoryReport> currentReportList = bookHelper.getInventoryList(msg);
-        List<String> currentUidList = new ArrayList<>();
-        for (InventoryReport report : currentReportList) {
-            currentUidList.add(report.getUidStr());
-        }
-
-        Log.e(Constant.TAG, "目前书架里的书：" + currentUidList.toString());
-        Log.e(Constant.TAG, "原来书架里的书：" + boxReportList.toString());
-        //
-
-        if (null != boxReportList
-                && null != currentUidList) {//在原来的里面有，在新的里面没有，说明是被借走了
-
-            for (int i = 0; i < boxReportList.size(); i++) {
-                if (!currentUidList.contains(boxReportList.get(i))) {
-                    borrowReportList.add(boxReportList.get(i));
-                }
-            }
-
-            for (int i = 0; i < currentUidList.size(); i++) {
-                if (!boxReportList.contains(currentUidList.get(i))) {
-                    backReportList.add(currentUidList.get(i));
-                }
-            }
-
-            Log.e(Constant.TAG, ">>借走>>>：" + borrowReportList.toString());
-            Log.e(Constant.TAG, ">>还回>>>：" + backReportList.toString());
-
-            if (borrowReportList.size() > 0) {//借走的书从本地查
-                borrowBookCodes = new ArrayList<>();
-                for (int i = 0; i < borrowReportList.size(); i++) {
-                    borrowBookCodes.addAll(reportDao.queryBookCodesByUid(borrowReportList.get(i)));
-                }
-            } else if (backReportList.size() > 0) {
-                backBookCodes = presenter.requestBookCodes(backReportList);
-                Log.e(Constant.TAG, "要借的书码：" + backBookCodes.toString());
-            } else {
-                ToastUtil.showToast(this, "没有借还书");
-            }
-
-            if (null != borrowBookCodes && borrowBookCodes.size() > 0) {
-                StringBuilder builder = new StringBuilder();
-
-                for (int i = 0; i < borrowBookCodes.size(); i++) {
-                    builder.append(borrowBookCodes.get(i));
-                    builder.append("]]");
-                }
-                Log.e(Constant.TAG, "借书码拼接：" + builder.toString());
-                presenter.checkOutBook(builder.toString());
-            }
-
-            if (null != backBookCodes && backBookCodes.size() > 0) {
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < backBookCodes.size(); i++) {
-                    builder.append(backBookCodes.get(i));
-                    builder.append("]]");
-
-                }
-
-                presenter.checkInBook(builder.toString());
-            }
-
-            closeDialog();
-        }
-    }
-
     @Override
     public void onGetProtocalVerison(int version) {
 
@@ -334,8 +335,9 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         super.onDestroy();
 
         lockHelper.close();
-        scheduledExecutorService.shutdown();
-
+        if(null!=scheduledExecutorService){
+            scheduledExecutorService.shutdown();
+        }
     }
 
     /**
@@ -350,8 +352,11 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         Log.e(Constant.TAG, "id:" + id + "--->" + state);
 
         if (id == openedId && state == 0) {
+            hasDoorOpen=true;
             mHandler.sendEmptyMessage(LockHelper.HAS_DOOR_NOT_CLOSED);
         } else {//打开的柜门已经关了，盘点书籍
+            closeTipDialog();
+            hasDoorOpen=false;
             mHandler.sendEmptyMessage(LockHelper.OPENED_CHECKING_BOOKS);
         }
     }
@@ -411,7 +416,8 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onButtonClick(View view) {
         //关闭Dialog提醒，检查打开的柜门是否已经关闭
-        getAllDoorsState();
+//        getAllDoorsState();
+        getDoorState();
 
     }
 

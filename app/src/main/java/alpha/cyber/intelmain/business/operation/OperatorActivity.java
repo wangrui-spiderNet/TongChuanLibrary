@@ -58,8 +58,6 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_operator);
-        Intent intent = new Intent(this, CheckBookService.class);
-        startService(intent);
 
     }
 
@@ -113,6 +111,7 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onResume() {
         super.onResume();
+        new InventoryReportDao(this).deleteAll();
         tvBack.setVisibility(View.INVISIBLE);
         btnRightButton.setText(R.string.exit_login);
         btnRightButton.setVisibility(View.VISIBLE);
@@ -167,7 +166,6 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
 
         LogSaveUtils.deleteLogFiles();
 
-        new BookDao(this).deleteAll();
         new InventoryReportDao(this).deleteAll();
         new UserDao().deleteAll();
     }

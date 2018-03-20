@@ -119,7 +119,7 @@ public class LockController extends SerialPortController implements LockFunction
         // TODO Auto-generated method stub
         Logger.iLine("openGrid");
         LockCommand cmd = LockCommand.openGrid(doorID, boardAddress);
-        cmd.setTimeout(100000);
+//        cmd.setTimeout(100000);
         sendCommand(cmd);
 
         if(isOpen()){
@@ -142,7 +142,7 @@ public class LockController extends SerialPortController implements LockFunction
         // TODO Auto-generated method stub
         Logger.iLine("getDoorState");
         LockCommand cmd = LockCommand.getDoorState(lockID, boardAddress);
-        cmd.setTimeout(100000);
+        cmd.setTimeout(10000);
         sendCommand(cmd);
         return 0;
     }
@@ -157,8 +157,10 @@ public class LockController extends SerialPortController implements LockFunction
     public int getFixedDataLength(Command cmd) {
         // TODO Auto-generated method stub
 
+        Log.e(Constant.TAG,"getFixedDataLength cmd:"+Integer.toHexString(cmd.getCmdId()));
+
         if (cmd.getCmdId() == LockCommand.CMD_GETLOCKSTATE) {
-            return 7;
+            return 5;
         } else {
             return 7;
         }

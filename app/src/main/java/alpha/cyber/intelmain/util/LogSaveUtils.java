@@ -21,7 +21,7 @@ import alpha.cyber.intelmain.threadpool.ThreadPoolUtil;
 public class LogSaveUtils {
 	
 	private static final boolean DEBUG = MyApplication.isDebug;
-	private static final String log_path = "lib/LogFile/lib_log_";
+	private static final String log_path = "LogFile/";
 
     private static StringBuffer sb;
 	static{

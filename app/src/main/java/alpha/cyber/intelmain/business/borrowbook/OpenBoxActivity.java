@@ -1,5 +1,6 @@
 package alpha.cyber.intelmain.business.borrowbook;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,6 +19,7 @@ import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.bean.BoxBean;
 import alpha.cyber.intelmain.business.login.LoginActivity;
+import alpha.cyber.intelmain.business.mechine_helper.CheckBookService;
 import alpha.cyber.intelmain.business.mechine_helper.LockHelper;
 import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.IntentUtils;
@@ -40,6 +42,10 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_box);
+
+        Intent intent = new Intent(this, CheckBookService.class);
+        startService(intent);
+
         lockHelper = new LockHelper(mHandler, this);
         lockHelper.open();
     }
