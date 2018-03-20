@@ -251,7 +251,9 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
                     presenter.checkOutBook(builder.toString());
                 }
 
-            } else if (backReportList.size() > 0) {
+            }
+
+            if (backReportList.size() > 0) {
                 backBookCodes = presenter.requestBookCodes(backReportList);
                 Log.e(Constant.TAG, "要还的书码：" + backBookCodes.toString());
 
@@ -268,6 +270,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
             } else {
                 ToastUtil.showToast(this, "没有借还书");
             }
+
             closeDialog();
         }
     }
@@ -275,7 +278,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void checkInBookSuccess(List<CheckoutListBean> checkoutListBeans) {
         backBookList = checkoutListBeans;
-        Log.e(Constant.TAG,"还书列表："+checkoutListBeans.toString());
+        Log.e(Constant.TAG, "还书列表：" + checkoutListBeans.toString());
         setBackBookView();
     }
 
@@ -335,7 +338,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         super.onDestroy();
 
         lockHelper.close();
-        if(null!=scheduledExecutorService){
+        if (null != scheduledExecutorService) {
             scheduledExecutorService.shutdown();
         }
     }
@@ -352,11 +355,11 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         Log.e(Constant.TAG, "id:" + id + "--->" + state);
 
         if (id == openedId && state == 0) {
-            hasDoorOpen=true;
+            hasDoorOpen = true;
             mHandler.sendEmptyMessage(LockHelper.HAS_DOOR_NOT_CLOSED);
         } else {//打开的柜门已经关了，盘点书籍
             closeTipDialog();
-            hasDoorOpen=false;
+            hasDoorOpen = false;
             mHandler.sendEmptyMessage(LockHelper.OPENED_CHECKING_BOOKS);
         }
     }
@@ -401,10 +404,10 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View v) {
         //点击右下角，检查是否关闭所有柜门
         if (v == btnRightButton) {
-            if(hasDoorOpen){
+            if (hasDoorOpen) {
                 mHandler.sendEmptyMessage(LockHelper.HAS_DOOR_NOT_CLOSED);
                 hasBorrowBook = false;
-            }else{
+            } else {
                 finish();
             }
         }
