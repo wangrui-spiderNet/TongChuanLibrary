@@ -93,7 +93,7 @@ public class BorrowBookPresenter {
         List<String > bookcodes=new ArrayList<>();
         for (int i = 0; i < reportList.size(); i++) {
 
-            String bookCode =  bookHelper.getBookCode( reportList.get(i));
+            String bookCode =  bookHelper.getBookCode(0, reportList.get(i));
             bookCode = bookCode.substring(6, 14);
             bookcodes.add(bookCode);
         }

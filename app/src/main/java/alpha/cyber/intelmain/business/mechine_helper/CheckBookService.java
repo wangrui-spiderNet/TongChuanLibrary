@@ -49,8 +49,8 @@ public class CheckBookService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        for(int i=0;i<CheckBookHelper.BOX_COUNT;i++){//一个柜子一个柜子的盘点并存储
-            helper.startInventoryOneBox((byte)(i+1));
+        for(int i=0;i<1;i++){//一个柜子一个柜子的盘点并存储
+            helper.startInventoryOneBox((byte) (i + 1));
         }
 //        helper.startInventoryAllBoxes();
 
@@ -112,7 +112,7 @@ public class CheckBookService extends Service {
 
                     List<InventoryReport> inventoryList = helper.getInventoryList(msg);
                     int address = msg.arg1;
-                    saveSingleBoxReportInfo(address,inventoryList);
+                    saveSingleBoxReportInfo(address, inventoryList);
 
                     Log.e(Constant.TAG, "第" + address + "个箱子里有：" + inventoryList.size() + "本书");
 
@@ -141,10 +141,10 @@ public class CheckBookService extends Service {
         for (int i = 0; i < reportList.size(); i++) {
 
             String uid = reportList.get(i).getUidStr();
-            String bookCode = helper.getBookCode(uid);
+            String bookCode = helper.getBookCode(0, uid);
             Log.e(Constant.TAG, "UID:" + uid + "盘点出来的书码：" + bookCode);
             reportList.get(i).setBoxid(boxid);
-            reportList.get(i).setBookcode(bookCode.substring(6,14));
+            reportList.get(i).setBookcode(bookCode.substring(6, 14));
             reportDao.insertBook(reportList.get(i));
         }
 
