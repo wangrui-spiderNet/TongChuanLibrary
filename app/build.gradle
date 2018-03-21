@@ -137,6 +137,7 @@ android {
                                     TALKINGDATA_ID: "778917A8BF12475E948992A672F09BA2"]
         }
     }
+
 }
 
 def compileTime() {

@@ -58,6 +58,7 @@ public class BorrowBookPresenter {
                     public void onFailure(String errorCode, String errorMessage) {
 
                         AppException.handleException(context, errorCode, errorMessage);
+                        bookView.checkOutFail(errorCode,errorMessage);
                     }
                 });
     }
@@ -82,6 +83,7 @@ public class BorrowBookPresenter {
                     @Override
                     public void onFailure(String errorCode, String errorMessage) {
                         AppException.handleException(context, errorCode, errorMessage);
+                        bookView.checkInFial(errorCode,errorMessage);
                     }
                 });
     }
@@ -91,7 +93,7 @@ public class BorrowBookPresenter {
         List<String > bookcodes=new ArrayList<>();
         for (int i = 0; i < reportList.size(); i++) {
 
-            String bookCode =  bookHelper.getBookCode(0, reportList.get(i));
+            String bookCode =  bookHelper.getBookCode( reportList.get(i));
             bookCode = bookCode.substring(6, 14);
             bookcodes.add(bookCode);
         }

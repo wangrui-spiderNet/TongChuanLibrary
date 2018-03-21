@@ -18,6 +18,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import alpha.cyber.intellib.lock.LockCallback;
+import alpha.cyber.intellib.utils.ToastUtils;
 import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
@@ -74,7 +75,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     //打开锁的ID
     private byte openedId;
     //============
-    private boolean hasBorrowBook;
+//    private boolean hasBorrowBook;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -117,7 +118,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
             }
             layoutTableBorrowed.addView(tableBorrowed);
         } else {
-            ToastUtil.showToast(this, "您还没有借书！");
+            ToastUtils.showShortToast( "您还没有借书！");
         }
 
     }
@@ -177,8 +178,8 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
             switch (msg.what) {
                 case CheckBookHelper.INVENTORY_SINGLE_BOX:
                     //书籍盘点结束处理
-                    hasBorrowBook = true;
-                    ToastUtil.showToast(BorrowDetailActivity.this, "盘点结束，计算中...");
+//                    hasBorrowBook = true;
+                    ToastUtils.showShortToast( "盘点结束，计算中...");
                     borrowReportList.clear();
                     borrowBookList.clear();
                     backBookList.clear();
@@ -192,7 +193,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
                 case LockHelper.OPENED_CHECKING_BOOKS:
                     //盘点前面打开的柜门书籍
-                    lockHelper.close();
+//                    lockHelper.close();
 //                    showDialog("正在盘点...");
                     bookHelper.startInventoryOneBox(openedId);
 
@@ -268,7 +269,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
                     presenter.checkInBook(builder.toString());
                 }
             } else {
-                ToastUtil.showToast(this, "没有借还书");
+                ToastUtils.showShortToast( "没有借还书");
             }
 
             closeDialog();
@@ -287,6 +288,18 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         borrowBookList = checkoutListBeans;
         setBorrowBookView();
 
+    }
+
+    @Override
+    public void checkOutFail(String errorcode, String msg) {
+//        isFail = true;
+//        showTipDialog("借书失败，您的借阅已达到上限");
+    }
+
+    @Override
+    public void checkInFial(String errorcode, String msg) {
+//        isFail = true;
+//        showTipDialog("还书失败，请取出您放进去的书，关好柜门，点击确认！");
     }
 
     private void setBackBookView() {
@@ -379,7 +392,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
         if (hasDoorOpen) {//没关柜门提示
             mHandler.sendEmptyMessage(LockHelper.HAS_DOOR_NOT_CLOSED);
-            hasBorrowBook = false;
+//            hasBorrowBook = false;
         } else {
             closeTipDialog();
             mHandler.sendEmptyMessage(LockHelper.OPENED_CHECKING_BOOKS);
@@ -406,7 +419,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         if (v == btnRightButton) {
             if (hasDoorOpen) {
                 mHandler.sendEmptyMessage(LockHelper.HAS_DOOR_NOT_CLOSED);
-                hasBorrowBook = false;
+//                hasBorrowBook = false;
             } else {
                 finish();
             }
@@ -415,12 +428,19 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
     private ScheduledExecutorService scheduledExecutorService;
     int loopcount;
+//    boolean isFail=false;
 
     @Override
     public void onButtonClick(View view) {
         //关闭Dialog提醒，检查打开的柜门是否已经关闭
 //        getAllDoorsState();
-        getDoorState();
+//       if(isFail){
+//           isFail = false;
+//           lockHelper.openGride(openedId);
+//       }else {
+           getDoorState();
+//       }
+
 
     }
 

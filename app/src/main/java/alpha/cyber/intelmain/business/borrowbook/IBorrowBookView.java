@@ -15,4 +15,8 @@ public interface IBorrowBookView  {
     void checkInBookSuccess(List<CheckoutListBean> checkoutListBeans);
 
     void checkOutBookSuccess(List<CheckoutListBean> checkoutListBeans);
+
+    void checkOutFail(String errorcode,String msg);
+
+    void checkInFial(String errorcode,String msg);
 }

@@ -15,7 +15,6 @@ import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.bean.InventoryReport;
 import alpha.cyber.intelmain.db.InventoryReportDao;
 import alpha.cyber.intelmain.db.BookDao;
-import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.Log;
 
 /**
@@ -50,7 +49,7 @@ public class CheckBookService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        for(int i=0;i<1;i++){//一个柜子一个柜子的盘点并存储
+        for(int i=0;i<CheckBookHelper.BOX_COUNT;i++){//一个柜子一个柜子的盘点并存储
             helper.startInventoryOneBox((byte)(i+1));
         }
 //        helper.startInventoryAllBoxes();
@@ -113,7 +112,7 @@ public class CheckBookService extends Service {
 
                     List<InventoryReport> inventoryList = helper.getInventoryList(msg);
                     int address = msg.arg1;
-                    saveSingleBoxBookInfo(address,inventoryList);
+                    saveSingleBoxReportInfo(address,inventoryList);
 
                     Log.e(Constant.TAG, "第" + address + "个箱子里有：" + inventoryList.size() + "本书");
 
@@ -137,12 +136,12 @@ public class CheckBookService extends Service {
 //
 //    }
 
-    private void saveSingleBoxBookInfo(int boxid, List<InventoryReport> reportList) {
+    private void saveSingleBoxReportInfo(int boxid, List<InventoryReport> reportList) {
 
         for (int i = 0; i < reportList.size(); i++) {
 
             String uid = reportList.get(i).getUidStr();
-            String bookCode = helper.getBookCode(0, uid);
+            String bookCode = helper.getBookCode(uid);
             Log.e(Constant.TAG, "UID:" + uid + "盘点出来的书码：" + bookCode);
             reportList.get(i).setBoxid(boxid);
             reportList.get(i).setBookcode(bookCode.substring(6,14));

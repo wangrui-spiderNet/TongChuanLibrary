@@ -49,7 +49,9 @@ public class CheckBookHelper {
     public boolean bBuzzer = true;
     private int mLoopCnt;
     private Handler mHandler;
+    public static final int BOX_COUNT = 10;
     private boolean isOpen = false;
+    private int mAntCnt = 10;//天线数量
 
     public CheckBookHelper(Handler mHandler) {
         this.mHandler = mHandler;
@@ -91,8 +93,6 @@ public class CheckBookHelper {
      *
      * @param address
      */
-    private int mAntCnt = 1;//天线数量
-
     public void startInventoryOneBox(byte address) {
 
         if (!isOpen) {
@@ -105,6 +105,7 @@ public class CheckBookHelper {
 
             byte[] mAntId = null;
             mAntCnt = m_reader.RDR_GetAntennaInterfaceCount();
+            Log.e(Constant.TAG,"天线数量："+mAntCnt);
             if (mAntCnt > 1) {
                 mAntId = new byte[1];
                 mAntId[0] = (address);
@@ -141,6 +142,16 @@ public class CheckBookHelper {
         }
     }
 
+    /**
+     * 获取天线数量
+     *
+     * @return
+     */
+    public int getAntCount() {
+        mAntCnt =m_reader.RDR_GetAntennaInterfaceCount();
+        return mAntCnt;
+    }
+
     public void destroyService() {
         if (m_reader.isReaderOpen()) {
             // If thread of inventory is running,stop the thread before exit the
@@ -159,7 +170,6 @@ public class CheckBookHelper {
         }
     }
 
-    private final int BOX_COUNT = 10;
 
     private class InventoryThrd implements Runnable {
         @Override
@@ -349,7 +359,7 @@ public class CheckBookHelper {
         b_inventoryThreadRun = false;
     }
 
-    public String getBookCode(int i, String uid) {
+    public String getBookCode(String uid) {
         byte[] connectUid = GFunction.decodeHex(uid);
         byte connectMode = 1;
 
@@ -365,7 +375,7 @@ public class CheckBookHelper {
 //            Log.e(Constant.TAG, "UID 连接：" + iret);
 //            Log.e(Constant.TAG, "connect UID:" + uid);
 
-            String bookCode = UiReadBlock(i, 2, mTag);
+            String bookCode = UiReadBlock(0, 2, mTag);
 
             return bookCode;
         }
