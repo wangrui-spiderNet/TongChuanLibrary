@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.tendcloud.tenddata.TCAgent;
 import com.youth.banner.transformer.BackgroundToForegroundTransformer;
 
@@ -38,6 +39,7 @@ import alpha.cyber.intelmain.util.DateUtils;
 import alpha.cyber.intelmain.util.DensityUtil;
 import alpha.cyber.intelmain.util.DialogUtil;
 import alpha.cyber.intelmain.util.IntentUtils;
+import alpha.cyber.intelmain.util.StringUtils;
 
 
 /**
@@ -119,6 +121,14 @@ public abstract class BaseActivity  extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        String logourl=AppSharedPreference.getInstance().getLogo();
+
+        if(!StringUtils.isEmpty(logourl)){
+            Glide.with(MyApplication.getInstance().getApplicationContext())
+                    .load(logourl)
+                    .into(ivLogo);
+        }
+
         TCAgent.onPageStart(this,this.getClass().getSimpleName());
     }
 

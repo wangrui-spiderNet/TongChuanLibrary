@@ -33,4 +33,6 @@ public class AppSharedPreferenceConfig {
 
     public static final String OPEN_BOX_ID="open_box_id";
 
+    public static final String LOGO_URL ="logo_url";
+
 }

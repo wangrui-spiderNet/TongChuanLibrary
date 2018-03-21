@@ -11,9 +11,6 @@ import java.util.List;
 
 import alpha.cyber.intelmain.MyApplication;
 import alpha.cyber.intelmain.bean.CheckoutListBean;
-import alpha.cyber.intelmain.bean.BorrowBookBean;
-import alpha.cyber.intelmain.bean.CheckoutListBean;
-import alpha.cyber.intelmain.bean.InventoryReport;
 import alpha.cyber.intelmain.bean.UserBorrowInfo;
 import alpha.cyber.intelmain.bean.UserInfoBean;
 
@@ -106,6 +103,15 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
     }
 
 
+    public String getLogo() {
+        return app.getString(LOGO_URL, "");
+    }
+
+    public boolean saveLogo(String mac) {
+        return editor.putString(LOGO_URL, mac).commit();
+    }
+
+
     /**
      * 保存List
      * @param datalist
@@ -165,7 +171,7 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
     }
 
     /**
-     * 保存用户信息
+     * 保存用户借书信息
      * @param infoBean
      */
     public void saveBorrowBookUserInfo(UserBorrowInfo infoBean){
@@ -178,7 +184,7 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
     }
 
     /**
-     * 获取用户信息
+     * 获取用户借书信息
      * @return
      */
     public UserBorrowInfo getBorrowBookUserInfo(){

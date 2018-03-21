@@ -229,6 +229,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                     .load(newsBean.getLogo())
                     .into(ivLogo);
 
+            AppSharedPreference.getInstance().saveLogo(newsBean.getLogo());
+
             tvTel.setText("TEL:" + newsBean.getService_telephone());
             tvTec.setText(newsBean.getTechnical_support());
 
