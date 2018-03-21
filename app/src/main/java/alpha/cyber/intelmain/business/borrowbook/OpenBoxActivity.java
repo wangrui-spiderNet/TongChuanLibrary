@@ -43,8 +43,6 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_box);
 
-        Intent intent = new Intent(this, CheckBookService.class);
-        startService(intent);
 
         lockHelper = new LockHelper(mHandler, this);
         lockHelper.open();
@@ -83,13 +81,15 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
         lockId = (byte) (position + 1);
         lockHelper.openGride(position + 1);
         AppSharedPreference.getInstance().saveOpenBoxId(position + 1);
+
+        Intent intent = new Intent(this, CheckBookService.class);
+        startService(intent);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-//        lockHelper.close();
     }
 
     @Override
@@ -104,7 +104,7 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
         Log.e(Constant.TAG, "id:" + id + "||state:" + state);
 
         if (id == lockId && state == 1) {
-            IntentUtils.startAtyWithSingleParam(this, BorrowDetailActivity.class, Constant.BORROW_BACK, Constant.BORROW_BOOK);
+            IntentUtils.startAtyWithSingleParam(OpenBoxActivity.this, BorrowDetailActivity.class, Constant.BORROW_BACK, Constant.BORROW_BOOK);
             lockHelper.close();
             finish();
         }
@@ -146,11 +146,11 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
 
     }
 
-//    private void getDoorState(byte lockId) {
-//        if (lockHelper.open()) {
-//            lockHelper.getLockState(lockId);
-//        }
-//    }
+    private void getDoorState(byte lockId) {
+        if (lockHelper.open()) {
+            lockHelper.getLockState(lockId);
+        }
+    }
 
 
     private void getAllDoorState() {

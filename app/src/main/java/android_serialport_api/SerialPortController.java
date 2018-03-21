@@ -249,25 +249,25 @@ public abstract class SerialPortController {
 
                     data = new byte[getUnfixedDataLength(cmd, buffer) + 11];
                     //System.arraycopy(buffer, 0, head, 0, 8);
-                    Log.e(" tu onReceiverData >>>> data = " + HexTools.bytesToHexString(data));
+//                    Log.e(" tu onReceiverData >>>> data = " + HexTools.bytesToHexString(data));
                     //break;
                 }
 
                 dataLen += recvLen;
-                for(int i=0;i<data.length;i++){
-                    Log.e(Constant.TAG,"data:"+Integer.toHexString(data[i]));
-                }
-                Log.e(Constant.TAG,"recvLen:"+recvLen);
-                Log.e(Constant.TAG,"dataPos:"+dataPos);
+//                for(int i=0;i<data.length;i++){
+//                    Log.e(Constant.TAG,"data:"+Integer.toHexString(data[i]));
+//                }
+//                Log.e(Constant.TAG,"recvLen:"+recvLen);
+//                Log.e(Constant.TAG,"dataPos:"+dataPos);
 
-                Log.e(Constant.TAG,"recvLen = " + recvLen + " buffer:" + HexTools.bytesToHexString(buffer));
+//                Log.e(Constant.TAG,"recvLen = " + recvLen + " buffer:" + HexTools.bytesToHexString(buffer));
                 System.arraycopy(buffer, 0, data, dataPos, recvLen);
                 //dataPos += recvLen;
 
-                Log.e(Constant.TAG,"recvLen = " + recvLen + " buffer:" + HexTools.bytesToHexString(buffer));
+//                Log.e(Constant.TAG,"recvLen = " + recvLen + " buffer:" + HexTools.bytesToHexString(buffer));
 
                 if (data.length == dataLen) {
-                    Logger.i("DataLength Get is :" + dataLen);
+//                    Logger.i("DataLength Get is :" + dataLen);
                     break;
                 }
             }while ((System.currentTimeMillis() - start_time) < timeout);

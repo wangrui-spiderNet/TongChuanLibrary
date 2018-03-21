@@ -44,7 +44,7 @@ public class LockController extends SerialPortController implements LockFunction
         //	Logger.i("onReceiverData data last is " + data[data.length-1]);
         //ToastUtils.showLongToast("receiver: " + HexTools.bytesToHexString(data));
 
-        Log.e(Constant.TAG,"回调：onReceiverData");
+//        Log.e(Constant.TAG,"回调：onReceiverData");
         Log.e(Constant.TAG,cmd.toString());
         Log.e(Constant.TAG,new String(data));
 
@@ -53,7 +53,7 @@ public class LockController extends SerialPortController implements LockFunction
                 break;
             case LockCommand.CMD_GETLOCKSTATE:
                 if (data[2] == 0x00) {
-                    Logger.d(" LockCommand.CMD_GETLOCKSTATE:");
+//                    Logger.d(" LockCommand.CMD_GETLOCKSTATE:");
                     byte[] dataState = new byte[24];
                     for (int i = 0; i < 24; i++) {
                         if (i > 15) {
@@ -74,9 +74,9 @@ public class LockController extends SerialPortController implements LockFunction
                 break;
             case LockCommand.CMD_OPENLOCK:
                 if (data[3] == 0x00) {
-                    ToastUtils.showLongToast("lockId : " + data[2] + "Opened Successed");
+//                    ToastUtils.showLongToast("lockId : " + data[2] + "Opened Successed");
                 } else {
-                    ToastUtils.showLongToast("lockId : " + data[2] + "Opened Failed ");
+//                    ToastUtils.showLongToast("lockId : " + data[2] + "Opened Failed ");
                 }
 
                 break;
@@ -90,14 +90,14 @@ public class LockController extends SerialPortController implements LockFunction
     @Override
     public void onTimeout(Command cmd) {
         // TODO Auto-generated method stub
-        Logger.i("timeout cmd = " + cmd.toString());ToastUtils.showLongToast("onTimeout: " + cmd.getCmdId());
+//        Logger.i("timeout cmd = " + cmd.toString());ToastUtils.showLongToast("onTimeout: " + cmd.getCmdId());
     }
 
     @Override
     public void onError(Command cmd, int errorNo) {
         // TODO Auto-generated method stub
         Logger.i("onError cmd = " + cmd.toString());
-        ToastUtils.showLongToast("onError: " + cmd.getCmdId());
+//        ToastUtils.showLongToast("onError: " + cmd.getCmdId());
     }
 
     @Override
@@ -157,7 +157,7 @@ public class LockController extends SerialPortController implements LockFunction
     public int getFixedDataLength(Command cmd) {
         // TODO Auto-generated method stub
 
-        Log.e(Constant.TAG,"getFixedDataLength cmd:"+Integer.toHexString(cmd.getCmdId()));
+//        Log.e(Constant.TAG,"getFixedDataLength cmd:"+Integer.toHexString(cmd.getCmdId()));
 
         if (cmd.getCmdId() == LockCommand.CMD_GETLOCKSTATE) {
             return 5;

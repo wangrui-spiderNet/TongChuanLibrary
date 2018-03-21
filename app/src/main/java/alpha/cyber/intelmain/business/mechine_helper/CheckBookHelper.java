@@ -50,6 +50,8 @@ public class CheckBookHelper {
     private int mLoopCnt;
     private Handler mHandler;
     private boolean isOpen = false;
+    public static final int BOX_COUNT = 10;
+    private int mAntCnt = 1;//天线数量
 
     public CheckBookHelper(Handler mHandler) {
         this.mHandler = mHandler;
@@ -91,8 +93,6 @@ public class CheckBookHelper {
      *
      * @param address
      */
-    private int mAntCnt = 1;//天线数量
-
     public void startInventoryOneBox(byte address) {
 
         if (!isOpen) {
@@ -169,8 +169,6 @@ public class CheckBookHelper {
             closeDevice();
         }
     }
-
-    private final int BOX_COUNT = 10;
 
     private class InventoryThrd implements Runnable {
         @Override

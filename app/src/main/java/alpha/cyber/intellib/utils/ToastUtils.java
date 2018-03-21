@@ -42,7 +42,7 @@ public class ToastUtils {
         TextView message = (TextView)v.findViewById(R.id.message);
         message.setText(text);
         toast.setView(v);
-        toast.setGravity(GRAVITY, 0, 100);
+        toast.setGravity(GRAVITY, 0, 0);
         toast.setDuration(duration);
         return toast;
 //		return Toast.makeText(NiuNiuParking.getAppContext(), text, duration);
@@ -55,7 +55,7 @@ public class ToastUtils {
         TextView message = (TextView)v.findViewById(R.id.message);
         message.setText(resId);
         toast.setView(v);
-        toast.setGravity(GRAVITY, 0, 100);
+        toast.setGravity(GRAVITY, 0, 0);
         toast.setDuration(duration);
         return toast;
 //		return Toast.makeText(NiuNiuParking.getAppContext(), resId, duration);

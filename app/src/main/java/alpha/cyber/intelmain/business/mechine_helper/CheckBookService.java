@@ -15,6 +15,7 @@ import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.bean.InventoryReport;
 import alpha.cyber.intelmain.db.InventoryReportDao;
 import alpha.cyber.intelmain.db.BookDao;
+import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.Log;
 
 /**
@@ -49,10 +50,8 @@ public class CheckBookService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        for(int i=0;i<1;i++){//一个柜子一个柜子的盘点并存储
-            helper.startInventoryOneBox((byte) (i + 1));
-        }
-//        helper.startInventoryAllBoxes();
+        int openid= AppSharedPreference.getInstance().getOpenBoxId();
+        helper.startInventoryOneBox((byte) openid);
 
         return super.onStartCommand(intent, flags, startId);
     }

@@ -145,14 +145,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
         openedId = (byte) AppSharedPreference.getInstance().getOpenBoxId();
 
-        //数据库查询已经打开柜子里面的书籍
-        List<InventoryReport> inventoryReports = reportDao.queryReportsByBoxId(openedId);
 
-        if (null != inventoryReports) {
-            for (int i = 0; i < inventoryReports.size(); i++) {
-                boxReportList.add(inventoryReports.get(i).getUidStr());
-            }
-        }
     }
 
     @Override
@@ -184,6 +177,16 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
                     borrowBookList.clear();
                     backBookList.clear();
                     backReportList.clear();
+
+                    //数据库查询已经打开柜子里面的书籍
+                    List<InventoryReport> inventoryReports = reportDao.queryReportsByBoxId(openedId);
+
+                    if (null != inventoryReports) {
+                        for (int i = 0; i < inventoryReports.size(); i++) {
+                            boxReportList.add(inventoryReports.get(i).getUidStr());
+                        }
+                    }
+
                     calculateBorrowOrBackBook(msg);
                     break;
 
@@ -268,7 +271,9 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
                     Log.e(Constant.TAG, "还书码拼接：" + builder.toString());
                     presenter.checkInBook(builder.toString());
                 }
-            } else {
+            }
+
+            if(backReportList.size()==0&&borrowReportList.size()==0) {
                 ToastUtils.showShortToast( "没有借还书");
             }
 
