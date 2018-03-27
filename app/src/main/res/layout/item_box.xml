@@ -5,13 +5,13 @@
 
     <TextView
         android:id="@+id/tv_box_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="128dp"
         android:background="@drawable/box_item_left"
         android:gravity="center"
         android:text="01"
         android:textColor="@color/white"
-        android:textSize="@dimen/font_size_22"
+        android:textSize="@dimen/font_size_28"
         android:textStyle="bold"
         />
 

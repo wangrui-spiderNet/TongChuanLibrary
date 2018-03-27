@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -34,23 +35,30 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
     private GridView gvBoxes;
     private BoxesAdapter mAdapter;
     private List<BoxBean> boxBeans;
+    private TextView tvTip;
 
     private LockHelper lockHelper;
     private byte lockId;
+    private int from=-1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_box);
-
-
         lockHelper = new LockHelper(mHandler, this);
         lockHelper.open();
     }
 
     @Override
     protected void findWidgets() {
+        tvTip = findView(R.id.tv_tip);
         gvBoxes = findView(R.id.gv_boxes);
+
+        if(from==Constant.BORROW_BOOK){
+            tvTip.setText(R.string.borrow_book);
+        }else if(from==Constant.BACK_BOOK){
+            tvTip.setText(R.string.back_book);
+        }
     }
 
     @Override
@@ -144,16 +152,9 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
     @Override
     protected void getIntentData() {
 
+        Intent intent=getIntent();
+        from= intent.getExtras().getInt(Constant.BORROW_BACK);
+
     }
 
-    private void getDoorState(byte lockId) {
-        if (lockHelper.open()) {
-            lockHelper.getLockState(lockId);
-        }
-    }
-
-
-    private void getAllDoorState() {
-        lockHelper.getAllDoorState();
-    }
 }

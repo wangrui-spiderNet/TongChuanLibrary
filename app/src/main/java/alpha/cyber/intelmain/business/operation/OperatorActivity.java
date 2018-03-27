@@ -45,6 +45,7 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     private TextView tvBackBook;
     private TextView tvSearchBook;
     private TextView tvReaderInfo;
+    private TextView tvMore;
     private ListView lvTable;
 
     private CustomConfirmDialog confirmDialog;
@@ -72,11 +73,13 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         tvReaderInfo = findView(R.id.tv_reader_info);
         tvSearchBook = findView(R.id.tv_search_book);
         lvTable = findView(R.id.lv_table);
+        tvMore = findView(R.id.tv_more);
 
         tvBackBook.setOnClickListener(this);
         tvBorrowBook.setOnClickListener(this);
         tvSearchBook.setOnClickListener(this);
         tvReaderInfo.setOnClickListener(this);
+        tvMore.setOnClickListener(this);
 
         View headView = LayoutInflater.from(this).inflate(R.layout.item_table_headview, null);
         lvTable.addHeaderView(headView);
@@ -131,12 +134,16 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         if (tvBorrowBook == v) {
-            IntentUtils.startAty(this, OpenBoxActivity.class);
+            Bundle bundle=new Bundle();
+            bundle.putInt(Constant.BORROW_BACK,Constant.BORROW_BOOK);
+            IntentUtils.startAty(this, OpenBoxActivity.class,bundle);
         } else if (tvBackBook == v) {
-            IntentUtils.startAty(this, OpenBoxActivity.class);
+            Bundle bundle=new Bundle();
+            bundle.putInt(Constant.BORROW_BACK,Constant.BACK_BOOK);
+            IntentUtils.startAty(this, OpenBoxActivity.class,bundle);
         } else if (tvReaderInfo == v) {
             IntentUtils.startAty(this, UserInfoActivity.class);
-        } else if (tvSearchBook == v) {
+        } else if (tvSearchBook == v || tvMore == v) {
             IntentUtils.startAty(this, SearchActivity.class);
         } else if (btnRightButton == v) {
 

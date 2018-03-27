@@ -89,7 +89,6 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         customDialog = new CustomConfirmDialog(this);
         customDialog.setConfirmListener(this);
 
-
     }
 
     @Override

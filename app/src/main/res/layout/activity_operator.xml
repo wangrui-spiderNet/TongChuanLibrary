@@ -45,8 +45,9 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:paddingLeft="@dimen/dimen_50"
-        android:paddingTop="@dimen/dimen_50">
+        android:gravity="center_horizontal"
+        android:paddingLeft="@dimen/dimen_60"
+        android:paddingTop="@dimen/dimen_20">
 
         <TextView
             android:id="@+id/tv_borrow_book"
@@ -71,6 +72,14 @@
             android:layout_below="@+id/tv_back_book"
             android:layout_toRightOf="@+id/tv_search_book"
             android:text="@string/reader_info" />
+
+        <TextView
+            android:id="@+id/tv_more"
+            style="@style/operator_style"
+            android:layout_below="@+id/tv_reader_info"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:text="@string/more" />
 
     </RelativeLayout>
 
