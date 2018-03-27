@@ -252,7 +252,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void checkVersion(final AppUpgradeInfo appUpgradeInfo) {
 
-        ToastUtil.showToast(HomeActivity.this, "新版本：" + appUpgradeInfo.getNew_version_name());
+//        ToastUtil.showToast(HomeActivity.this, "新版本：" + appUpgradeInfo.getNew_version_name());
 
         try {
             AppThreadManager.getInstance().start(new Runnable() {

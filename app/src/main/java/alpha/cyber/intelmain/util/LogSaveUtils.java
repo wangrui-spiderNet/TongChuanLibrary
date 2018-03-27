@@ -113,9 +113,7 @@ public class LogSaveUtils {
 	}
 	
 	private static void writeLogFile(String logTag){
-		if(logTag.contains("android.bluetooth.device.action.FOUND")){
-			return;
-		}
+
 		String path = FileUtils.getAppRootDir();
 	    write(path, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss   ").format(System.currentTimeMillis())+logTag+"\n");
 	}

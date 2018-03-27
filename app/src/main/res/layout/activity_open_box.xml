@@ -8,11 +8,11 @@
         android:id="@+id/tv_tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_200"
+        android:layout_marginTop="@dimen/dimen_150"
         android:text="@string/borrow_book"
-        android:layout_weight="1"
         android:textSize="@dimen/font_size_70"
-        android:layout_marginLeft="@dimen/dimen_100"
+        android:layout_marginLeft="@dimen/dimen_180"
+        android:layout_marginRight="@dimen/dimen_150"
         />
 
     <GridView
