@@ -13,7 +13,7 @@ public class ToastUtils {
 
 	public static final String TAG = "ToastUtils";
 	
-	static final int GRAVITY = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
+	static final int GRAVITY = Gravity.CENTER;
 	
 	
 	public static void showShortToast(int resId){

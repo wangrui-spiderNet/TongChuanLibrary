@@ -87,11 +87,12 @@ public class OpenBoxActivity extends BaseActivity implements AdapterView.OnItemC
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         lockId = (byte) (position + 1);
-        lockHelper.openGride(position + 1);
+        lockHelper.openGride(position + 1,true);
         AppSharedPreference.getInstance().saveOpenBoxId(position + 1);
 
         Intent intent = new Intent(this, CheckBookService.class);
         startService(intent);
+
     }
 
     @Override

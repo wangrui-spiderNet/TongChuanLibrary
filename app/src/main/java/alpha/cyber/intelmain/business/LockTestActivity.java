@@ -154,7 +154,7 @@ public class LockTestActivity extends BaseActivity implements OnClickListener, L
             case R.id.opendoor:
                 if (checkId()) {
                     int doorID = Integer.valueOf(mEditId.getText().toString());
-                    mLockController.openGrid((byte) doorID, BOARD_ADDRESS);
+                    mLockController.openGrid((byte) doorID, BOARD_ADDRESS,false);
                 }
                 break;
         }

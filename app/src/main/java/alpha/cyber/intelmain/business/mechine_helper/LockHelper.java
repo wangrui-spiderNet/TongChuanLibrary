@@ -70,12 +70,12 @@ public class LockHelper {
         mLockController.open();
     }
 
-    public void openGride(int position) {
+    public void openGride(int position,boolean isCallBack) {
         if(mLockController==null){
             return;
         }
 
-        mLockController.openGrid((byte) (position), BOARD_ADDRESS);
+        mLockController.openGrid((byte) (position), BOARD_ADDRESS,isCallBack);
 
     }
 

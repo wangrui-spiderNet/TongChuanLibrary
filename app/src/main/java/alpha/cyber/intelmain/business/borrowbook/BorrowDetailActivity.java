@@ -27,10 +27,8 @@ import alpha.cyber.intelmain.bean.InventoryReport;
 import alpha.cyber.intelmain.bean.UserInfoBean;
 import alpha.cyber.intelmain.business.mechine_helper.CheckBookHelper;
 import alpha.cyber.intelmain.business.mechine_helper.LockHelper;
-import alpha.cyber.intelmain.db.BookDao;
 import alpha.cyber.intelmain.db.InventoryReportDao;
 import alpha.cyber.intelmain.util.AppSharedPreference;
-import alpha.cyber.intelmain.util.ToastUtil;
 import alpha.cyber.intelmain.widget.CustomConfirmDialog;
 import alpha.cyber.intelmain.widget.MyTableView;
 
@@ -117,7 +115,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
             }
             layoutTableBorrowed.addView(tableBorrowed);
         } else {
-            ToastUtils.showShortToast( "您还没有借书！");
+            ToastUtils.showShortToast("您还没有借书！");
         }
 
     }
@@ -171,7 +169,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
                 case CheckBookHelper.INVENTORY_SINGLE_BOX:
                     //书籍盘点结束处理
 //                    hasBorrowBook = true;
-                    ToastUtils.showShortToast( "盘点结束，计算中...");
+                    ToastUtils.showShortToast("盘点结束，计算中...");
                     borrowReportList.clear();
                     borrowBookList.clear();
                     backBookList.clear();
@@ -272,8 +270,8 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
                 }
             }
 
-            if(backReportList.size()==0&&borrowReportList.size()==0) {
-                ToastUtils.showShortToast( "没有借还书");
+            if (backReportList.size() == 0 && borrowReportList.size() == 0) {
+                ToastUtils.showShortToast("没有借还书");
             }
 
             closeDialog();
@@ -296,13 +294,13 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void checkOutFail(String errorcode, String msg) {
-//        isFail = true;
-//        showTipDialog("借书失败，您的借阅已达到上限");
+        showTipDialog(msg);
+        hasDoorOpen = true;
+        lockHelper.openGride(openedId, false);
     }
 
     @Override
     public void checkInFial(String errorcode, String msg) {
-//        isFail = true;
 //        showTipDialog("还书失败，请取出您放进去的书，关好柜门，点击确认！");
     }
 
@@ -423,28 +421,26 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         if (v == btnRightButton) {
             if (hasDoorOpen) {
                 mHandler.sendEmptyMessage(LockHelper.HAS_DOOR_NOT_CLOSED);
-//                hasBorrowBook = false;
             } else {
                 finish();
             }
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+
+    }
+
     private ScheduledExecutorService scheduledExecutorService;
     int loopcount;
-//    boolean isFail=false;
 
     @Override
     public void onButtonClick(View view) {
         //关闭Dialog提醒，检查打开的柜门是否已经关闭
-//        getAllDoorsState();
-//       if(isFail){
-//           isFail = false;
-//           lockHelper.openGride(openedId);
-//       }else {
-           getDoorState();
-//       }
-
+        getDoorState();
 
     }
 

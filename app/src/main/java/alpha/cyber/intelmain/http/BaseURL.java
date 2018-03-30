@@ -43,6 +43,7 @@ public class BaseURL {
     public static final String APP_EXCEPTION_DEVICE_ERROR = "40002";
     public static final String APP_EXCEPTION_NO_DEVICE_ERROR = "40003";
     public static final String APP_EXCEPTION_LIB_ERROR = "50001";
+    public static final String APP_EXCEPTION_OVER_BORROW = "50002";
 
     /**
      * 业务成功代码：0000000<br>

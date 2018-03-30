@@ -14,6 +14,6 @@ public interface LockFunction {
 	
 	public int getProtocalID(int boardAddr);
 
-	public void openGrid(byte doorID, byte boardAddress);
+	public void openGrid(byte doorID, byte boardAddress,boolean isCallBack);
 
 }

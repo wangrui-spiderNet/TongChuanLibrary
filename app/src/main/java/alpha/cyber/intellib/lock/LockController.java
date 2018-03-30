@@ -115,17 +115,19 @@ public class LockController extends SerialPortController implements LockFunction
     }
 
     @Override
-    public void openGrid(byte doorID, byte boardAddress) {
+    public void openGrid(byte doorID, byte boardAddress,boolean isCallBack) {
         // TODO Auto-generated method stub
         Logger.iLine("openGrid");
         LockCommand cmd = LockCommand.openGrid(doorID, boardAddress);
 //        cmd.setTimeout(100000);
         sendCommand(cmd);
 
-        if(isOpen()){
-            mCallback.onGetLockState(doorID,(byte) 1);
-        }else{
-            mCallback.onGetLockState(doorID,(byte) 0);
+        if(isCallBack){
+            if(isOpen()){
+                mCallback.onGetLockState(doorID,(byte) 1);
+            }else{
+                mCallback.onGetLockState(doorID,(byte) 0);
+            }
         }
 
     }

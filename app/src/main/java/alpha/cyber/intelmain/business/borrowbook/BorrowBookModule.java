@@ -24,5 +24,8 @@ public interface BorrowBookModule {
     @POST("/api/book/bookInfo")//查看图书信息
     Observable<CheckoutListBean> getBookInfoByCode(@Body Request data);
 
+    @POST("/api/user/overCheckout")
+    Observable<EmptyResponse> overCheckOut(@Body Request data);
+
 
 }

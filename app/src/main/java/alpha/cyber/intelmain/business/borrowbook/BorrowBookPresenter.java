@@ -11,6 +11,7 @@ import alpha.cyber.intelmain.base.AppException;
 import alpha.cyber.intelmain.bean.CheckoutListBean;
 import alpha.cyber.intelmain.business.mechine_helper.CheckBookHelper;
 import alpha.cyber.intelmain.http.DefaultSubscriber;
+import alpha.cyber.intelmain.http.model.EmptyResponse;
 import alpha.cyber.intelmain.http.model.Request;
 import alpha.cyber.intelmain.http.utils.RetrofitUtils;
 import alpha.cyber.intelmain.util.AppSharedPreference;
@@ -57,8 +58,30 @@ public class BorrowBookPresenter {
                     @Override
                     public void onFailure(String errorCode, String errorMessage) {
 
-                        AppException.handleException(context, errorCode, errorMessage);
+//                        AppException.handleException(context, errorCode, errorMessage);
                         bookView.checkOutFail(errorCode,errorMessage);
+                    }
+                });
+    }
+
+    /**
+     * 超出借阅的接口
+     * @param patron_id
+     * @param item_ids
+     */
+    public void overCheckout(String patron_id,String item_ids){
+        borrowBookModule.overCheckOut(new Request.Builder().withParam("",item_ids).withParam("",patron_id).build()).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DefaultSubscriber<EmptyResponse>() {
+                    @Override
+                    public void onSuccess(EmptyResponse response) {
+
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMessage) {
+
+                        AppException.handleException(context, errorCode, errorMessage);
                     }
                 });
     }
