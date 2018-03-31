@@ -61,17 +61,13 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
     }
 
     //设置是否第一次登陆
-    public void setFirstEnter(Boolean isFirstEnter) {
-        editor.putBoolean(IS_FIRST_ENTER, isFirstEnter).commit();
+    public void saveBoxBookCodes(String allbooks) {
+        editor.putString(ALL_BOX_BOOKS, allbooks).commit();
     }
 
     //判断是否第一次登陆
-    public boolean getIsFirstEnter() {
-        return app.getBoolean(IS_FIRST_ENTER, true);
-    }
-
-    public void setFirstActive(boolean isFirstActive) {
-        editor.putBoolean(IS_FIRST_ACTIVE, isFirstActive).commit();
+    public String getBoxBookCodes() {
+        return app.getString(ALL_BOX_BOOKS,"");
     }
 
     public void clear() {
@@ -197,5 +193,7 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
 
         return null;
     }
+
+
 
 }

@@ -34,7 +34,7 @@ public class UserBorrowInfo {
     private String print_line;
     private double fee;
     private String patron_identifier;
-    private String lib_hold;
+    private int lib_hold;
     private String personal_name;
     private String loanedvalue;
     private String screen_message;
@@ -44,7 +44,7 @@ public class UserBorrowInfo {
     private String fee_amount;
     private String global_lib_hold;
     private String enddate;
-    private String lib_rest;
+    private int lib_rest;
     private String readertype;
     private List<String> hold_items;
     private List<CheckoutListBean> checkoutList;
@@ -87,11 +87,11 @@ public class UserBorrowInfo {
         this.patron_identifier = patron_identifier;
     }
 
-    public String getLib_hold() {
+    public int getLib_hold() {
         return lib_hold;
     }
 
-    public void setLib_hold(String lib_hold) {
+    public void setLib_hold(int lib_hold) {
         this.lib_hold = lib_hold;
     }
 
@@ -167,11 +167,11 @@ public class UserBorrowInfo {
         this.enddate = enddate;
     }
 
-    public String getLib_rest() {
+    public int getLib_rest() {
         return lib_rest;
     }
 
-    public void setLib_rest(String lib_rest) {
+    public void setLib_rest(int lib_rest) {
         this.lib_rest = lib_rest;
     }
 

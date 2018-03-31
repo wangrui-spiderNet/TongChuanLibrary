@@ -32,6 +32,8 @@ import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.MyApplication;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.business.manage.ManagerLoginActivity;
+import alpha.cyber.intelmain.db.InventoryReportDao;
+import alpha.cyber.intelmain.db.UserDao;
 import alpha.cyber.intelmain.http.BaseURL;
 import alpha.cyber.intelmain.util.ActivityManager;
 import alpha.cyber.intelmain.util.AppSharedPreference;
@@ -39,6 +41,7 @@ import alpha.cyber.intelmain.util.DateUtils;
 import alpha.cyber.intelmain.util.DensityUtil;
 import alpha.cyber.intelmain.util.DialogUtil;
 import alpha.cyber.intelmain.util.IntentUtils;
+import alpha.cyber.intelmain.util.LogSaveUtils;
 import alpha.cyber.intelmain.util.StringUtils;
 
 
@@ -80,6 +83,8 @@ public abstract class BaseActivity  extends FragmentActivity {
     public TextView tvTel;
     public TextView tvTec;
     public TextView tvVersion;
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -199,6 +204,8 @@ public abstract class BaseActivity  extends FragmentActivity {
         });
 
     }
+
+
 
     public void hideTitle(){
         rl_common_title.setVisibility(View.GONE);
@@ -336,4 +343,6 @@ public abstract class BaseActivity  extends FragmentActivity {
                     InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
+
+
 }

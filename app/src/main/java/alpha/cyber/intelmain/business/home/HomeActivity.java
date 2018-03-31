@@ -1,9 +1,12 @@
 package alpha.cyber.intelmain.business.home;
 
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
@@ -24,6 +27,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import alpha.cyber.intellib.lock.LockCallback;
 import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.MyApplication;
 import alpha.cyber.intelmain.R;
@@ -33,6 +37,7 @@ import alpha.cyber.intelmain.bean.HomeNewsBean;
 import alpha.cyber.intelmain.business.login.InPutPwdActivity;
 import alpha.cyber.intelmain.business.login.LoginPresenter;
 import alpha.cyber.intelmain.business.mechine_helper.CheckBookService;
+import alpha.cyber.intelmain.business.mechine_helper.LockHelper;
 import alpha.cyber.intelmain.db.BookDao;
 import alpha.cyber.intelmain.util.AppSharedPreference;
 import alpha.cyber.intelmain.util.AppThreadManager;
@@ -45,12 +50,13 @@ import alpha.cyber.intelmain.util.PackageUtils;
 import alpha.cyber.intelmain.util.ShellUtils;
 import alpha.cyber.intelmain.util.StringUtils;
 import alpha.cyber.intelmain.util.ToastUtil;
+import alpha.cyber.intelmain.widget.CustomConfirmDialog;
 
 /**
  * Created by wangrui on 2018/1/29.
  */
 
-public class HomeActivity extends BaseActivity implements View.OnClickListener, IHomeView {
+public class HomeActivity extends BaseActivity implements View.OnClickListener, IHomeView, LockCallback {
 
     private RadioGroup rg_tabs;
     private Banner banner;
@@ -60,7 +66,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     private HomePresenter homePresenter;
     private HomeNewsBean homeNewsBean;
 
-    private RadioButton rbNews, rbApplyCard, rbIntroduction, rbOpenTime, rbUseGuide, rbMore;
+    private LockHelper lockHelper;
+    private boolean hasDoorOpen = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,13 +91,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
         banner = findView(R.id.banner);
         ivPhoto = findView(R.id.iv_photo);
         tvBack.setVisibility(View.INVISIBLE);
-        rbNews = findView(R.id.rb_news);
-        rbApplyCard = findView(R.id.rb_apply_card);
-        rbOpenTime = findView(R.id.rb_open_time);
-        rbUseGuide = findView(R.id.rb_use_gide);
-        rbMore = findView(R.id.rb_more);
-        rbIntroduction = findView(R.id.rb_introduction);
-
         images = new ArrayList<String>();
 
     }
@@ -243,6 +243,91 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
 
     }
 
+    private Handler mHandler = new MyHandler();
+
+    public class MyHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case LockHelper.HAS_DOOR_NOT_CLOSED:
+                    showTipDialog(getString(R.string.box_not_closed),true);
+                    break;
+            }
+        }
+    }
+
+    private byte openedId;
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        openedId =(byte) AppSharedPreference.getInstance().getOpenBoxId();
+        lockHelper = new LockHelper(mHandler, this);
+        lockHelper.open();
+
+        if (null != intent && null!=intent.getExtras()) {
+            boolean hasDoorOpen = intent.getExtras().getBoolean(Constant.HAS_DOOR_OPEN);
+            if (hasDoorOpen) {
+                showTipDialog("请先关闭所有柜门，才能借还书！谢谢您的配合！", hasDoorOpen);
+            }
+        }
+
+    }
+
+    @Override
+    public void onGetProtocalVerison(int version) {
+
+    }
+
+    @Override
+    public void onGetLockState(int id, byte state) {
+        if (id == openedId && state == 0) {
+            hasDoorOpen = true;
+            mHandler.sendEmptyMessage(LockHelper.HAS_DOOR_NOT_CLOSED);
+        } else {//打开的柜门已经关了，盘点书籍
+            closeTipDialog();
+            hasDoorOpen = false;
+        }
+    }
+
+    private void closeTipDialog() {
+        if (null != customDialog && customDialog.isShowing()) {
+            customDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onGetAllLockState(byte[] state) {
+        hasDoorOpen = hasDoorOpen(state);
+        if(hasDoorOpen){
+            mHandler.sendEmptyMessage(LockHelper.HAS_DOOR_NOT_CLOSED);
+
+        }
+    }
+
+    private CustomConfirmDialog customDialog;
+
+    private void showTipDialog(String content, boolean hasDoorOpen) {
+        customDialog = new CustomConfirmDialog(this);
+        customDialog.setContent(content);
+        customDialog.setConfirmButtonText("确认");
+        customDialog.setCancelable(false);
+        customDialog.setHasDoorOpen(hasDoorOpen);
+        customDialog.setConfirmListener(new CustomConfirmDialog.CustomDialogConfirmListener() {
+            @Override
+            public void onButtonClick(View view) {
+                lockHelper.getLockState((byte) AppSharedPreference.getInstance().getOpenBoxId());
+            }
+        });
+
+        if (!isFinishing() && !customDialog.isShowing()) {
+            customDialog.show();
+        }
+
+    }
+
     /**
      * 检查版本更新
      *
@@ -353,5 +438,17 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
                 });
     }
 
+    private boolean hasDoorOpen(byte[] state) {
+        for (int i = 0; i < 1; i++) {
+            if (state[i] == 0) {
+                return true;
+
+            } else {
+                hasDoorOpen = false;
+            }
+        }
+
+        return false;
+    }
 
 }

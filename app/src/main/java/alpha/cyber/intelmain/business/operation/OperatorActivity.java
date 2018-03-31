@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import alpha.cyber.intellib.utils.ToastUtils;
 import alpha.cyber.intelmain.Constant;
 import alpha.cyber.intelmain.R;
 import alpha.cyber.intelmain.base.BaseActivity;
@@ -53,6 +54,7 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
     private UserInfoBean userInfo;
     private List<CheckoutListBean> bookInfoBeanList = new ArrayList<>();
     private BorrowBookAdapter mAdapter;
+    private int limit_count,hold_count;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,8 +94,7 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         ivQr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BookDao bookDao = new BookDao(OperatorActivity.this);
-                Log.e(Constant.TAG, "书柜里的所有书：" + bookDao.queryAllBooks());
+
             }
         });
     }
@@ -136,7 +137,13 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         if (tvBorrowBook == v) {
             Bundle bundle=new Bundle();
             bundle.putInt(Constant.BORROW_BACK,Constant.BORROW_BOOK);
-            IntentUtils.startAty(this, OpenBoxActivity.class,bundle);
+            if(hold_count<limit_count){
+
+                IntentUtils.startAty(this, OpenBoxActivity.class,bundle);
+            }else{
+                ToastUtils.showShortToast("您借书数量已达到上限，请先还书，然后再借！");
+            }
+
         } else if (tvBackBook == v) {
             Bundle bundle=new Bundle();
             bundle.putInt(Constant.BORROW_BACK,Constant.BACK_BOOK);
@@ -164,7 +171,7 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         finish();
     }
 
-    private void logout(){
+    public void logout(){
         String clientXgTocken = AppSharedPreference.getInstance().getClientXgToken();
         AppSharedPreference.getInstance().clear();
         AppSharedPreference.getInstance().setClientXgToken(clientXgTocken);
@@ -199,13 +206,23 @@ public class OperatorActivity extends BaseActivity implements View.OnClickListen
         initFirstLine();
         tvName.setText("姓名:" + infoBean.getPersonal_name());
         tvCardNumber.setText("卡号:" + infoBean.getPatron_identifier());
-        tvPermission.setText("权限:" + infoBean.getScreen_message());
+
+        limit_count= infoBean.getLib_rest();
+        hold_count=infoBean.getLib_hold();
+
+        tvPermission.setText("权限:您最多可借阅" + limit_count+"本书，已借"+hold_count+"本书。最多可借"+(limit_count-hold_count)+"本书。超出借阅书籍要面临封锁账号的风险，感谢您遵守规则，文明借阅。");
 
         bookInfoBeanList.addAll(infoBean.getCheckoutList());
         mAdapter.notifyDataSetChanged();
         AppSharedPreference.getInstance().saveHoldBookInfos(bookInfoBeanList);
         AppSharedPreference.getInstance().saveBorrowBookUserInfo(infoBean);
 
+
+        if(limit_count<=hold_count){
+            tvBorrowBook.setBackgroundResource(R.drawable.circle_undo_bg_shape);
+        }else{
+            tvBorrowBook.setBackgroundResource(R.drawable.circle_bg_shape);
+        }
 
     }
 

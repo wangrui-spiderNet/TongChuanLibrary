@@ -142,15 +142,6 @@ public class CheckBookHelper {
         }
     }
 
-    /**
-     * 获取天线数量
-     *
-     * @return
-     */
-    public int getAntCount() {
-        mAntCnt =m_reader.RDR_GetAntennaInterfaceCount();
-        return mAntCnt;
-    }
 
     public void destroyService() {
         if (m_reader.isReaderOpen()) {

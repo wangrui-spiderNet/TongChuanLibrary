@@ -77,35 +77,25 @@ public class CheckBookService extends Service {
             }
 
             switch (msg.what) {
-//                case CheckBookHelper.INVENTORY_ALL_BOX:
-//
-//                    if (helper.getmLoopCnt() > 0) {
-//                        helper.stopLoop();
-//                    }
-//                    pt.allBoxInventoryList = helper.getInventoryList(msg);
-//                    Log.e(Constant.TAG, "全柜盘点到的书：" + pt.allBoxInventoryList.toString());
-//
-//                    break;
-//                case CheckBookHelper.INVENTORY_FAIL_MSG:
-//                    Log.e(Constant.TAG, "》》》》》盘点失败》》》》》");
-//
-//                    break;
-//                case CheckBookHelper.THREAD_END:
-//                    Log.e(Constant.TAG, "全柜盘点结束");
-//                    helper.destroyService();
-//                    if (null != allBoxInventoryList && allBoxInventoryList.size() > 0) {
-//                        reportDao.deleteAll();
-//
-//                        for (int i = 0; i < allBoxInventoryList.size(); i++) {
-//                            reportDao.insertBook(allBoxInventoryList.get(i));
-//                        }
-//
-//                        clearBookTable();
-//
-//                        requestAllBookInfo();
-//                    }
-//
-//                    break;
+                case CheckBookHelper.INVENTORY_ALL_BOX:
+
+                    pt.allBoxInventoryList = helper.getInventoryList(msg);
+                    Log.e(Constant.TAG, "全柜盘点到的书：" + pt.allBoxInventoryList.toString());
+
+                    break;
+                case CheckBookHelper.INVENTORY_FAIL_MSG:
+                    Log.e(Constant.TAG, "》》》》》盘点失败》》》》》");
+                    helper.destroyService();
+                    break;
+                case CheckBookHelper.THREAD_END:
+                    Log.e(Constant.TAG, "全柜盘点结束");
+                    helper.destroyService();
+
+                    if (null != allBoxInventoryList && allBoxInventoryList.size() > 0) {
+                        requestAllBookInfo();
+                    }
+
+                    break;
 
                 case CheckBookHelper.INVENTORY_SINGLE_BOX:
 
@@ -115,6 +105,7 @@ public class CheckBookService extends Service {
 
                     Log.e(Constant.TAG, "第" + address + "个箱子里有：" + inventoryList.size() + "本书");
 
+//                    helper.startInventoryAllBoxes();
                     break;
                 default:
                     break;
@@ -122,18 +113,19 @@ public class CheckBookService extends Service {
         }
     }
 
-//    private void requestAllBookInfo() {
-//
-//        ArrayList<String> bookcodes = new ArrayList<String>();
-//
-//        for (int i = 0; i < allBoxInventoryList.size(); i++) {
-//            String uid = allBoxInventoryList.get(i).getUidStr();
-//            String bookCode = helper.getBookCode(0, uid);
-//            bookcodes.add(bookCode);
-//            Log.e(Constant.TAG, "UID:" + uid + "盘点出来的书码：" + bookCode);
-//        }
-//
-//    }
+    private void requestAllBookInfo() {
+
+        StringBuilder sb=new StringBuilder();
+        for (int i = 0; i < allBoxInventoryList.size(); i++) {
+            String uid = allBoxInventoryList.get(i).getUidStr();
+            String bookCode = helper.getBookCode(0, uid);
+            sb.append(bookCode);
+            sb.append("]]");
+        }
+
+        AppSharedPreference.getInstance().saveBoxBookCodes(sb.toString());
+
+    }
 
     private void saveSingleBoxReportInfo(int boxid, List<InventoryReport> reportList) {
 

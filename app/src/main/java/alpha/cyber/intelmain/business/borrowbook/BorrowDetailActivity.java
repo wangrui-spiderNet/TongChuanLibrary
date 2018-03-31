@@ -25,10 +25,14 @@ import alpha.cyber.intelmain.base.BaseActivity;
 import alpha.cyber.intelmain.bean.CheckoutListBean;
 import alpha.cyber.intelmain.bean.InventoryReport;
 import alpha.cyber.intelmain.bean.UserInfoBean;
+import alpha.cyber.intelmain.business.home.HomeActivity;
 import alpha.cyber.intelmain.business.mechine_helper.CheckBookHelper;
 import alpha.cyber.intelmain.business.mechine_helper.LockHelper;
 import alpha.cyber.intelmain.db.InventoryReportDao;
+import alpha.cyber.intelmain.db.UserDao;
 import alpha.cyber.intelmain.util.AppSharedPreference;
+import alpha.cyber.intelmain.util.IntentUtils;
+import alpha.cyber.intelmain.util.LogSaveUtils;
 import alpha.cyber.intelmain.widget.CustomConfirmDialog;
 import alpha.cyber.intelmain.widget.MyTableView;
 
@@ -69,11 +73,13 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
     private LockHelper lockHelper;
     private CheckBookHelper bookHelper;
     private InventoryReportDao reportDao;
-    private boolean hasDoorOpen = true;
+
     //打开锁的ID
     private byte openedId;
-    //============
-//    private boolean hasBorrowBook;
+    private ScheduledExecutorService scheduledExecutorService;
+    private TimerTask refreshTask;
+    private int countTime;
+    private boolean hasDoorOpen = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -297,10 +303,11 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         showTipDialog(msg);
         hasDoorOpen = true;
         lockHelper.openGride(openedId, false);
+        setErrorTime();
     }
 
     @Override
-    public void checkInFial(String errorcode, String msg) {
+    public void checkInFail(String errorcode, String msg) {
 //        showTipDialog("还书失败，请取出您放进去的书，关好柜门，点击确认！");
     }
 
@@ -355,6 +362,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         lockHelper.close();
         if (null != scheduledExecutorService) {
             scheduledExecutorService.shutdown();
+            scheduledExecutorService = null;
         }
     }
 
@@ -401,19 +409,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
-    private boolean hasDoorOpen(byte[] state) {
-        for (int i = 0; i < 1; i++) {
-            if (state[i] == 0) {
-                hasDoorOpen = true;
-                return true;
 
-            } else {
-                hasDoorOpen = false;
-            }
-        }
-
-        return false;
-    }
 
     @Override
     public void onClick(View v) {
@@ -434,13 +430,18 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
     }
 
-    private ScheduledExecutorService scheduledExecutorService;
-    int loopcount;
 
     @Override
     public void onButtonClick(View view) {
         //关闭Dialog提醒，检查打开的柜门是否已经关闭
         getDoorState();
+        if(null!=refreshTask){
+            refreshTask.cancel();
+        }
+
+        if(null!=scheduledExecutorService){
+            scheduledExecutorService.shutdownNow();
+        }
 
     }
 
@@ -454,9 +455,9 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
         TimerTask refreshTask = new TimerTask() {
             @Override
             public void run() {
-                loopcount = loopcount + 1;
+                countTime = countTime + 1;
                 lockHelper.getAllDoorState();
-                if (loopcount % 5 == 0) {
+                if (countTime % 5 == 0) {
                     lockHelper.open();
                 }
             }
@@ -464,6 +465,38 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
 
         scheduledExecutorService.scheduleAtFixedRate(refreshTask, 0, 200, TimeUnit.MILLISECONDS);
     }
+    /**
+     * 查看是否所有的锁都关闭方法
+     */
+    private void setErrorTime() {
+
+        scheduledExecutorService = Executors.newScheduledThreadPool(2);
+
+        refreshTask = new TimerTask() {
+            @Override
+            public void run() {
+                countTime = countTime + 1;
+
+                if (countTime  == 120) {
+                    cancel();
+
+//                    presenter.overCheckout();
+
+                    Intent intent=new Intent();
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setClass(BorrowDetailActivity.this,HomeActivity.class);
+                    intent.putExtra(Constant.HAS_DOOR_OPEN,hasDoorOpen);
+                    startActivity(intent);
+
+                    logout();
+
+                }
+            }
+        };
+
+        scheduledExecutorService.scheduleAtFixedRate(refreshTask, 0, 1000, TimeUnit.MILLISECONDS);
+    }
+
 
     /**
      * 查看之前打开的锁有没有打开
@@ -488,6 +521,34 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
             customDialog.show();
         }
 
+    }
+
+    private boolean hasDoorOpen(byte[] state) {
+        for (int i = 0; i < 1; i++) {
+            if (state[i] == 0) {
+                hasDoorOpen = true;
+                return true;
+
+            } else {
+                hasDoorOpen = false;
+            }
+        }
+
+        return false;
+    }
+
+    private void logout(){
+        String clientXgTocken = AppSharedPreference.getInstance().getClientXgToken();
+        AppSharedPreference.getInstance().clear();
+        AppSharedPreference.getInstance().saveOpenBoxId(openedId);
+        AppSharedPreference.getInstance().setClientXgToken(clientXgTocken);
+        AppSharedPreference.getInstance().saveHoldBookInfos(null);
+        AppSharedPreference.getInstance().saveBorrowBookUserInfo(null);
+
+        LogSaveUtils.deleteLogFiles();
+
+        new InventoryReportDao(this).deleteAll();
+        new UserDao().deleteAll();
     }
 
 }

@@ -18,5 +18,5 @@ public interface IBorrowBookView  {
 
     void checkOutFail(String errorcode,String msg);
 
-    void checkInFial(String errorcode,String msg);
+    void checkInFail(String errorcode, String msg);
 }
