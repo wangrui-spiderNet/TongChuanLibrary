@@ -293,7 +293,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void closeTipDialog() {
-        if (null != customDialog && customDialog.isShowing()) {
+        if (null != customDialog ) {
             customDialog.dismiss();
         }
     }
