@@ -480,7 +480,7 @@ public class BorrowDetailActivity extends BaseActivity implements View.OnClickLi
                 if (countTime  == 120) {
                     cancel();
 
-//                    presenter.overCheckout();
+                    presenter.overCheckout();
 
                     Intent intent=new Intent();
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

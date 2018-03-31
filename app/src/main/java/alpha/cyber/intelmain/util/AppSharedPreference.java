@@ -60,12 +60,10 @@ public class AppSharedPreference extends AppSharedPreferenceConfig {
         return app.getBoolean(HAS_LOGOUT_IM,false);
     }
 
-    //设置是否第一次登陆
     public void saveBoxBookCodes(String allbooks) {
         editor.putString(ALL_BOX_BOOKS, allbooks).commit();
     }
 
-    //判断是否第一次登陆
     public String getBoxBookCodes() {
         return app.getString(ALL_BOX_BOOKS,"");
     }
